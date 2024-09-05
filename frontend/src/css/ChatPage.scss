@@ -1,0 +1,35 @@
+.chatPage_container {
+    position: fixed;
+    left: 26%;
+    top: 5%;
+    width: 71%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1C1B1C;
+    z-index: 1;
+    border-radius: 15px;
+    box-shadow: 9px 9px 1px 1px #3b3b3b;
+
+    .chatpage_header {
+        background-color: #3C3C434A;
+        width: 97%;
+        padding: 1.5rem;
+        height: 4%;
+        border-radius: 15px;
+
+        text-align: center;
+        font-size: 1.5rem;
+        color: #FFFFFF;
+        .chatPage_chat_avt{
+            float: left;
+        }
+    }
+    .ChatWindow{
+        width: 100%;
+        background-image: linear-gradient(to right bottom, #694cff, #5343cf, #41399f, #322e71, #252246, #2a2548, #2e2749, #322a4b, #523b78, #7a4aa6, #aa57d2, #e05ffb);
+        height: 100%;
+    }
+}
