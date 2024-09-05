@@ -28,7 +28,15 @@ const RightSidebar = () => {
                                 </div>
                                 <span>Trang nhã</span>
                             </NavLink>
-                            
+                            <NavLink
+                                to="/chatpage"
+                                className="nav-link list_nav_item"
+                            >
+                                <div className="icon_list_nav_item">
+                                   
+                                </div>
+                                <span>Trang tụ điền</span>
+                            </NavLink>
                         </div>
             {/* <Mascot /> */}
         </div>

@@ -6,6 +6,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import PrivateRoutes from "./privateRoutes";
 // page
 import HomePage from "../components/pages/home";
+import ChatPage from "../components/pages/chatPage";
 
 
 // layout
@@ -31,43 +32,43 @@ const AppRoutes = (props) => {
         (state) => state.Authentication.defaultUser
     );
 
-   
+
     const prevPath = localStorage.getItem('prevPath') || '/';
- 
+
     return (
         <>
             <RightSidebar />
             <div
                 className="main_page"
-                // style={{ height: isPlaying ? "calc(100vh - 92px)" : "100vh" }}
+            // style={{ height: isPlaying ? "calc(100vh - 92px)" : "100vh" }}
             >
                 {/* <Header /> */}
                 <section className={`main_page_container ${theme}`}>
                     <Routes>
 
                         {/* <Route path="/song/:id" element={<Songpage />} /> */}
-                        
+
 
                         {/* //authentication */}
-                       
+
                         <Route
                             path="/login-gg-success/:id"
                             element={
                                 isAuthentication &&
-                                isAuthentication.isAuthenticated === true ? (
-                                        <Navigate to={prevPath} />
+                                    isAuthentication.isAuthenticated === true ? (
+                                    <Navigate to={prevPath} />
                                 ) : (
-                                        // <LoginPageGG />
-                                        <></>
+                                    // <LoginPageGG />
+                                    <></>
                                 )
                             }
                         />
-                        
-                        {/* <Route
-                            path="/profile/*"
-                            element={<PrivateRoutes component={Profile} />}
-                        /> */}
 
+                        {/* <Route
+                            path="/chatpage/*"
+                            element={<PrivateRoutes component={<ChatPage />} />}
+                        /> */}
+                        <Route path="/chatpage" element={<ChatPage />} />
                         <Route path="/*" element={<HomePage />} />
 
                         <Route path="*">404 not found</Route>
