@@ -4,7 +4,7 @@ async function connect() {
   try {
    await mongoose
       .connect(
-        "mongodb+srv://hungthinhh2003:1234567890@cluster0.adwf3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+        "mongodb+srv://binhminh19112003:coqZxFJI4bdafhu8@wtfchat.8qpy7.mongodb.net/?retryWrites=true&w=majority&appName=WTFChat"
       )
       .then(() => console.log("Connected!"));
   } catch (error) {
