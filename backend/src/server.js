@@ -6,13 +6,15 @@ import initApiRouter from "./routes/api.js";
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-
+import {setupWebSocket}  from "./socket/socketConfig.js";
+const path = require('path');
 require('dotenv').config()
 
 
 const app = express()
 const PORT = process.env.PORT || 6969
-
+const server = require('http').createServer(app);
+setupWebSocket(server);
 
 const corsOptions = {
     origin: 'http://localhost:3000', // Thay đổi địa chỉ này thành nguồn gốc của ứng dụng của bạn
@@ -25,6 +27,13 @@ app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+app.use(express.json());
+// const parentDirectory = path.dirname(__dirname);
+// app.use(express.static(parentDirectory));
+// app.set('view engine', 'ejs');
+// app.set('views', path.join(parentDirectory, 'views'));
+
 configViewEngine(app);
 //conect database
 db.connect()

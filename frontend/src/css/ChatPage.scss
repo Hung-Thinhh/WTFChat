@@ -13,23 +13,68 @@
     border-radius: 15px;
     box-shadow: 9px 9px 1px 1px #3b3b3b;
 
-    .chatpage_header {
-        background-color: #3C3C434A;
-        width: 97%;
-        padding: 1.5rem;
-        height: 4%;
-        border-radius: 15px;
 
+    .chatpage_header {
+        background-color: rgba(60, 60, 67, 0.2901960784);
+        width: 97%;
+        padding: 0.5rem;
+        height: 8%;
+        border-radius: 15px;
         text-align: center;
         font-size: 1.5rem;
         color: #FFFFFF;
-        .chatPage_chat_avt{
-            float: left;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 2%;
+
+        .chatPage_chat_avt {
+            width: 4rem;
+            height: 4rem;
+        
+
+            img {
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+        }
+        .chatPage_chat_name {
+            width: 95%;
+            font-size: 1.5rem;
+            color: #FFFFFF;
+            h3{
+                width: 30%;
+                text-align: left;
+            }
+            p{
+                width: 10%;
+                text-align: left;
+                font-size: 5px;
+                color: chartreuse;
+            }
         }
     }
-    .ChatWindow{
+
+    .ChatWindow {
         width: 100%;
         background-image: linear-gradient(to right bottom, #694cff, #5343cf, #41399f, #322e71, #252246, #2a2548, #2e2749, #322a4b, #523b78, #7a4aa6, #aa57d2, #e05ffb);
         height: 100%;
+
+        overflow-y: scroll;
+    }
+
+    .input_container {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+
+        .chatPage_chat_btn {
+            margin: 5px;
+            font-size: 2rem;
+            width: 6rem;
+            height: 4rem;
+        }
     }
 }

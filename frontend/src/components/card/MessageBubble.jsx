@@ -1,31 +1,33 @@
-import { Stack } from '@mui/material';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import Avatar from '@mui/material/Avatar';
+import React from 'react';
 
 const MessageBubble = (data) => {
     return (
         <div
-        sx={{
-            with: "100% !important",
-        }}
-        className='messageBubble'
+            style={
+                data.data.user === "me" ?
+                    {
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        alignItems: "center",
+                        flexDirection: "row",
+                        margin: "2rem 1rem"
+                    }
+                    :
+                    {
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        alignItems: "center",
+                        flexDirection: "row",
+                        margin: "2rem 1rem"
+                    }
+            }
+            className='messageBubble'
         >
-            <Stack
-                sx={
-                    data.data.user = "me" ?
-                        {
-                            maxWidth: '50%',
-                            display: 'flex',
-                            flexDirection: 'row-reverse',
-                            justifyContent: "space-between",
-                            gap: "1rem",
-                            alignItems: "flex-end",
-                            float: "right",
-                        } :
+            <div
+                style={
+                    data.data.user === "me" ?
                         {
                             maxWidth: '50%',
                             display: 'flex',
@@ -34,37 +36,53 @@ const MessageBubble = (data) => {
                             gap: "1rem",
                             alignItems: "flex-end",
                         }
+                        :
+                        {
+                            maxWidth: '50%',
+                            display: 'flex',
+                            flexDirection: 'row-reverse',
+                            justifyContent: "space-between",
+                            gap: "1rem",
+                            alignItems: "flex-end",
+                            float: "right",
+                        }
                 }
             >
-                <Stack direction="row" spacing={1} useFlexGap sx={{ margin: "1rem 0" }}>
-                    <Avatar alt="UserAvt" src={data.data.avt} />
-                </Stack>
-                <Card sx={{
+                <div style={{ margin: "1rem 0", display: 'flex', flexDirection: 'row', gap: '1rem' }}>
+                    <img alt="UserAvt" src={data.data.avt} style={{ borderRadius: '50%', width: '40px', height: '40px' }} />
+                </div>
+                <div style={{
                     display: 'flex',
                     minWidth: '15rem',
                     flexDirection: 'column',
                     alignItems: 'center',
+                    border: '1px solid #ccc',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    backgroundColor: data.data.user==="me" ? "#626262": "rgb(208 188 255)",
+                    borderRadius: "8px",
+                    border:"none",
+                    color:data.data.user==="me" ? "white": "black",
                 }}>
-                    <CardMedia
-                        component="img"
-                        sx={{
+                    <img
+                        style={{
                             maxWidth: "50%",
                         }}
-                        image="https://meliawedding.com.vn/wp-content/uploads/2022/03/avatar-gai-xinh-1.jpg"
+                        src="https://meliawedding.com.vn/wp-content/uploads/2022/03/avatar-gai-xinh-1.jpg"
                         alt="Live from space album cover"
                     />
-                    <Box sx={{ display: 'flex', flexDirection: 'column', width: "100%", justifyContent: "flex-end", paddingRight: "1rem" }}>
-                        <CardContent sx={{ flex: '1 0 auto' }}>
-                            <Typography component="div" variant="h6">
+                    <div style={{ display: 'flex', flexDirection: 'column', width: "100%", justifyContent: "flex-end", paddingRight: "1rem" }}>
+                        <div style={{ flex: '1 0 auto', padding: '1rem' }}>
+                            <h6 style={{ margin: 0 ,fontSize:"1.2rem", fontWeight:"500"}}>
                                 {data.data.content}
-                            </Typography>
-                        </CardContent>
-                        <Box sx={{ display: 'flex', width: "100%", pl: 1, pb: 1 }}>
+                            </h6>
+                        </div>
+                        <div style={{ display: 'flex', width: "100%", paddingLeft: '1rem', paddingBottom: '1rem' }}>
                             {data.data.time} phút trước
-                        </Box>
-                    </Box>
-                </Card>
-            </Stack>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
