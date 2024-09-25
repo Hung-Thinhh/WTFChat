@@ -1,13 +1,10 @@
 import "./App.css";
 import AppRoutes from "./router/appRoutes";
 import AdminRoutes from "./router/adminRouter";
-import { styled } from '@mui/material/styles';
 // react route
 import { BrowserRouter as Router } from "react-router-dom";
 import { Routes, Route, Navigate } from "react-router-dom";
 import CheckAdminRoutes from "./router/checkAdminRoutes";
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
 
 // rovider
 
@@ -15,14 +12,6 @@ import ChatDataProvider from "./lib/provider/ChatDataProvider";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import Container from '@mui/material/Container';
-
-
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-});
 
 
 
@@ -42,9 +31,6 @@ function App(props) {
 
 
   return (
-    <Container fixed>
-      <ThemeProvider theme={darkTheme}>
-        <CssBaseline />
         <ChatDataProvider>
           <Router>
             <Routes>
@@ -71,8 +57,6 @@ function App(props) {
             </Routes>
           </Router>
         </ChatDataProvider>
-      </ThemeProvider>
-    </Container>
   );
 }
 
