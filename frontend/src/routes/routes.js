@@ -1,9 +1,9 @@
-import config from '~/config';
+import config from '../config';
 
 // Layouts (là những layout bọc bên ngoài của trang nhưng layout sẽ được đặt trong thư mục layouts)
 
 // Pages (là giao diện những trang web và được đặt bên trong thư mục page)
-import Home from '~/pages/Home';
+import Home from '../components/pages/Home';
 
 // Public routes (nhưng đường dẫn có thể được truy cập bởi người dùng)
 const publicRoutes = [
@@ -18,9 +18,9 @@ const publicRoutes = [
         path: config.routes.home,
         component: Home,
         name: 'Home',
-    //     icon: <FontAwesomeIcon icon={faHome} />,
-    //     layout: HeaderOnly,
-    //     mblayout: MobileHeaderOnly,
+        //     icon: <FontAwesomeIcon icon={faHome} />,
+        //     layout: HeaderOnly,
+        //     mblayout: MobileHeaderOnly,
     },
 ];
 
