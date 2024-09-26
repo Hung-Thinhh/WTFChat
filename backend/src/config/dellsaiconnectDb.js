@@ -11,4 +11,4 @@ async function connect() {
       console.log("Failed to connect")
   }
 }
-export default {connect}
+export default connect
