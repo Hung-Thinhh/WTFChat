@@ -2,7 +2,7 @@ import pool from '../connectDB.js';
 
 const createChat = async () => {
   try {
-    const [rows] = await pool.query('SELECT * FROM message');
+    const [rows] = await pool.query('SELECT * FROM nguoidung');
     return {
       EM: 'Success',
       EC: 0,
