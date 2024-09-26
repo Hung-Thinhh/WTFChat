@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { Routes, Route, Navigate } from "react-router-dom";
 import PrivateRoutes from "./privateRoutes";
 // page
-import HomePage from "../components/pages/home";
+// import HomePage from "../components/pages/home";
 import ChatPage from "../components/pages/chatPage";
 
 
@@ -69,7 +69,7 @@ const AppRoutes = (props) => {
                             element={<PrivateRoutes component={<ChatPage />} />}
                         /> */}
                         <Route path="/chatpage" element={<ChatPage />} />
-                        <Route path="/*" element={<HomePage />} />
+                        {/* <Route path="/*" element={<HomePage />} /> */}
 
                         <Route path="*">404 not found</Route>
                     </Routes>

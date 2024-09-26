@@ -1,69 +1,71 @@
-import "./App.css";
-import AppRoutes from "./router/appRoutes";
-import AdminRoutes from "./router/adminRouter";
+import './App.css';
+// import AppRoutes from './router/appRoutes';
+// import AdminRoutes from './router/adminRouter';
 // react route
-import { BrowserRouter as Router } from "react-router-dom";
-import { Routes, Route, Navigate } from "react-router-dom";
-import CheckAdminRoutes from "./router/checkAdminRoutes";
+import { BrowserRouter as Router } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
+// import CheckAdminRoutes from './router/checkAdminRoutes';
 
 // routes
-import { publicRoutes } from "~/routes";
+import { publicRoutes } from '../src/routes';
 
-import ChatDataProvider from "./lib/provider/ChatDataProvider";
+import ChatDataProvider from './lib/provider/ChatDataProvider';
 
-import { useDispatch, useSelector } from "react-redux";
-import { Fragment, useEffect, useState } from "react";
+// import { useDispatch, useSelector } from 'react-redux';
+import { Fragment, useEffect, useState } from 'react';
 
 function App(props) {
-  const prevPath = localStorage.getItem("prevPath") || "/";
+    console.log(publicRoutes);
 
-  const [pageProps, setPageProps] = useState({}); // những props muốn chuyền vào pages để sữ dụng
+    const prevPath = localStorage.getItem('prevPath') || '/';
 
-  //   const isAuthentication = useSelector(
-  //     (state) => state.Authentication.defaultUser
-  //   );
-  //   const Mainn = () => (
-  //     <div className="main_content">
-  //       <AppRoutes />
-  //     </div>
-  //   );
+    const [pageProps, setPageProps] = useState({}); // những props muốn chuyền vào pages để sữ dụng
 
-  // Thêm những giá trị muốn thêm vào page đặc biệt nếu có
-  // setPageProps(prev => {...prev, newProps: value})
+    //   const isAuthentication = useSelector(
+    //     (state) => state.Authentication.defaultUser
+    //   );
+    //   const Mainn = () => (
+    //     <div className="main_content">
+    //       <AppRoutes />
+    //     </div>
+    //   );
 
-  return (
-    <ChatDataProvider>
-      <Router>
-        <Routes>
-          {publicRoutes.map((route, index) => {
-            const Page = route.component;
-            // let Layout = isMobile ? MobileLayout : DefaultLayout;
-            let Layout = Fragment; // sau này chỉ cần tạo ra một layout mặc đinh set ở đây
+    // Thêm những giá trị muốn thêm vào page đặc biệt nếu có
+    // setPageProps(prev => {...prev, newProps: value})
 
-            // Phần này dùng để check xem page có layout đặc biệt không nếu có thì chuyển thành layout đó
-            // set up layout trong thư mục routes/routes
+    return (
+        <ChatDataProvider>
+            <Router>
+                <Routes>
+                    {publicRoutes.map((route, index) => {
+                        const Page = route.component;
+                        // let Layout = isMobile ? MobileLayout : DefaultLayout;
+                        let Layout = Fragment; // sau này chỉ cần tạo ra một layout mặc đinh set ở đây
 
-            // if (route.layout) {
-            //   Layout = isMobile ? route.mblayout : route.layout;
-            // } else if (route.layout === null) {
-            //   Layout = Fragment;
-            // }
+                        // Phần này dùng để check xem page có layout đặc biệt không nếu có thì chuyển thành layout đó
+                        // set up layout trong thư mục routes/routes
 
-            return (
-              <Route
-                key={index}
-                path={route.path}
-                element={
-                  <Layout>
-                    <Page {...pageProps} />
-                  </Layout>
-                }
-              />
-            );
-          })}
-        </Routes>
+                        // if (route.layout) {
+                        //   Layout = isMobile ? route.mblayout : route.layout;
+                        // } else if (route.layout === null) {
+                        //   Layout = Fragment;
+                        // }
 
-        {/* Code cũ chuyển theo hướng dẫn để có thể sử dụng
+                        return (
+                            <Route
+                                key={index}
+                                path={route.path}
+                                element={
+                                    <Layout>
+                                        <Page {...pageProps} />
+                                    </Layout>
+                                }
+                            />
+                        );
+                    })}
+                </Routes>
+
+                {/* Code cũ chuyển theo hướng dẫn để có thể sử dụng
         
         <Routes>
           <Route
@@ -86,9 +88,9 @@ function App(props) {
           <Route path="/*" element={<CheckBan component={Mainn} />} />
           <Route path="/" element={<Mainn />} />
         </Routes> */}
-      </Router>
-    </ChatDataProvider>
-  );
+            </Router>
+        </ChatDataProvider>
+    );
 }
 
 export default App;
