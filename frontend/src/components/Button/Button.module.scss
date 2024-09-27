@@ -38,13 +38,11 @@
 .rounded {
     border-radius: 999px;
     box-shadow: 0 2px 8px rgb(0 0 0 / 6%);
-    border-color: rgba(255, 255, 255, 0.12);
+    border-color: rgba(0, 0, 0, 0.12);
     background-color: white;
 
     &:hover {
-        border-color: rgba(22, 24, 35, 0.2);
-        background-color: rgba(150, 150, 150, 0.03);
-        cursor: none;
+        border-color: white;
     }
 }
 
@@ -70,6 +68,10 @@
 }
 
 .text {
+    background-color: transparent;
+    color: var(--white);
+    font-weight: 300;
+
     &:hover {
         text-decoration: underline;
     }

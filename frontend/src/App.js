@@ -13,6 +13,7 @@ import ChatDataProvider from './lib/provider/ChatDataProvider';
 
 // import { useDispatch, useSelector } from 'react-redux';
 import { Fragment, useEffect, useState } from 'react';
+import HomeLayout from './components/layout/HomeLayout';
 
 function App(props) {
     const prevPath = localStorage.getItem('prevPath') || '/';
@@ -38,16 +39,14 @@ function App(props) {
                     {publicRoutes.map((route, index) => {
                         const Page = route.component;
                         // let Layout = isMobile ? MobileLayout : DefaultLayout;
-                        let Layout = Fragment; // sau này chỉ cần tạo ra một layout mặc đinh set ở đây
+                        let Layout = Fragment; // layout mặc đinh sẽ được đặt là không có thiết lập trong routes
 
                         // Phần này dùng để check xem page có layout đặc biệt không nếu có thì chuyển thành layout đó
                         // set up layout trong thư mục routes/routes
 
-                        // if (route.layout) {
-                        //   Layout = isMobile ? route.mblayout : route.layout;
-                        // } else if (route.layout === null) {
-                        //   Layout = Fragment;
-                        // }
+                        if (route.layout) {
+                            Layout = route.layout;
+                        }
 
                         return (
                             <Route

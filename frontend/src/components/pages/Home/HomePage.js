@@ -1,7 +1,7 @@
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import styles from '../../../css/HomePage.module.scss';
+import styles from './HomePage.module.scss';
 import { faMessage } from '@fortawesome/free-regular-svg-icons';
 import Button from '../../Button';
 
@@ -16,8 +16,13 @@ function Home() {
                 alt="WTFChatLogo"
             />
             <div className={cx('decribe')}>ChatTime - Thời gian tuyệt vời để trò chuyện</div>
-            <Button leftIcon={<FontAwesomeIcon icon={faMessage} />} type="rounded" size="medium">
-                Nhắn tin ngay
+            <Button
+                className={cx('btn')}
+                leftIcon={<FontAwesomeIcon icon={faMessage} />}
+                type="rounded"
+                size="medium"
+            >
+                <span className={cx('text')}>Nhắn tin</span>
             </Button>
             {/* <button className={cx('btn')}></button> */}
         </div>
