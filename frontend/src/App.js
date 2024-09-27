@@ -15,8 +15,6 @@ import ChatDataProvider from './lib/provider/ChatDataProvider';
 import { Fragment, useEffect, useState } from 'react';
 
 function App(props) {
-    console.log(publicRoutes);
-
     const prevPath = localStorage.getItem('prevPath') || '/';
 
     const [pageProps, setPageProps] = useState({}); // những props muốn chuyền vào pages để sữ dụng

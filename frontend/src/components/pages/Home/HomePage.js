@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import styles from '../../../css/HomePage.module.scss';
 import { faMessage } from '@fortawesome/free-regular-svg-icons';
+import Button from '../../Button';
 
 const cx = classNames.bind(styles);
 
@@ -12,13 +13,13 @@ function Home() {
             <img
                 className={cx('logo')}
                 src={process.env.PUBLIC_URL + 'logo512.png'}
-                alt="WTFChat"
+                alt="WTFChatLogo"
             />
             <div className={cx('decribe')}>ChatTime - Thời gian tuyệt vời để trò chuyện</div>
-            <button className={cx('btn')}>
-                <FontAwesomeIcon icon={faMessage} />
+            <Button leftIcon={<FontAwesomeIcon icon={faMessage} />} type="rounded" size="medium">
                 Nhắn tin ngay
-            </button>
+            </Button>
+            {/* <button className={cx('btn')}></button> */}
         </div>
     );
 }
