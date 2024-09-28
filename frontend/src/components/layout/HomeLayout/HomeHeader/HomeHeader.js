@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -15,7 +14,7 @@ function HomeHeader() {
     const [data, setData] = useState({});
 
     useEffect(() => {
-        if (location.pathname === '/login') {
+        if (location.pathname === '/login' || location.pathname === '/register') {
             setData({
                 to: '/',
                 icon: <FontAwesomeIcon icon={faArrowLeft} />,
@@ -46,11 +45,5 @@ function HomeHeader() {
         </div>
     );
 }
-
-HomeHeader.propTypes = {
-    to: PropTypes.string.isRequired,
-    icon: PropTypes.node.isRequired,
-    content: PropTypes.string.isRequired,
-};
 
 export default HomeHeader;

@@ -37,18 +37,19 @@
         margin-top: 1.5rem;
     }
 
+    .pass-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+    }
+
     .input-group {
+        position: relative;
         margin-top: 0.25rem;
-        margin-bottom: 1rem;
+        margin-bottom: 1.8rem;
         font-size: 0.875rem;
         line-height: 1.25rem;
-
-        label {
-            display: block;
-            font-size: 1.3rem;
-            color: var(--text-color);
-            margin-bottom: 4px;
-        }
 
         input {
             width: 100%;
@@ -58,6 +59,16 @@
             background-color: var(--white);
             padding: 1.25rem 1rem;
             color: var(--text-color);
+        }
+
+        .label {
+            position: absolute;
+            top: -6px;
+            left: 6px;
+            font-size: 1.3rem;
+            padding: 0 5px;
+            color: #a4a4a9;
+            background-color: var(--white);
         }
 
         .pass-input {
@@ -71,6 +82,35 @@
                 background-color: transparent;
             }
         }
+
+        .gender-title {
+            color: #a4a4a9;
+            font-size: 1.3rem;
+        }
+
+        .gender {
+            width: 60px;
+            height: 32px;
+            min-width: auto;
+            padding: 10px;
+            border: 1px var(--black) solid;
+            border-radius: 8px;
+            font-size: 1.3rem;
+            font-weight: 300;
+            color: var(--text-color);
+            background-color: var(--white);
+        }
+
+        .gender-selected {
+            color: var(--white);
+            background-color: #5a5d62;
+        }
+    }
+
+    .ratio-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
     .forgot {

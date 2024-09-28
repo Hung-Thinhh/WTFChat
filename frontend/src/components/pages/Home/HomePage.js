@@ -16,10 +16,14 @@ function Home() {
                 alt="WTFChatLogo"
             />
             <div className={cx('decribe')}>ChatTime - Thời gian tuyệt vời để trò chuyện</div>
-            <Button leftIcon={<FontAwesomeIcon icon={faMessage} />} type="rounded" size="medium">
-                Nhắn tin ngay
+            <Button
+                className={cx('btn')}
+                leftIcon={<FontAwesomeIcon icon={faMessage} />}
+                type="rounded"
+                size="medium"
+            >
+                <span className={cx('text')}>Nhắn tin</span>
             </Button>
-            {/* <button className={cx('btn')}></button> */}
         </div>
     );
 }

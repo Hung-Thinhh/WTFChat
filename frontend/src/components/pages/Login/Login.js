@@ -10,7 +10,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 const cx = classNames.bind(styles);
 
 function Login() {
-    const [imput, setInput] = useState({
+    const [input, setInput] = useState({
         email: '',
         password: '',
     });
@@ -43,6 +43,7 @@ function Login() {
                             name="email"
                             id="email"
                             placeholder="Email"
+                            value={input.email}
                             onChange={handleChange}
                         />
                     </div>
@@ -53,6 +54,8 @@ function Login() {
                                 name="password"
                                 id="password"
                                 placeholder="Mật khẩu"
+                                suggested="new-password"
+                                value={input.password}
                                 onChange={handleChange}
                             />
                             <button className={cx('eye-btn')} onClick={handlePassShow}>
