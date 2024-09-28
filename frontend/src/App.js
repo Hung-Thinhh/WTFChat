@@ -7,13 +7,12 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 // import CheckAdminRoutes from './router/checkAdminRoutes';
 
 // routes
-import { publicRoutes } from '../src/routes';
+import { publicRoutes } from 'routes';
 
 import ChatDataProvider from './lib/provider/ChatDataProvider';
 
 // import { useDispatch, useSelector } from 'react-redux';
 import { Fragment, useEffect, useState } from 'react';
-import HomeLayout from './components/layout/HomeLayout';
 
 function App(props) {
     const prevPath = localStorage.getItem('prevPath') || '/';
