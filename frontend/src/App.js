@@ -2,7 +2,7 @@ import './App.css';
 // import AppRoutes from './router/appRoutes';
 // import AdminRoutes from './router/adminRouter';
 // react route
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, useLocation, useRoutes } from 'react-router-dom';
 import { Routes, Route, Navigate } from 'react-router-dom';
 // import CheckAdminRoutes from './router/checkAdminRoutes';
 
@@ -13,12 +13,14 @@ import ChatDataProvider from './lib/provider/ChatDataProvider';
 
 // import { useDispatch, useSelector } from 'react-redux';
 import { Fragment, useEffect, useState } from 'react';
+import { faArrowLeft, faArrowRightToBracket } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function App(props) {
+    // const location = useLocation();
     const prevPath = localStorage.getItem('prevPath') || '/';
 
     const [pageProps, setPageProps] = useState({}); // những props muốn chuyền vào pages để sữ dụng
-
     //   const isAuthentication = useSelector(
     //     (state) => state.Authentication.defaultUser
     //   );
@@ -46,6 +48,8 @@ function App(props) {
                         if (route.layout) {
                             Layout = route.layout;
                         }
+
+                        // Set layout and Page props base on route.name
 
                         return (
                             <Route

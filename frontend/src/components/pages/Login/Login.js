@@ -5,14 +5,25 @@ import styles from './Login.module.scss';
 import Button from 'components/Button';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 
 const cx = classNames.bind(styles);
 
 function Login() {
     const [imput, setInput] = useState({
         email: '',
-        passwork: '',
+        password: '',
     });
+    const [showPass, setShowPass] = useState(false);
+
+    const handleChange = (event) => {
+        setInput((prev) => ({ ...prev, [event.target.name]: event.target.value }));
+    };
+
+    const handlePassShow = (event) => {
+        event.preventDefault();
+        setShowPass((prev) => !prev);
+    };
 
     return (
         <div className={cx('wraper')}>
@@ -23,21 +34,37 @@ function Login() {
                         src={process.env.PUBLIC_URL + 'logo512.png'}
                         alt="WTFChatLogo"
                     />
-                    <p className={cx('title')}>Login</p>
+                    <p className={cx('title')}>Đăng nhập</p>
                 </div>
                 <form className={cx('form')}>
                     <div className={cx('input-group')}>
-                        <input type="email" name="email" id="email" placeholder="Email" />
+                        <input
+                            type="email"
+                            name="email"
+                            id="email"
+                            placeholder="Email"
+                            onChange={handleChange}
+                        />
                     </div>
                     <div className={cx('input-group')}>
-                        <input
-                            type="password"
-                            name="password"
-                            id="password"
-                            placeholder="Pasword"
-                        />
+                        <div className={cx('pass-input')}>
+                            <input
+                                type={showPass ? 'text' : 'password'}
+                                name="password"
+                                id="password"
+                                placeholder="Mật khẩu"
+                                onChange={handleChange}
+                            />
+                            <button className={cx('eye-btn')} onClick={handlePassShow}>
+                                {showPass ? (
+                                    <FontAwesomeIcon icon={faEye} />
+                                ) : (
+                                    <FontAwesomeIcon icon={faEyeSlash} />
+                                )}
+                            </button>
+                        </div>
                         <div className={cx('forgot')}>
-                            <Link to="/forgetpass">Forgot Password ?</Link>
+                            <Link to="/forgetpass">Quên mật khẩu ?</Link>
                         </div>
                     </div>
                     <Button className={cx('sign')} type="rounded" size="medium">

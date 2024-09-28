@@ -3,21 +3,37 @@ import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import styles from './HomeHeader.module.scss';
-import Button from '../../../Button';
-import { faArrowRightToBracket } from '@fortawesome/free-solid-svg-icons';
+import Button from 'components/Button';
+import { faArrowLeft, faArrowRightToBracket } from '@fortawesome/free-solid-svg-icons';
+import { useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 const cx = classNames.bind(styles);
 
-function HomeHeader({ to = '/login', content, icon }) {
+function HomeHeader() {
+    const location = useLocation();
+    const [data, setData] = useState({});
+
+    useEffect(() => {
+        if (location.pathname === '/login') {
+            setData({
+                to: '/',
+                icon: <FontAwesomeIcon icon={faArrowLeft} />,
+                content: 'Trang chủ',
+            });
+        } else if (location.pathname === '/') {
+            setData({
+                to: '/login',
+                icon: <FontAwesomeIcon icon={faArrowRightToBracket} />,
+                content: 'Đăng nhập',
+            });
+        }
+    }, [location]);
+
     return (
         <div className={cx('wrapper')}>
-            <Button
-                to={to}
-                type="text"
-                size="medium"
-                leftIcon={<FontAwesomeIcon icon={faArrowRightToBracket} />}
-            >
-                Đăng nhập
+            <Button to={data.to} type="text" size="medium" leftIcon={data.icon}>
+                {data.content}
             </Button>
             <Button
                 href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
@@ -32,9 +48,9 @@ function HomeHeader({ to = '/login', content, icon }) {
 }
 
 HomeHeader.propTypes = {
-    to: PropTypes.string,
-    leftIcon: PropTypes.node,
-    content: PropTypes.string,
+    to: PropTypes.string.isRequired,
+    icon: PropTypes.node.isRequired,
+    content: PropTypes.string.isRequired,
 };
 
 export default HomeHeader;
