@@ -1,7 +1,7 @@
 import express from "express";
 import { checkUserJWT, checkUserPermission } from "../middleware/jwt.js";
 
-
+import chatController from '../controllers/chatController';
 // const { getRating } = require("../controller/RatingController.js");
 
 
@@ -13,7 +13,7 @@ const initApiRouter = (app) => {
     //register
 
    
-
+    router.get("/chat", chatController);
     return app.use("/api", router);
 };
 

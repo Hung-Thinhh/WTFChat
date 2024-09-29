@@ -1,54 +1,79 @@
-import "./App.css";
-import AppRoutes from "./router/appRoutes";
-import AdminRoutes from "./router/adminRouter";
-
+import './App.css';
+// import AppRoutes from './router/appRoutes';
+// import AdminRoutes from './router/adminRouter';
 // react route
-import { BrowserRouter as Router } from "react-router-dom";
-import { Routes, Route, Navigate } from "react-router-dom";
-import CheckAdminRoutes from "./router/checkAdminRoutes";
-import CheckBan from "./router/checkBan";
+import { BrowserRouter as Router, useLocation, useRoutes } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
+// import CheckAdminRoutes from './router/checkAdminRoutes';
 
+// routes
+import { publicRoutes } from 'routes';
 
-// rovider
+import ChatDataProvider from './lib/provider/ChatDataProvider';
 
-import ChatDataProvider from "./lib/provider/ChatDataProvider";
-import { fetchAuthentication } from "./redux/slide/AuthenticationSlice";
-
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-// import { ThemeProvider, createTheme } from '@mui/material/styles';
-// import CssBaseline from '@mui/material/CssBaseline';
-// import { toast, ToastContainer } from "react-toastify";
+// import { useDispatch, useSelector } from 'react-redux';
+import { Fragment, useEffect, useState } from 'react';
+import { faArrowLeft, faArrowRightToBracket } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function App(props) {
-  const dispatch = useDispatch();
-  const prevPath = localStorage.getItem('prevPath') || '/';
+    // const location = useLocation();
+    const prevPath = localStorage.getItem('prevPath') || '/';
 
-  // useEffect(() => {
-  //   dispatch(fetchAuthentication());
-  // }, []);
+    const [pageProps, setPageProps] = useState({}); // những props muốn chuyền vào pages để sữ dụng
+    //   const isAuthentication = useSelector(
+    //     (state) => state.Authentication.defaultUser
+    //   );
+    //   const Mainn = () => (
+    //     <div className="main_content">
+    //       <AppRoutes />
+    //     </div>
+    //   );
 
-  const isAuthentication = useSelector(
-    (state) => state.Authentication.defaultUser
-  );
-  const Mainn = () => (
-    <div className="main_content">
-      <AppRoutes />
-    </div>
-  );
-  return (
-    <>
-      <div className="App">
+    // Thêm những giá trị muốn thêm vào page đặc biệt nếu có
+    // setPageProps(prev => {...prev, newProps: value})
+
+    return (
         <ChatDataProvider>
-          <Router>
-            <Routes>
-              <Route
-                path="/admin/*"
-                element={<CheckAdminRoutes component={AdminRoutes} />}
-              />
-             
-             
-              {/* <Route
+            <Router>
+                <Routes>
+                    {publicRoutes.map((route, index) => {
+                        const Page = route.component;
+                        // let Layout = isMobile ? MobileLayout : DefaultLayout;
+                        let Layout = Fragment; // layout mặc đinh sẽ được đặt là không có thiết lập trong routes
+
+                        // Phần này dùng để check xem page có layout đặc biệt không nếu có thì chuyển thành layout đó
+                        // set up layout trong thư mục routes/routes
+
+                        if (route.layout) {
+                            Layout = route.layout;
+                        }
+
+                        // Set layout and Page props base on route.name
+
+                        return (
+                            <Route
+                                key={index}
+                                path={route.path}
+                                element={
+                                    <Layout>
+                                        <Page {...pageProps} />
+                                    </Layout>
+                                }
+                            />
+                        );
+                    })}
+                </Routes>
+
+                {/* Code cũ chuyển theo hướng dẫn để có thể sử dụng
+        
+        <Routes>
+          <Route
+            path="/admin/*"
+            element={<CheckAdminRoutes component={AdminRoutes} />}
+          />
+
+          <Route
                 path="/login"
                 element={
                   isAuthentication &&
@@ -58,16 +83,14 @@ function App(props) {
                     <LoginPage />
                   )
                 }
-              /> */}
-           
-              {/* <Route path="/*" element={<CheckBan component={Mainn} />} /> */}
-              <Route path="/*" element={<Mainn />} />
-            </Routes>
-          </Router>
+              />
+
+          <Route path="/*" element={<CheckBan component={Mainn} />} />
+          <Route path="/" element={<Mainn />} />
+        </Routes> */}
+            </Router>
         </ChatDataProvider>
-      </div>
-    </>
-  );
+    );
 }
 
 export default App;

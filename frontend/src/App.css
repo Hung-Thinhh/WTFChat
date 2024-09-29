@@ -1,51 +1,51 @@
 .main_content {
-  height         : 100vh;
-  display        : flex;
-  justify-content: flex-end;
-  overflow-x     : hidden;
-  transition     : all ease-in-out 2s;
+    height: 100vh;
+    display: flex;
+    justify-content: flex-end;
+    overflow-x: hidden;
+    transition: all ease-in-out 2s;
 }
 
 .App-logo {
-  height        : 40vmin;
-  pointer-events: none;
+    height: 40vmin;
+    pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height      : 100vh;
-  display         : flex;
-  flex-direction  : column;
-  align-items     : center;
-  justify-content : center;
-  font-size       : calc(10px + 2vmin);
-  color           : white;
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
 }
 
 .App-link {
-  color: #61dafb;
+    color: #61dafb;
 }
 
 h1 {
-  color: red;
+    color: red;
 }
 
 a {
-  text-decoration: none;
+    text-decoration: none;
 }
 
-@media screen and (max-width:600px) {
-  .main_content {
-    flex-direction : column;
-    margin         : 0 !important;
-    justify-content: flex-start;
+@media screen and (max-width: 600px) {
+    .main_content {
+        flex-direction: column;
+        margin: 0 !important;
+        justify-content: flex-start;
 
-    margin-bottom: 15rem;
-  }
+        margin-bottom: 15rem;
+    }
 }
