@@ -15,14 +15,30 @@ function Login() {
         password: '',
     });
     const [showPass, setShowPass] = useState(false);
+    const [err, setErr] = useState('');
 
     const handleChange = (event) => {
         setInput((prev) => ({ ...prev, [event.target.name]: event.target.value }));
+        if (err) setErr('');
     };
 
     const handlePassShow = (event) => {
         event.preventDefault();
         setShowPass((prev) => !prev);
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        // for avaiable input
+        if (!input.email) setErr('Email không thể để trống');
+        else if (!input.password) setErr('Mật khẩu không thể để trống');
+        else if (input.password.length < 8 || input.password.length > 50)
+            setErr('Mật khẩu phải có 8 - 50 kí tự');
+        else {
+            setErr('');
+            // send request
+        }
     };
 
     return (
@@ -70,7 +86,14 @@ function Login() {
                             <Link to="/forgetpass">Quên mật khẩu ?</Link>
                         </div>
                     </div>
-                    <Button className={cx('sign')} type="rounded" size="medium">
+                    {err && <div className={cx('err-tag')}>* {err}</div>}
+                    <Button
+                        className={cx('sign')}
+                        type="rounded"
+                        size="medium"
+                        disabled={err}
+                        onClick={handleSubmit}
+                    >
                         Đăng nhập
                     </Button>
                 </form>

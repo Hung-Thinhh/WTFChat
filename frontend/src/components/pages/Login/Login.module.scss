@@ -44,6 +44,11 @@
         gap: 12px;
     }
 
+    .err-tag {
+        font-size: 1.3rem;
+        color: red;
+    }
+
     .input-group {
         position: relative;
         margin-top: 0.25rem;
@@ -141,6 +146,37 @@
         font-size: 1.2rem;
         font-weight: 300;
         margin: 30px 0 18px;
+        border-color: transparent;
+        transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: 100px;
+            height: 100px;
+            border-radius: inherit;
+            scale: 0;
+            z-index: -1;
+            background-color: var(--white);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        &:hover::before {
+            scale: 3;
+        }
+
+        &:hover {
+            color: #212121;
+            scale: 1.1;
+            box-shadow: 0 0px 20px rgba(119, 119, 119, 0.4);
+        }
+
+        &:active {
+            scale: 1;
+        }
     }
 
     .signup {

@@ -6,6 +6,7 @@ import Button from 'components/Button';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
+import { getAge } from 'lib/function/function';
 
 const cx = classNames.bind(styles);
 
@@ -21,9 +22,11 @@ function Register() {
         gender: 0,
     });
     const [showPass, setShowPass] = useState(false);
+    const [err, setErr] = useState('');
 
     const handleChange = (event) => {
         setInput((prev) => ({ ...prev, [event.target.name]: event.target.value }));
+        if (err) setErr('');
     };
 
     const handlePassShow = (event) => {
@@ -36,11 +39,32 @@ function Register() {
         setInput((prev) => ({ ...prev, gender: value }));
     };
 
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        // for avaiable input
+        if (!input.email) setErr('Email không thể để trống');
+        else if (!input.username) setErr('Họ và tên không thể để trống');
+        else if (input.username.length > 100) setErr('Tên của bạn quá dài');
+        else if (!input.password) setErr('Mật khẩu không thể để trống');
+        else if (input.password.length < 8 || input.password.length > 50)
+            setErr('Mật khẩu phải có 8 - 50 kí tự');
+        else if (!input.repass) setErr('Nhập lại mật khẩu không thể để trống');
+        else if (input.repass !== input.password) setErr('Mật khẩu nhập lại không trùng khớp');
+        else if (!input.birthdate) setErr('Ngày sinh không thể để trống');
+        else if (getAge(input.birthdate) <= 13) setErr('Độ tuổi tối thiểu là 13');
+        else if (input.gender < 0 || input.gender > 3) setErr('Giới tính không tồn tại');
+        else {
+            setErr('');
+            // send request
+        }
+    };
+
     return (
         <div className={cx('wraper')}>
             <div className={cx('form-container')}>
                 <div className={cx('image-box')}>
-                    <p className={cx('title')}>THAM GIA CHATTIME</p>
+                    <p className={cx('title')}>THAM GIA ChatTime</p>
                 </div>
                 <form className={cx('form')}>
                     <div className={cx('input-group')}>
@@ -128,8 +152,15 @@ function Register() {
                             ))}
                         </div>
                     </div>
-                    <Button className={cx('sign')} type="rounded" size="medium">
-                        Đăng nhập
+                    {err && <div className={cx('err-tag')}>* {err}</div>}
+                    <Button
+                        className={cx('sign')}
+                        type="rounded"
+                        size="medium"
+                        disabled={err}
+                        onClick={handleSubmit}
+                    >
+                        Đăng kí
                     </Button>
                 </form>
                 <p className={cx('signup')}>
