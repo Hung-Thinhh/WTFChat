@@ -1,5 +1,7 @@
 import Authentication_service from "../services/Authentication_service.js";
 import Otp_service from "../services/Otp_services.js";
+
+
 const handleRegister = async (req, res) => {
   try {
     if (!req.body.username || !req.body.email || !req.body.password) {

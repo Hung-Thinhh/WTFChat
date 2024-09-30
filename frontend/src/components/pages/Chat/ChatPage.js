@@ -15,7 +15,6 @@ const ChatPage = () => {
                     <p> <FontAwesomeIcon icon={faCircle} /></p>
                 </div>
             </div>
-            <div></div>
 
             <div className="ChatWindow">
                 <MessageBubble data={
@@ -44,7 +43,7 @@ const ChatPage = () => {
                         time: "25:00",
                         user: "i"
                     }
-                } />F
+                } />
             </div>
 
 

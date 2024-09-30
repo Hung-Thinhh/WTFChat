@@ -1,5 +1,5 @@
 require("dotenv").config();
-import  jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
 const createToken = (payload) => {
   let key = process.env.JWT_SECRET_KEY;
@@ -7,10 +7,11 @@ const createToken = (payload) => {
   try {
     token = jwt.sign(payload, key, { expiresIn: process.env.JWT_EXPIRES_IN });
   } catch (error) {
-    console.log(error);
+    console.log("error create token: ", error);
   }
   return token;
 };
+
 const verifyToken = (token) => {
   let key = process.env.JWT_SECRET_KEY;
   let decode = null;
@@ -18,19 +19,22 @@ const verifyToken = (token) => {
   try {
     decode = jwt.verify(token, key);
   } catch (error) {
-    console.log('error verifying token');
+    console.log("error verifying token: ", error);
   }
   return decode;
 };
 
 const SecurePaths = ["/user", "/account", "/getInfor", "/editInfor"];
 
-const extractToken = (req) => { 
-  if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
-    return req.headers.authorization.split(' ')[1]
+const extractToken = (req) => {
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.split(" ")[0] === "Bearer"
+  ) {
+    return req.headers.authorization.split(" ")[1];
   }
-  return null
-}
+  return null;
+};
 const checkUserJWT = (req, res, next) => {
   if (!SecurePaths.includes(req.path)) return next();
   let cookies = req.cookies;
@@ -59,22 +63,22 @@ const checkUserJWT = (req, res, next) => {
   }
 };
 const checkUserPermission = (req, res, next) => {
-  if (!SecurePaths.includes(req.path) || req.path === "/account")
-    return next();
+  if (!SecurePaths.includes(req.path) || req.path === "/account") return next();
 
   if (req.user) {
     let email = req.user.email;
     let roles = req.user.groupWithRole.Roles;
     let currUrl = req.path;
     if (!roles || roles.length === 0) {
-
       return res.status(403).json({
         EC: "-1",
         DT: "",
         EM: `You don't have permission to access this resource...`,
       });
     }
-    let canAccess = roles.some((item) => item.url === currUrl || currUrl.includes(item.url));
+    let canAccess = roles.some(
+      (item) => item.url === currUrl || currUrl.includes(item.url)
+    );
     if (canAccess) {
       next();
     } else {
@@ -92,9 +96,10 @@ const checkUserPermission = (req, res, next) => {
     });
   }
 };
+
 module.exports = {
   createToken,
   verifyToken,
   checkUserJWT,
-  checkUserPermission
+  checkUserPermission,
 };

@@ -18,6 +18,7 @@ function Home() {
             <div className={cx('decribe')}>ChatTime - Thời gian tuyệt vời để trò chuyện</div>
             <Button
                 className={cx('btn')}
+                to='/chat'
                 leftIcon={<FontAwesomeIcon icon={faMessage} />}
                 type="rounded"
                 size="medium"
