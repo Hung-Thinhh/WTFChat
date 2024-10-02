@@ -3,6 +3,7 @@ const routes = {
     home: '/',
     login: '/login',
     register: '/register',
+    chatpage: '/chatpage',
     chat: '/chat',
 }
 

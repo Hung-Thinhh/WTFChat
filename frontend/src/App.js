@@ -15,6 +15,7 @@ import ChatDataProvider from './lib/provider/ChatDataProvider';
 import { Fragment, useEffect, useState } from 'react';
 import { faArrowLeft, faArrowRightToBracket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import RightSidebar from "./components/layout/RightSidebar";
 
 function App(props) {
     // const location = useLocation();
@@ -57,6 +58,7 @@ function App(props) {
                                 path={route.path}
                                 element={
                                     <Layout>
+                                      {route.path === '/' ? (""):( <RightSidebar />)}
                                         <Page {...pageProps} />
                                     </Layout>
                                 }
