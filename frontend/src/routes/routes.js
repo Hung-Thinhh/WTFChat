@@ -4,7 +4,7 @@ import config from '../config';
 
 // Pages (là giao diện những trang web và được đặt bên trong thư mục page)
 import Home from '../components/pages/Home';
-import ChatPage from '../components/pages/chatPage';
+import ChatPage from '../components/pages/Chat';
 
 
 // Public routes (nhưng đường dẫn có thể được truy cập bởi người dùng)

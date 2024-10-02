@@ -1,8 +1,8 @@
-import "../../css/ChatPage.scss";
+import "../../../css/ChatPage.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
-import MessageBubble from "../card/MessageBubble";
-import MessageInput from "../card/MessageInput";
+import MessageBubble from "../../card/MessageBubble";
+import MessageInput from "../../card/MessageInput";
 const ChatPage = () => {
     return (
         <div className="chatPage_container">

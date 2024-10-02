@@ -15,7 +15,7 @@ import ChatDataProvider from './lib/provider/ChatDataProvider';
 import { Fragment, useEffect, useState } from 'react';
 import { faArrowLeft, faArrowRightToBracket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import RightSidebar from "./components/layout/RightSidebar";
+import RightSidebar from "./components/layout/ChatLayout/RightSidebar";
 
 function App(props) {
     // const location = useLocation();

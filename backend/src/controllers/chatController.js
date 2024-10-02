@@ -1,8 +1,11 @@
 import createChat from "../services/chatService.js";
+import {getIO}  from "../socket/socketConfig.js";
 
 const chatController = async (req, res) => {
     try {
+        const io = getIO();
         const data = await createChat();
+        io.emit('edit_comment', data.DT);
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,

@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
-import "../../css/RightSidebar.scss";
+import "../../../../css/RightSidebar.scss";
 import { useEffect, useState, useLocation } from "react";
 import { useDispatch } from "react-redux";
 

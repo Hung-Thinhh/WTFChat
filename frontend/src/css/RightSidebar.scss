@@ -13,6 +13,10 @@
   border-radius: 15px;
   box-shadow: 9px 9px 1px 1px #3b3b3b;
 
+  .page {
+    border-radius: 1rem;
+  }
+
   .list_nav {
     width: 100%;
 
@@ -47,7 +51,7 @@
     border-radius: 10px;
     justify-content: center;
     margin: 0;
-    // border-bottom: 2px solid var(--deep-black);;
+    // border-bottom: 2px solid black;;
   }
 
   .rs_bottom_bar {
@@ -108,18 +112,18 @@
   .icon_list_nav_item_svg {
     width: 20px;
     height: 20px;
-    fill: var(--deep-black);
+    fill: black;
   }
 
   /* #ee1169 */
   .list_nav_item svg {
-    color: var(--deep-black);
+    color: black;
     transition: opacity 100ms ease-in-out;
   }
 
   .list_nav_item span {
     font-size: 16px;
-    color: var(--deep-black);
+    color: black;
   }
 
   .list_nav_item.active {
@@ -131,13 +135,14 @@
     -webkit-backdrop-filter: blur(4px);
     // border: 1px solid rgba(255, 255, 255, 0.18);
     transition: all 0.3s ease-in-out;
+    border-radius: 1rem;
 
     & span {
-      color: var(--main-color);
+      color: white;
     }
 
     & svg {
-      fill: var(--main-color);
+      fill: white;
     }
   }
 
@@ -153,12 +158,12 @@
   .list_nav_item:hover .icon_list_nav_item_svg {
     width: 22px;
     height: 22px;
-    fill: var(--main-color);
+    fill: white;
     animation: beatingHeart 1.2s infinite;
   }
 
   .list_nav_item:hover span {
-    color: var(--main-color);
+    color: white;
   }
 
   @keyframes beatingHeart {
