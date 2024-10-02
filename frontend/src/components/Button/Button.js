@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
-import styles from '../../css/Button.module.scss';
+import styles from './Button.module.scss';
 
 const cx = classNames.bind(styles);
 

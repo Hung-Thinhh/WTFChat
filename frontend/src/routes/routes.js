@@ -20,9 +20,19 @@ const publicRoutes = [
         path: config.routes.home,
         component: Home,
         name: 'Home',
-        //     icon: <FontAwesomeIcon icon={faHome} />,
-        //     layout: HeaderOnly,
-        //     mblayout: MobileHeaderOnly,
+        layout: HomeLayout,
+    },
+    {
+        path: config.routes.login,
+        component: Login,
+        name: 'Login',
+        layout: HomeLayout,
+    },
+    {
+        path: config.routes.register,
+        component: Register,
+        name: 'Register',
+        layout: HomeLayout,
     },
     {
         path: config.routes.chatpage,
