@@ -1,0 +1,26 @@
+Một số lưu ý:
+- .prettierrc đã được set up khi hoàn thành đoạn code nhớ alt + shift + F để clean code
+
+
+***Lưu ý khi triễn khai API:
+- Khi thực hiện hiễn thị trả về cần ghi rõ vị trí hàm bị và nội dung 
+exp: 
+    export const handleRegister = async (req, res) => {
+        try {
+            // some code
+            return res.status(200).json({
+                EM: "REGISTER | INFO | Register success", 
+                EC: "200", // status
+                DT: "", // data
+            });
+        } catch (error) {
+            // FORDER | MODULE | TYPE | CONTENT
+            console.log('SERVICE | REGISTER | ERROR | ', error); // dev only
+
+            return res.status(200).json({
+                EM: "REGISTER | ERROR | " + error, // location and error
+                EC: "400", // status
+                DT: "", // data
+            });
+        }
+    };

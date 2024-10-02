@@ -3,10 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import styles from '../Login/Login.module.scss';
 import Button from 'components/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { getAge } from 'lib/function/function';
+import { register } from 'controller/authen';
+import { info } from 'sass';
 
 const cx = classNames.bind(styles);
 
@@ -46,7 +48,6 @@ function Register() {
         if (!input.email) setErr('Email không thể để trống');
         else if (!input.username) setErr('Họ và tên không thể để trống');
         else if (input.username.length > 100) setErr('Tên của bạn quá dài');
-        else if (!input.password) setErr('Mật khẩu không thể để trống');
         else if (input.password.length < 8 || input.password.length > 50)
             setErr('Mật khẩu phải có 8 - 50 kí tự');
         else if (!input.repass) setErr('Nhập lại mật khẩu không thể để trống');
@@ -55,8 +56,8 @@ function Register() {
         else if (getAge(input.birthdate) <= 13) setErr('Độ tuổi tối thiểu là 13');
         else if (input.gender < 0 || input.gender > 3) setErr('Giới tính không tồn tại');
         else {
+            register({ ...input, password: input.repass });
             setErr('');
-            // send request
         }
     };
 
