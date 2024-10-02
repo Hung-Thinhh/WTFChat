@@ -13,7 +13,7 @@ import ChatDataProvider from './lib/provider/ChatDataProvider';
 
 // import { useDispatch, useSelector } from 'react-redux';
 import { Fragment, useEffect, useState } from 'react';
-
+import RightSidebar from "./components/layout/RightSidebar";
 function App(props) {
     const prevPath = localStorage.getItem('prevPath') || '/';
 
@@ -55,6 +55,7 @@ function App(props) {
                                 path={route.path}
                                 element={
                                     <Layout>
+                                      {route.path === '/' ? (""):( <RightSidebar />)}
                                         <Page {...pageProps} />
                                     </Layout>
                                 }
