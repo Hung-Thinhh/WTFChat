@@ -1,7 +1,7 @@
 require("dotenv").config();
 import jwt from "jsonwebtoken";
 
-const createToken = (payload) => {
+export const createToken = (payload) => {
   let key = process.env.JWT_SECRET_KEY;
   let token = null;
   try {
@@ -12,7 +12,7 @@ const createToken = (payload) => {
   return token;
 };
 
-const verifyToken = (token) => {
+export const verifyToken = (token) => {
   let key = process.env.JWT_SECRET_KEY;
   let decode = null;
 
@@ -35,7 +35,8 @@ const extractToken = (req) => {
   }
   return null;
 };
-const checkUserJWT = (req, res, next) => {
+
+export const checkUserJWT = (req, res, next) => {
   if (!SecurePaths.includes(req.path)) return next();
   let cookies = req.cookies;
   let tokenFromHeader = extractToken(req);
@@ -62,7 +63,8 @@ const checkUserJWT = (req, res, next) => {
     });
   }
 };
-const checkUserPermission = (req, res, next) => {
+
+export const checkUserPermission = (req, res, next) => {
   if (!SecurePaths.includes(req.path) || req.path === "/account") return next();
 
   if (req.user) {
@@ -97,9 +99,3 @@ const checkUserPermission = (req, res, next) => {
   }
 };
 
-module.exports = {
-  createToken,
-  verifyToken,
-  checkUserJWT,
-  checkUserPermission,
-};
