@@ -1,10 +1,14 @@
 import config from '../config';
 
 // Layouts (là những layout bọc bên ngoài của trang nhưng layout sẽ được đặt trong thư mục layouts)
+import HomeLayout from 'components/layout/HomeLayout';
+import ChatLayout from 'components/layout/ChatLayout';
 
 // Pages (là giao diện những trang web và được đặt bên trong thư mục page)
 import Home from '../components/pages/Home';
 import ChatPage from '../components/pages/Chat';
+import Login from '../components/pages/Login';
+import Register from 'components/pages/Register';
 
 
 // Public routes (nhưng đường dẫn có thể được truy cập bởi người dùng)
@@ -20,14 +24,25 @@ const publicRoutes = [
         path: config.routes.home,
         component: Home,
         name: 'Home',
-        //     icon: <FontAwesomeIcon icon={faHome} />,
-        //     layout: HeaderOnly,
-        //     mblayout: MobileHeaderOnly,
+        layout: HomeLayout,
+    },
+    {
+        path: config.routes.login,
+        component: Login,
+        name: 'Login',
+        layout: HomeLayout,
+    },
+    {
+        path: config.routes.register,
+        component: Register,
+        name: 'Register',
+        layout: HomeLayout,
     },
     {
         path: config.routes.chatpage,
         component: ChatPage,
         name: 'ChatPage',
+        layout: ChatLayout,
     },
 ];
 

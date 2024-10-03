@@ -1,12 +1,14 @@
-import Authentication_service from '../services/Authentication_service.js';
+import { services } from '../services/Authentication_service.js';
 import Otp_service from '../services/Otp_services.js';
 
 export const handleRegister = async (req, res) => {
     try {
-        let data = await Authentication_service.handleRegister(req.body);
+        const data = await req.body;
+        
+        const result = await services.handleRegister(data);
 
         return res.status(200).json({
-            ...data,
+            ...result,    
             DT: '',
         });
     } catch (error) {

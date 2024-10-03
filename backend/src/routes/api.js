@@ -16,7 +16,7 @@ const initApiRouter = (app) => {
     router.all("*", checkUserJWT);
 
     //register
-    router.get("/register", handleRegister);
+    router.post("/register", handleRegister);
 
 
     router.get("/chat", chatController);

@@ -58,7 +58,6 @@ function App(props) {
                                 path={route.path}
                                 element={
                                     <Layout>
-                                      {route.path === '/' ? (""):( <RightSidebar />)}
                                         <Page {...pageProps} />
                                     </Layout>
                                 }

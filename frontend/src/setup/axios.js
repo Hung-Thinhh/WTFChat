@@ -1,10 +1,8 @@
 import axios from "axios";
-import { toast } from "react-toastify"
-require('dotenv').config()
-const instance = axios.create({
-    baseURL: process.env.SERVER
-});
 
+const instance = axios.create({
+    baseURL: 'http://localhost:8000'
+});
 
 instance.defaults.withCredentials = true; 
 // // Alter defaults after instance has been created
@@ -32,14 +30,14 @@ instance.interceptors.request.use(function (config) {
       case 401: {
         if (window.location.pathname !== '/' && window.location.pathname !== '/login' && window.location.pathname !== '/register') {
           
-          toast.error('Not authenticated the user')
+          alert('Not authenticated the user')
         }
         return error.response.data;
       }
 
       // forbidden (permission related issues)
       case 403: {
-        toast.error(`You don't have permission to access this resource...`)
+        alert(`You don't have permission to access this resource...`)
         return Promise.reject(error);
       }
 
