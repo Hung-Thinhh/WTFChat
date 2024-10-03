@@ -25,6 +25,7 @@
     "@babel/core": "^7.25.2",
     "@babel/node": "^7.25.0",
     "@babel/preset-env": "^7.25.4",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -39,7 +40,9 @@
     "mysql2": "^3.11.3",
     "mysql2-promise": "^0.1.4",
     "nodemon": "^3.1.4",
+    "otp-generator": "^4.0.1",
     "socket.io": "^4.7.5",
+    "uuid": "^10.0.0",
     "websocket": "^1.0.35"
   }
 }
