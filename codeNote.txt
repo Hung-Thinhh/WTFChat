@@ -15,7 +15,7 @@ exp:
             });
         } catch (error) {
             // FORDER | MODULE | TYPE | CONTENT
-            console.log('SERVICE | REGISTER | ERROR | ', error); // dev only
+            console.log('SERVICE | REGISTER | ERROR | ', error); // dAev only
 
             return res.status(200).json({
                 EM: "REGISTER | ERROR | " + error, // location and error
