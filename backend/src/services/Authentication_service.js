@@ -7,7 +7,7 @@ const salt = bcrypt.genSaltSync(10);
 const hash = bcrypt.hashSync('B4c0//', salt);
 import { v4 as uuidv4 } from 'uuid';
 import { getAge } from '../lib/globalFunct.js';
-import { query } from '../connectDB.js';
+import pool from '../connectDB.js';
 
 const hashPassword = (password) => {
     const pass_hash = bcrypt.hashSync(password, salt);
@@ -17,14 +17,13 @@ const hashPassword = (password) => {
 const checkEmail = async (email) => {
     // add check by sending email add later
     try {
-        await query('START TRANSACTION');
-        const user = await query(`SELECT email FROM xacthuc WHERE email = ?`, [email]);
+        await pool.query('START TRANSACTION');
+        const user = await pool.query(`SELECT email FROM xacthuc WHERE email = ?`, [email]);
 
-        await query('COMMIT');
-
-        return user.length > 0;
+        await pool.query('COMMIT');
+        return user[0].length > 0;
     } catch (err) {
-        await query('ROLLBACK');
+        await pool.query('ROLLBACK');
 
         console.log('CHECK_EMAIL | ERROR | ', err);
         return false;
@@ -79,10 +78,7 @@ const handleRegister = async (data) => {
             EC: '400',
         };
 
-    console.log('aaaa');
-
     const isEmailExist = await checkEmail(data.email);
-    console.log(isEmailExist);
 
     if (isEmailExist) {
         return {
@@ -91,13 +87,13 @@ const handleRegister = async (data) => {
         };
     } else {
         try {
-            await query('START TRANSACTION');
+            await pool.query('START TRANSACTION');
             const hashPass = hashPassword(data.password);
             const firstName = username.split(' ').slice(0, -1).join(' ');
             const lastName = username.split(' ').slice(-1).join(' ');
 
             // insert user information
-            await query(
+            const insertUser = await pool.query(
                 `INSERT INTO  nguoidung (firstname, lastname, email, birthdate, gender) VALUES (
 					?,
 					?, 
@@ -109,13 +105,14 @@ const handleRegister = async (data) => {
             );
 
             // insert user authen
-            await query(
-                `INSERT INTO  xacthuc (email, password, EC) VALUES (
-					?,
-					?, 
-					?,
-				)`,
-                [email, hashPass, true],
+            await pool.query(
+                `INSERT INTO  xacthuc (id, email, password, status) VALUES (
+                        ?,
+                        ?,
+                        ?, 
+                        ?
+                    )`,
+                [insertUser[0].insertId, email, hashPass, true],
             );
 
             return {
@@ -123,7 +120,7 @@ const handleRegister = async (data) => {
                 EC: '200',
             };
         } catch (error) {
-            await query('ROLLBACK');
+            await pool.query('ROLLBACK');
 
             console.log('SERVICE | REGISTER | ERROR | ', error);
             return {

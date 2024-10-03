@@ -35,16 +35,14 @@ const pool = mysql.createPool({
 //     });
 // };
 
-
-// code nay ko quan trong
-export const query = (sql, binding) => {
-    return new Promise((resolve, reject) => {
-        pool.query(sql, binding, (err, result, fields) => {
-            if (err) reject(err);
-            resolve(result);
-        });
-    });
-};
+// export const query = (sql, binding) => {
+//     return new Promise((resolve, reject) => {
+//         pool.query(sql, binding, (err, result, fields) => {
+//             if (err) reject(err);
+//             resolve(result);
+//         });
+//     });
+// };
 
 pool.getConnection()
     .then((connection) => {
