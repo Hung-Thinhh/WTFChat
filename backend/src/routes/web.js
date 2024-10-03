@@ -6,6 +6,7 @@ const initWebRouter = (app) => {
     router.get("/", (req, res) => {
         return res.render('index', {
             sidebar: 'rightSidebar',
+            header:"header"
             
         });
     });
