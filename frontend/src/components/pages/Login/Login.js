@@ -12,7 +12,7 @@ const cx = classNames.bind(styles);
 function Login() {
     const [input, setInput] = useState({
         email: '',
-        password: '',
+        password: ''
     });
     const [showPass, setShowPass] = useState(false);
     const [err, setErr] = useState('');

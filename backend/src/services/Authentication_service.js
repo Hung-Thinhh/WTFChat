@@ -1,13 +1,13 @@
 require('dotenv').config();
 import bcrypt from 'bcryptjs';
-import User from '../models/user_model.js';
 // const { getGroupWithRole } = require("./jwt-services.js");
 const { createToken } = require('../middleware/jwt.js');
 // get the promise implementation, we will use bluebird
 const salt = bcrypt.genSaltSync(10);
 const hash = bcrypt.hashSync('B4c0//', salt);
 import { v4 as uuidv4 } from 'uuid';
-import { queryAsync } from '../connectDB.js';
+import { getAge } from '../lib/globalFunct.js';
+import pool from '../connectDB.js';
 
 const hashPassword = (password) => {
     const pass_hash = bcrypt.hashSync(password, salt);
@@ -17,14 +17,13 @@ const hashPassword = (password) => {
 const checkEmail = async (email) => {
     // add check by sending email add later
     try {
-        await queryAsync('START TRANSACTION');
-        const user = await queryAsync(`SELECT email FROM xacthuc WHERE email = ?`, [email]);
+        await pool.query('START TRANSACTION');
+        const user = await pool.query(`SELECT email FROM xacthuc WHERE email = ?`, [email]);
 
-        await queryAsync('COMMIT');
-
-        return user.length > 0;
+        await pool.query('COMMIT');
+        return user[0].length > 0;
     } catch (err) {
-        await queryAsync('ROLLBACK');
+        await pool.query('ROLLBACK');
 
         console.log('CHECK_EMAIL | ERROR | ', err);
         return false;
@@ -42,7 +41,7 @@ const generateId = () => {
 const handleRegister = async (data) => {
     if (!data)
         return {
-            EM: 'No Data',
+            EM: 'REGISTER | ERROR | No Data',
             EC: '400',
         };
 
@@ -68,7 +67,7 @@ const handleRegister = async (data) => {
             EM: "REGISTER | ERROR | Birthdate can't empty",
             EC: '400',
         };
-    else if (getAge(input.birthdate) <= 13)
+    else if (getAge(birthdate) <= 13)
         return {
             EM: 'REGISTER | ERROR | User ages must higher than 13',
             EC: '400',
@@ -88,13 +87,13 @@ const handleRegister = async (data) => {
         };
     } else {
         try {
-            await queryAsync('START TRANSACTION');
+            await pool.query('START TRANSACTION');
             const hashPass = hashPassword(data.password);
             const firstName = username.split(' ').slice(0, -1).join(' ');
             const lastName = username.split(' ').slice(-1).join(' ');
 
             // insert user information
-            await queryAsync(
+            const insertUser = await pool.query(
                 `INSERT INTO  nguoidung (firstname, lastname, email, birthdate, gender) VALUES (
 					?,
 					?, 
@@ -106,13 +105,14 @@ const handleRegister = async (data) => {
             );
 
             // insert user authen
-            await queryAsync(
-                `INSERT INTO  xacthuc (email, password, EC) VALUES (
-					?,
-					?, 
-					?,
-				)`,
-                [email, hashPass, true],
+            await pool.query(
+                `INSERT INTO  xacthuc (id, email, password, status) VALUES (
+                        ?,
+                        ?,
+                        ?, 
+                        ?
+                    )`,
+                [insertUser[0].insertId, email, hashPass, true],
             );
 
             return {
@@ -120,7 +120,7 @@ const handleRegister = async (data) => {
                 EC: '200',
             };
         } catch (error) {
-            await queryAsync('ROLLBACK');
+            await pool.query('ROLLBACK');
 
             console.log('SERVICE | REGISTER | ERROR | ', error);
             return {
@@ -131,120 +131,120 @@ const handleRegister = async (data) => {
     }
 };
 
-const handleLogin = async (data) => {
-    try {
-        const user = await User.findOne({
-            $or: [{ email: data.valueLogin }, { username: data.valueLogin }],
-        });
-        if (user) {
-            let isCorrectPassword = await checkPassword(data.password, user.password);
-            if (isCorrectPassword) {
-                // let groupWithRole = await getGroupWithRole(user);
-                let payload = {
-                    id: user.id,
-                    email: user.email,
-                    type_login: user.type_login,
-                    username: user.username,
-                };
-                let token = createToken(payload);
-                return {
-                    EM: 'ok!',
-                    EC: '0',
-                    DT: {
-                        access_token: token,
-                        avt: user.avt,
-                        email: user.email,
-                        username: user.username,
-                    },
-                };
-            }
-        } else {
-            return {
-                EM: 'Your email/phone or password is incorrect!',
-                EC: '2',
-                DT: '',
-            };
-        }
+// const handleLogin = async (data) => {
+//     try {
+//         const user = await User.findOne({
+//             $or: [{ email: data.valueLogin }, { username: data.valueLogin }],
+//         });
+//         if (user) {
+//             let isCorrectPassword = await checkPassword(data.password, user.password);
+//             if (isCorrectPassword) {
+//                 // let groupWithRole = await getGroupWithRole(user);
+//                 let payload = {
+//                     id: user.id,
+//                     email: user.email,
+//                     type_login: user.type_login,
+//                     username: user.username,
+//                 };
+//                 let token = createToken(payload);
+//                 return {
+//                     EM: 'ok!',
+//                     EC: '0',
+//                     DT: {
+//                         access_token: token,
+//                         avt: user.avt,
+//                         email: user.email,
+//                         username: user.username,
+//                     },
+//                 };
+//             }
+//         } else {
+//             return {
+//                 EM: 'Your email/phone or password is incorrect!',
+//                 EC: '2',
+//                 DT: '',
+//             };
+//         }
 
-        return {
-            EM: 'Your email/phone or password is incorrect!',
-            EC: '1',
-            DT: '',
-        };
-    } catch (error) {
-        console.log('error: >>>>', error);
-        return {
-            EM: 'error creating user',
-            EC: '2',
-            DT: '',
-        };
-    }
-};
-const handleAuthGG = async (token) => {
-    try {
-        const user = await User.findOne({
-            token: token,
-        });
-        console.log(user);
-        if (user) {
-            user.token = generateId();
-            await user.save();
-            // let groupWithRole = await getGroupWithRole(user);
-            let payload = {
-                id: user.id,
-                email: user.email,
-                username: user.username,
-                type_login: user.type_login,
-            };
-            let token = createToken(payload);
-            return {
-                EM: 'ok!',
-                EC: '0',
-                DT: {
-                    access_token: token,
-                    avt: user.avt,
-                    email: user.email,
-                    username: user.username || '',
-                },
-            };
-        } else {
-            console.log('hahah');
-            return {
-                EM: 'Your email/phone or password is incorrect!',
-                EC: '2',
-                DT: '',
-            };
-        }
-    } catch (error) {
-        console.log('error: >>>>', error);
-        return {
-            EM: 'error creating user',
-            EC: '2',
-            DT: '',
-        };
-    }
-};
-const handleCheckAccount = async (id) => {
-    const user = await User.findOne({
-        id: id,
-    });
-    // console.log(user);
-    // console.log(id);
-    if (user) {
-        return {
-            EM: 'ok!',
-            EC: '0',
-            DT: user,
-        };
-    }
-};
-module.exports = {
+//         return {
+//             EM: 'Your email/phone or password is incorrect!',
+//             EC: '1',
+//             DT: '',
+//         };
+//     } catch (error) {
+//         console.log('error: >>>>', error);
+//         return {
+//             EM: 'error creating user',
+//             EC: '2',
+//             DT: '',
+//         };
+//     }
+// };
+// const handleAuthGG = async (token) => {
+//     try {
+//         const user = await User.findOne({
+//             token: token,
+//         });
+//         console.log(user);
+//         if (user) {
+//             user.token = generateId();
+//             await user.save();
+//             // let groupWithRole = await getGroupWithRole(user);
+//             let payload = {
+//                 id: user.id,
+//                 email: user.email,
+//                 username: user.username,
+//                 type_login: user.type_login,
+//             };
+//             let token = createToken(payload);
+//             return {
+//                 EM: 'ok!',
+//                 EC: '0',
+//                 DT: {
+//                     access_token: token,
+//                     avt: user.avt,
+//                     email: user.email,
+//                     username: user.username || '',
+//                 },
+//             };
+//         } else {
+//             console.log('hahah');
+//             return {
+//                 EM: 'Your email/phone or password is incorrect!',
+//                 EC: '2',
+//                 DT: '',
+//             };
+//         }
+//     } catch (error) {
+//         console.log('error: >>>>', error);
+//         return {
+//             EM: 'error creating user',
+//             EC: '2',
+//             DT: '',
+//         };
+//     }
+// };
+// const handleCheckAccount = async (id) => {
+//     const user = await User.findOne({
+//         id: id,
+//     });
+//     // console.log(user);
+//     // console.log(id);
+//     if (user) {
+//         return {
+//             EM: 'ok!',
+//             EC: '0',
+//             DT: user,
+//         };
+//     }
+// };
+export const services = {
     handleRegister,
-    handleLogin,
-    handleAuthGG,
+    // handleLogin,
+    // handleAuthGG,
     checkEmail,
     generateId,
     checkPassword,
     hashPassword,
-    handleCheckAccount,
+    // handleCheckAccount,
 };
