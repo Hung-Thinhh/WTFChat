@@ -21,17 +21,10 @@ export const handleRegister = async (req, res) => {
 
 export const handleLogin = async (req, res) => {
     try {
-        if (!req.body.valueLogin || !req.body.password) {
-            return res.status(200).json({
-                EM: 'missing required',
-                EC: '1',
-                DT: '',
-            });
-        }
-        let data = await Authentication_service.handleLogin(req.body);
+        const data = await Authentication_service.handleLogin(req.body);
+        
         if (data) {
             if (req.body.checkRemember) {
-                console.log('lâu');
                 res.cookie('jwt', data.DT.access_token, {
                     httpOnly: true,
                     maxAge: 30 * 24 * 60 * 60 * 1000,
