@@ -118,6 +118,18 @@
         align-items: center;
     }
 
+    .remeber-box {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 10px;
+        font-size: 1.3rem;
+
+        input {
+            width: auto;
+        }
+    }
+
     .forgot {
         display: flex;
         justify-content: flex-end;

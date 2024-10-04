@@ -6,13 +6,15 @@ import Button from 'components/Button';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
+import { login } from 'controller/authen';
 
 const cx = classNames.bind(styles);
 
 function Login() {
     const [input, setInput] = useState({
         email: '',
-        password: ''
+        password: '',
+        remember: false,
     });
     const [showPass, setShowPass] = useState(false);
     const [err, setErr] = useState('');
@@ -27,7 +29,7 @@ function Login() {
         setShowPass((prev) => !prev);
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         // for avaiable input
@@ -36,6 +38,9 @@ function Login() {
         else if (input.password.length < 8 || input.password.length > 50)
             setErr('Mật khẩu phải có 8 - 50 kí tự');
         else {
+            const res = await login(input);
+            console.log(res);
+
             setErr('');
             // send request
         }
@@ -85,6 +90,15 @@ function Login() {
                         <div className={cx('forgot')}>
                             <Link to="/forgetpass">Quên mật khẩu ?</Link>
                         </div>
+                    </div>
+                    <div className={cx('input-group', 'remeber-box')}>
+                        <input
+                            type="checkbox"
+                            name="remember"
+                            value={input.remember}
+                            onChange={handleChange}
+                        />
+                        <label htmlFor="remember">Ghi nhớ tài khoản</label>
                     </div>
                     {err && <div className={cx('err-tag')}>* {err}</div>}
                     <Button

@@ -69,7 +69,7 @@ const handleRegister = async (data) => {
         };
     else if (!birthdate)
         return {
-            EM: "REGISTER | ERROR | Ngày sinh không thể để trống",
+            EM: 'REGISTER | ERROR | Ngày sinh không thể để trống',
             EC: '400',
         };
     else if (getAge(birthdate) <= 13)
@@ -120,6 +120,7 @@ const handleRegister = async (data) => {
                 [insertUser[0].insertId, email, hashPass, true],
             );
 
+            await pool.query('COMMIT');
             return {
                 EM: 'REGISTER | INFO | Đăng ký thành công',
                 EC: '200',
@@ -142,52 +143,78 @@ const handleLogin = async (data) => {
         await pool.query('START TRANSACTION');
         // find current user
         const currUser = await pool.query(
-            `SELECT email, password, status FROM xacthuc WHERE email = ?`,
+            `SELECT xacthuc.email, xacthuc.password, xacthuc.status, xacthuc.role, nguoidung.lastname, nguoidung.avatar
+            FROM xacthuc 
+            INNER JOIN nguoidung ON xacthuc.email=nguoidung.email
+            WHERE xacthuc.email = ?`,
             [data.email],
         );
 
-        console.log(currUser);
+        await pool.query('COMMIT');
+
+        if (!currUser[0])
+            return {
+                EM: 'LOGIN | ERROR | Tài khoản không tồn tại',
+                EC: '400',
+                DT: '',
+            };
+
+        const { email, password, status, role, lastname, avatar } = currUser[0][0];
         
+        // check status
+        if (!status)
+            return {
+                EM: 'LOGIN | ERROR | Tài khoản hiện đăng bị khoá',
+                EC: '400',
+                DT: '',
+            };
+        
+        // check password
+        const isCorrectPassword = await checkPassword(data.password, password);
+        if (!isCorrectPassword)
+            return {
+                EM: 'LOGIN | ERROR | Mật khẩu không chính xác',
+                EC: '400',
+                DT: '',
+            };
 
-        // if (user) {
-        //     let isCorrectPassword = await checkPassword(data.password, user.password);
-        //     if (isCorrectPassword) {
-        //         // let groupWithRole = await getGroupWithRole(user);
-        //         let payload = {
-        //             id: user.id,
-        //             email: user.email,
-        //             type_login: user.type_login,
-        //             username: user.username,
-        //         };
-        //         let token = createToken(payload);
-        //         return {
-        //             EM: 'ok!',
-        //             EC: '0',
-        //             DT: {
-        //                 access_token: token,
-        //                 avt: user.avt,
-        //                 email: user.email,
-        //                 username: user.username,
-        //             },
-        //         };
-        //     }
-        // } else {
-        //     return {
-        //         EM: 'Your email/phone or password is incorrect!',
-        //         EC: '2',
-        //         DT: '',
-        //     };
-        // }
+        let payload = {
+            email,
+            role,
+        };
+        let token = createToken(payload);
 
-        // return {
-        //     EM: 'Your email/phone or password is incorrect!',
-        //     EC: '1',
-        //     DT: '',
-        // };
-    } catch (error) {
-        console.log('error: >>>>', error);
+
+        // change to switch case if have more role
+        if (role === 0)
+            // admin
+            return {
+                EM: 'LOGIN | INFO | Đăng nhập quản trị thành công',
+                EC: '201',
+                DT: {
+                    email,
+                    access_token: token,
+                    avt: avatar,
+                    username: lastname,
+                },
+            };
+
+        // nomal user
         return {
-            EM: 'REGISTER | ERROR | ' + error,
+            EM: 'LOGIN | INFO | Đăng nhập thành công',
+            EC: '200',
+            DT: {
+                email,
+                access_token: token,
+                avt: avatar,
+                username: lastname,
+            },
+        };
+    } catch (error) {
+        await pool.query('ROLLBACK');
+        console.log('SERVICE | LOGIN | ERROR |', error);
+        return {
+            EM: 'LOGIN | ERROR | ' + error,
             EC: '500',
             DT: '',
         };
@@ -254,7 +281,7 @@ const handleLogin = async (data) => {
 // };
 export const services = {
     handleRegister,
-    // handleLogin,
+    handleLogin,
     // handleAuthGG,
     checkEmail,
     generateId,
