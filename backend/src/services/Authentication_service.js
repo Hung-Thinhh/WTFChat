@@ -64,7 +64,7 @@ const handleRegister = async (data) => {
         };
     else if (password.length < 8 || password.length > 50)
         return {
-            EM: 'REGISTER | ERROR | Mật khẩu phải có 8 - 50 kí tự',
+            EM: 'REGISTER | ERROR | Mật khẩu nhập lại không trùng khớp',
             EC: '400',
         };
     else if (!birthdate)
@@ -138,6 +138,23 @@ const handleRegister = async (data) => {
 };
 
 const handleLogin = async (data) => {
+    if (!data)
+        return {
+            EM: 'LOGIN | ERROR | Không có dữ liệu',
+            EC: '401',
+        };
+
+    if (!data.email)
+        return {
+            EM: 'LOGIN | ERROR | Email không thể để trống',
+            EC: '400',
+        };
+    else if (!data.password)
+        return {
+            EM: 'LOGIN | ERROR | Mật khẩu phải có 8 - 50 kí tự',
+            EC: '400',
+        };
+
     try {
         // get email
         await pool.query('START TRANSACTION');
@@ -152,7 +169,7 @@ const handleLogin = async (data) => {
 
         await pool.query('COMMIT');
 
-        if (!currUser[0])
+        if (!currUser[0][0])
             return {
                 EM: 'LOGIN | ERROR | Tài khoản không tồn tại',
                 EC: '400',
@@ -160,7 +177,7 @@ const handleLogin = async (data) => {
             };
 
         const { email, password, status, role, lastname, avatar } = currUser[0][0];
-        
+
         // check status
         if (!status)
             return {
@@ -168,7 +185,7 @@ const handleLogin = async (data) => {
                 EC: '400',
                 DT: '',
             };
-        
+
         // check password
         const isCorrectPassword = await checkPassword(data.password, password);
         if (!isCorrectPassword)
@@ -183,7 +200,6 @@ const handleLogin = async (data) => {
             role,
         };
         let token = createToken(payload);
-
 
         // change to switch case if have more role
         if (role === 0)

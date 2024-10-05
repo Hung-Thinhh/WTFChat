@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from '../Login/Login.module.scss';
 import Button from 'components/Button';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { getAge } from 'lib/function/function';
 import { register } from 'controller/authen';
@@ -14,6 +14,7 @@ const cx = classNames.bind(styles);
 const genderList = ['Nam', 'Nữ', 'Khác'];
 
 function Register() {
+    const nav = useNavigate();
     const [input, setInput] = useState({
         email: '',
         username: '',
@@ -24,6 +25,7 @@ function Register() {
     });
     const [showPass, setShowPass] = useState(false);
     const [err, setErr] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (event) => {
         setInput((prev) => ({ ...prev, [event.target.name]: event.target.value }));
@@ -42,6 +44,7 @@ function Register() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setLoading(true)
 
         // for avaiable input
         if (!input.email) setErr('Email không thể để trống');
@@ -55,18 +58,22 @@ function Register() {
         else if (input.gender < 0 || input.gender > 3) setErr('Giới tính không tồn tại');
         else {
             const res = await register({ ...input, password: input.repass });
-            
+
             if (res.EC === '200') {
                 // dang ki thanh cong
+                nav('/login');
                 alert('Đăng kí tài khoản thành công!');
                 setErr('');
             } else if (res.EC === '400') {
                 setErr(res.EM);
             } else if (res.EC === '500') {
-                alert('Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com');
+                alert(
+                    'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
+                );
             }
-
         }
+
+        setLoading(false)
     };
 
     return (
@@ -166,7 +173,7 @@ function Register() {
                         className={cx('sign')}
                         type="rounded"
                         size="medium"
-                        disabled={err}
+                        disabled={err || loading}
                         onClick={handleSubmit}
                     >
                         Đăng kí

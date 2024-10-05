@@ -4,13 +4,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from './Login.module.scss';
 import Button from 'components/Button';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { login } from 'controller/authen';
 
 const cx = classNames.bind(styles);
 
 function Login() {
+    const nav = useNavigate();
     const [input, setInput] = useState({
         email: '',
         password: '',
@@ -18,6 +19,7 @@ function Login() {
     });
     const [showPass, setShowPass] = useState(false);
     const [err, setErr] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (event) => {
         setInput((prev) => ({ ...prev, [event.target.name]: event.target.value }));
@@ -29,8 +31,9 @@ function Login() {
         setShowPass((prev) => !prev);
     };
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = async (event) => {        
         event.preventDefault();
+        setLoading(true)
 
         // for avaiable input
         if (!input.email) setErr('Email không thể để trống');
@@ -39,11 +42,23 @@ function Login() {
             setErr('Mật khẩu phải có 8 - 50 kí tự');
         else {
             const res = await login(input);
-            console.log(res);
-
-            setErr('');
-            // send request
+            if (res.EC === '200') {
+                // dang nhap thanh cong
+                nav('/');
+                setErr('');
+            } if (res.EC === '201') {
+                // dang nhap quan tri thanh cong
+                nav('/admin');
+                setErr('');
+            } else if (res.EC === '400') {
+                setErr(res.EM);
+            } else if (res.EC === '500') {
+                alert(
+                    'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
+                );
+            }
         }
+        setLoading(false)
     };
 
     return (
@@ -98,14 +113,14 @@ function Login() {
                             value={input.remember}
                             onChange={handleChange}
                         />
-                        <label htmlFor="remember">Ghi nhớ tài khoản</label>
+                        <label htmlFor="remember">Ghi nhớ đăng nhập</label>
                     </div>
                     {err && <div className={cx('err-tag')}>* {err}</div>}
                     <Button
                         className={cx('sign')}
                         type="rounded"
                         size="medium"
-                        disabled={err}
+                        disabled={err || loading}
                         onClick={handleSubmit}
                     >
                         Đăng nhập

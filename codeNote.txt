@@ -1,4 +1,8 @@
 Một số lưu ý:
+- TK quản trị:
+    TK: admin 
+    MK: admin123
+
 - role của người dùng: 
     0: admin
     1: user
