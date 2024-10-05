@@ -3,15 +3,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import styles from './Login.module.scss';
 import Button from 'components/Button';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { login } from 'controller/authen';
+import ChatDataContext from 'lib/Context/ChatContext';
 
 const cx = classNames.bind(styles);
 
 function Login() {
-    const nav = useNavigate();
+    const nav = useNavigate(); // for nav page
+    const { setCurrUser } = useContext(ChatDataContext);
     const [input, setInput] = useState({
         email: '',
         password: '',
@@ -31,9 +33,9 @@ function Login() {
         setShowPass((prev) => !prev);
     };
 
-    const handleSubmit = async (event) => {        
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        setLoading(true)
+        setLoading(true);
 
         // for avaiable input
         if (!input.email) setErr('Email không thể để trống');
@@ -44,21 +46,23 @@ function Login() {
             const res = await login(input);
             if (res.EC === '200') {
                 // dang nhap thanh cong
+                setCurrUser(res.DT);
                 nav('/');
-                setErr('');
-            } if (res.EC === '201') {
+            }
+            if (res.EC === '201') {
                 // dang nhap quan tri thanh cong
                 nav('/admin');
-                setErr('');
+                setCurrUser(res.DT);
             } else if (res.EC === '400') {
                 setErr(res.EM);
             } else if (res.EC === '500') {
                 alert(
                     'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
                 );
+                setErr('');
             }
         }
-        setLoading(false)
+        setLoading(false);
     };
 
     return (

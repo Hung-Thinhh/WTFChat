@@ -5,13 +5,18 @@ import styles from './HomeHeader.module.scss';
 import Button from 'components/Button';
 import { faArrowLeft, faArrowRightToBracket } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import Avatar from 'components/Avatar';
+import ChatDataContext from 'lib/Context/ChatContext';
 
 const cx = classNames.bind(styles);
 
 function HomeHeader() {
-    const location = useLocation();
+    const location = useLocation(); // to get current route
+    const { currUser } = useContext(ChatDataContext); // get current user data from global state
     const [data, setData] = useState({});
+
+    console.log(currUser);
 
     useEffect(() => {
         if (location.pathname === '/login' || location.pathname === '/register') {
@@ -31,9 +36,16 @@ function HomeHeader() {
 
     return (
         <div className={cx('wrapper')}>
-            <Button to={data.to} type="text" size="medium" leftIcon={data.icon}>
-                {data.content}
-            </Button>
+            {currUser ? (
+                <div className={cx('userButton')}>
+                    <Avatar src={currUser.avt} size='medium' />
+                    <p>{currUser.username}</p>
+                </div>
+            ) : (
+                <Button to={data.to} type="text" size="small" leftIcon={data.icon}>
+                    {data.content}
+                </Button>
+            )}
             <Button
                 href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                 type="text"
