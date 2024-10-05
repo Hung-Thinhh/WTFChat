@@ -6,7 +6,13 @@ import styles from './Avatar.module.scss';
 const cx = classNames.bind(styles);
 
 function Avatar({ src, size }) {
-    return <img className={cx('avatar', {[size]: size})} src={src || process.env.PUBLIC_URL + 'logo512.png'} alt='avatar' />;
+    return (
+        <img
+            className={cx('avatar', { [size]: size })}
+            src={src || process.env.PUBLIC_URL + 'logo512.png'}
+            alt="avatar"
+        />
+    );
 }
 
 Avatar.propTypes = {
