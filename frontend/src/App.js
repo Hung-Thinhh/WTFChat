@@ -2,8 +2,8 @@ import './App.css';
 // import AppRoutes from './router/appRoutes';
 // import AdminRoutes from './router/adminRouter';
 // react route
-import { BrowserRouter as Router, useLocation, useRoutes } from 'react-router-dom';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 // import CheckAdminRoutes from './router/checkAdminRoutes';
 
 // routes
@@ -12,14 +12,14 @@ import { publicRoutes } from 'routes';
 import ChatDataProvider from './lib/provider/ChatDataProvider';
 
 // import { useDispatch, useSelector } from 'react-redux';
-import { Fragment, useEffect, useState } from 'react';
-import { faArrowLeft, faArrowRightToBracket } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import RightSidebar from "./components/layout/ChatLayout/RightSidebar";
+import { Fragment, useState } from 'react';
+// import { faArrowLeft, faArrowRightToBracket } from '@fortawesome/free-solid-svg-icons';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import RightSidebar from "./components/layout/ChatLayout/RightSidebar";
 
 function App(props) {
     // const location = useLocation();
-    const prevPath = localStorage.getItem('prevPath') || '/';
+    // const prevPath = localStorage.getItem('prevPath') || '/';
 
     const [pageProps, setPageProps] = useState({}); // những props muốn chuyền vào pages để sữ dụng
     //   const isAuthentication = useSelector(

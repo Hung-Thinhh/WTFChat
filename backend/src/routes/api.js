@@ -20,7 +20,7 @@ const initApiRouter = (app) => {
     router.post("/login", handleLogin);
 
 
-    router.get("/chat", chatController);
+    router.post("/chat", chatController);
     router.get("/getchat", getChatController);
     router.get("/deletechat", deletaChatController);
 

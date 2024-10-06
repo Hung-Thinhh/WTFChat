@@ -10,6 +10,7 @@ import ChatPage from '../components/pages/Chat';
 import Login from '../components/pages/Login';
 import Register from 'components/pages/Register';
 import ForgetPass from 'components/pages/ForgerPass';
+import ChatHome from 'components/pages/ChatHome';
 
 // Public routes (nhưng đường dẫn có thể được truy cập bởi người dùng)
 const publicRoutes = [
@@ -48,6 +49,12 @@ const publicRoutes = [
         path: config.routes.chatpage,
         component: ChatPage,
         name: 'ChatPage',
+        layout: ChatLayout,
+    },
+    {
+        path: config.routes.chat,
+        component: ChatHome,
+        name: 'Chat',
         layout: ChatLayout,
     },
 ];

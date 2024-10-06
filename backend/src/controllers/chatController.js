@@ -6,6 +6,7 @@ import {
 import { getIO } from "../socket/socketConfig.js";
 
 const chatController = async (req, res) => {
+    const message = req.body.messages;
     try {
         const io = getIO();
         const data = await createChat();
@@ -18,7 +19,7 @@ const chatController = async (req, res) => {
     } catch (error) {
         console.log(error);
         return res.status(500).json({
-            EM: "error from server",
+            EM: "SERVICE | CHAT CONTROLLER | ERROR | ",
             EC: "-1",
             DT: "",
         });
@@ -36,7 +37,7 @@ const getChatController = async (req, res) => {
     } catch (error) {
         console.log(error);
         return res.status(500).json({
-            EM: "error from server",
+            EM: "SERVICE | CHAT CONTROLLER | ERROR | ",
             EC: "-1",
             DT: "",
         });
@@ -53,7 +54,7 @@ const deletaChatController = async (req, res) => {
     } catch (error) {
         console.log(error);
         return res.status(500).json({
-            EM: "error from server",
+            EM: "SERVICE | CHAT CONTROLLER | ERROR | ",
             EC: "-1",
             DT: "",
         });
