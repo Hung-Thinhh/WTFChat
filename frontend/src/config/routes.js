@@ -4,6 +4,7 @@ const routes = {
     login: '/login',
     register: '/register',
     forgetpassword: '/forgetpassword',
+    profile: '/profile',
     chatpage: '/chatpage',
     chat: '/chat',
 };

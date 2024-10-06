@@ -4,10 +4,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from './HomeHeader.module.scss';
 import Button from 'components/Button';
 import { faArrowLeft, faArrowRightToBracket } from '@fortawesome/free-solid-svg-icons';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
 import Avatar from 'components/Avatar';
 import ChatDataContext from 'lib/Context/ChatContext';
+import config from 'config';
 
 const cx = classNames.bind(styles);
 
@@ -16,18 +17,16 @@ function HomeHeader() {
     const { currUser } = useContext(ChatDataContext); // get current user data from global state
     const [data, setData] = useState({});
 
-    console.log(currUser);
-
     useEffect(() => {
-        if (location.pathname === '/login' || location.pathname === '/register') {
+        if (location.pathname === config.routes.login || location.pathname === config.routes.register || location.pathname === config.routes.forgetpassword) {
             setData({
-                to: '/',
+                to: config.routes.home,
                 icon: <FontAwesomeIcon icon={faArrowLeft} />,
                 content: 'Trang chủ',
             });
         } else if (location.pathname === '/') {
             setData({
-                to: '/login',
+                to: config.routes.login,
                 icon: <FontAwesomeIcon icon={faArrowRightToBracket} />,
                 content: 'Đăng nhập',
             });
@@ -37,10 +36,10 @@ function HomeHeader() {
     return (
         <div className={cx('wrapper')}>
             {currUser ? (
-                <div className={cx('userButton')}>
+                <Link className={cx('userButton')} to={config.routes.profile}>
                     <Avatar src={currUser.avt} size='medium' />
                     <p>{currUser.username}</p>
-                </div>
+                </Link>
             ) : (
                 <Button to={data.to} type="text" size="small" leftIcon={data.icon}>
                     {data.content}

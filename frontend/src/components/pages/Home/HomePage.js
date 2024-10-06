@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from './HomePage.module.scss';
 import { faMessage } from '@fortawesome/free-regular-svg-icons';
 import Button from 'components/Button';
+import config from 'config';
 
 const cx = classNames.bind(styles);
 
@@ -18,7 +19,7 @@ function Home() {
             <div className={cx('decribe')}>ChatTime - Thời gian tuyệt vời để trò chuyện</div>
             <Button
                 className={cx('btn')}
-                to='/chat'
+                to={config.routes.chatpage}
                 leftIcon={<FontAwesomeIcon icon={faMessage} />}
                 type="rounded"
                 size="medium"
