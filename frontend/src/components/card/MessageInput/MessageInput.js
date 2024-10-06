@@ -1,4 +1,4 @@
-import "../../css/MessageInput.scss";
+import "./MessageInput.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import {  useRef, useCallback } from "react";
