@@ -3,18 +3,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import styles from '../Login/Login.module.scss';
 import Button from 'components/Button';
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { getAge } from 'lib/function/function';
 import { register } from 'controller/authen';
-import { info } from 'sass';
 
 const cx = classNames.bind(styles);
 
 const genderList = ['Nam', 'Nữ', 'Khác'];
 
 function Register() {
+    const nav = useNavigate();
     const [input, setInput] = useState({
         email: '',
         username: '',
@@ -25,6 +25,7 @@ function Register() {
     });
     const [showPass, setShowPass] = useState(false);
     const [err, setErr] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (event) => {
         setInput((prev) => ({ ...prev, [event.target.name]: event.target.value }));
@@ -41,8 +42,9 @@ function Register() {
         setInput((prev) => ({ ...prev, gender: value }));
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
+        setLoading(true)
 
         // for avaiable input
         if (!input.email) setErr('Email không thể để trống');
@@ -50,15 +52,28 @@ function Register() {
         else if (input.username.length > 100) setErr('Tên của bạn quá dài');
         else if (input.password.length < 8 || input.password.length > 50)
             setErr('Mật khẩu phải có 8 - 50 kí tự');
-        else if (!input.repass) setErr('Nhập lại mật khẩu không thể để trống');
         else if (input.repass !== input.password) setErr('Mật khẩu nhập lại không trùng khớp');
         else if (!input.birthdate) setErr('Ngày sinh không thể để trống');
         else if (getAge(input.birthdate) <= 13) setErr('Độ tuổi tối thiểu là 13');
         else if (input.gender < 0 || input.gender > 3) setErr('Giới tính không tồn tại');
         else {
-            register({ ...input, password: input.repass });
-            setErr('');
+            const res = await register({ ...input, password: input.repass });
+
+            if (res.EC === '200') {
+                // dang ki thanh cong
+                nav('/login');
+                alert('Đăng kí tài khoản thành công!');
+                setErr('');
+            } else if (res.EC === '400') {
+                setErr(res.EM);
+            } else if (res.EC === '500') {
+                alert(
+                    'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
+                );
+            }
         }
+
+        setLoading(false)
     };
 
     return (
@@ -158,7 +173,7 @@ function Register() {
                         className={cx('sign')}
                         type="rounded"
                         size="medium"
-                        disabled={err}
+                        disabled={err || loading}
                         onClick={handleSubmit}
                     >
                         Đăng kí

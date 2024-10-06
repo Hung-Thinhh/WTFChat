@@ -65,30 +65,6 @@ function App(props) {
                         );
                     })}
                 </Routes>
-
-                {/* Code cũ chuyển theo hướng dẫn để có thể sử dụng
-        
-        <Routes>
-          <Route
-            path="/admin/*"
-            element={<CheckAdminRoutes component={AdminRoutes} />}
-          />
-
-          <Route
-                path="/login"
-                element={
-                  isAuthentication &&
-                  isAuthentication.isAuthenticated === true ? (
-                    <Navigate to={prevPath} />
-                  ) : (
-                    <LoginPage />
-                  )
-                }
-              />
-
-          <Route path="/*" element={<CheckBan component={Mainn} />} />
-          <Route path="/" element={<Mainn />} />
-        </Routes> */}
             </Router>
         </ChatDataProvider>
     );

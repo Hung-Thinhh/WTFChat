@@ -9,7 +9,7 @@ import Home from '../components/pages/Home';
 import ChatPage from '../components/pages/Chat';
 import Login from '../components/pages/Login';
 import Register from 'components/pages/Register';
-
+import ForgetPass from 'components/pages/ForgerPass';
 
 // Public routes (nhưng đường dẫn có thể được truy cập bởi người dùng)
 const publicRoutes = [
@@ -36,6 +36,12 @@ const publicRoutes = [
         path: config.routes.register,
         component: Register,
         name: 'Register',
+        layout: HomeLayout,
+    },
+    {
+        path: config.routes.forgetpassword,
+        component: ForgetPass,
+        name: 'ForgetPass',
         layout: HomeLayout,
     },
     {

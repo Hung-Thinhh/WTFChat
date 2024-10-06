@@ -21,40 +21,30 @@ export const handleRegister = async (req, res) => {
 
 export const handleLogin = async (req, res) => {
     try {
-        if (!req.body.valueLogin || !req.body.password) {
-            return res.status(200).json({
-                EM: 'missing required',
-                EC: '1',
-                DT: '',
-            });
-        }
-        let data = await Authentication_service.handleLogin(req.body);
-        if (data) {
-            if (req.body.checkRemember) {
-                console.log('lâu');
-                res.cookie('jwt', data.DT.access_token, {
+        const data = await req.body;
+        const result = await services.handleLogin(data);
+        
+        if (result.DT) {
+            if (data.remember) {
+                res.cookie('jwt', result.DT.access_token, {
                     httpOnly: true,
                     maxAge: 30 * 24 * 60 * 60 * 1000,
                 });
             } else {
-                res.cookie('jwt', data.DT.access_token, {
+                res.cookie('jwt', result.DT.access_token, {
                     httpOnly: true,
                     maxAge: 24 * 60 * 60 * 1000,
                 });
             }
-            return res.status(200).json({
-                EM: data.EM,
-                EC: data.EC,
-                DT: data.DT,
-            });
         }
+        
+        return res.status(200).json(result);
     } catch (error) {
-        console.log('error: >>>>', error);
+        console.log('CONTROLLER | LOGIN | ERROR | ', error);
 
         return res.status(200).json({
-            EM: 'error from server',
-            EC: '-1',
-            DT: '',
+            EM: 'LOGIN | ERROR | ' + error,
+            EC: '500',
         });
     }
 };

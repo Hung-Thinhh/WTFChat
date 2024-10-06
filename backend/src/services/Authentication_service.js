@@ -41,40 +41,45 @@ const generateId = () => {
 const handleRegister = async (data) => {
     if (!data)
         return {
-            EM: 'REGISTER | ERROR | No Data',
-            EC: '400',
+            EM: 'REGISTER | ERROR | Không có dữ liệu',
+            EC: '401',
         };
 
     const { email, username, password, birthdate, gender } = data;
     // first check
     if (!email)
         return {
-            EM: "REGISTER | ERROR | Email can't empty",
+            EM: 'REGISTER | ERROR | Email không thể để trống',
             EC: '400',
         };
     else if (!username)
         return {
-            EM: "REGISTER | ERROR | Username can't empty",
+            EM: 'REGISTER | ERROR | Họ và tên không thể để trống',
+            EC: '400',
+        };
+    else if (username.length > 100)
+        return {
+            EM: 'REGISTER | ERROR | Tên của bạn quá dài',
             EC: '400',
         };
     else if (password.length < 8 || password.length > 50)
         return {
-            EM: 'REGISTER | ERROR | Password must from 8 to 50 characters',
+            EM: 'REGISTER | ERROR | Mật khẩu nhập lại không trùng khớp',
             EC: '400',
         };
     else if (!birthdate)
         return {
-            EM: "REGISTER | ERROR | Birthdate can't empty",
+            EM: 'REGISTER | ERROR | Ngày sinh không thể để trống',
             EC: '400',
         };
     else if (getAge(birthdate) <= 13)
         return {
-            EM: 'REGISTER | ERROR | User ages must higher than 13',
+            EM: 'REGISTER | ERROR | Độ tuổi tối thiểu là 13',
             EC: '400',
         };
     else if (gender < 0 || gender > 3)
         return {
-            EM: 'REGISTER | ERROR | Gender not exists',
+            EM: 'REGISTER | ERROR | Giới tính không tồn tại',
             EC: '400',
         };
 
@@ -82,7 +87,7 @@ const handleRegister = async (data) => {
 
     if (isEmailExist) {
         return {
-            EM: 'REGISTER | ERROR | Email already exists',
+            EM: 'REGISTER | ERROR | Email đã tồn tại',
             EC: '400',
         };
     } else {
@@ -115,8 +120,9 @@ const handleRegister = async (data) => {
                 [insertUser[0].insertId, email, hashPass, true],
             );
 
+            await pool.query('COMMIT');
             return {
-                EM: 'REGISTER | INFO | Register success',
+                EM: 'REGISTER | INFO | Đăng ký thành công',
                 EC: '200',
             };
         } catch (error) {
@@ -131,55 +137,106 @@ const handleRegister = async (data) => {
     }
 };
 
-// const handleLogin = async (data) => {
-//     try {
-//         const user = await User.findOne({
-//             $or: [{ email: data.valueLogin }, { username: data.valueLogin }],
-//         });
-//         if (user) {
-//             let isCorrectPassword = await checkPassword(data.password, user.password);
-//             if (isCorrectPassword) {
-//                 // let groupWithRole = await getGroupWithRole(user);
-//                 let payload = {
-//                     id: user.id,
-//                     email: user.email,
-//                     type_login: user.type_login,
-//                     username: user.username,
-//                 };
-//                 let token = createToken(payload);
-//                 return {
-//                     EM: 'ok!',
-//                     EC: '0',
-//                     DT: {
-//                         access_token: token,
-//                         avt: user.avt,
-//                         email: user.email,
-//                         username: user.username,
-//                     },
-//                 };
-//             }
-//         } else {
-//             return {
-//                 EM: 'Your email/phone or password is incorrect!',
-//                 EC: '2',
-//                 DT: '',
-//             };
-//         }
+const handleLogin = async (data) => {
+    if (!data)
+        return {
+            EM: 'LOGIN | ERROR | Không có dữ liệu',
+            EC: '401',
+        };
 
-//         return {
-//             EM: 'Your email/phone or password is incorrect!',
-//             EC: '1',
-//             DT: '',
-//         };
-//     } catch (error) {
-//         console.log('error: >>>>', error);
-//         return {
-//             EM: 'error creating user',
-//             EC: '2',
-//             DT: '',
-//         };
-//     }
-// };
+    if (!data.email)
+        return {
+            EM: 'LOGIN | ERROR | Email không thể để trống',
+            EC: '400',
+        };
+    else if (!data.password)
+        return {
+            EM: 'LOGIN | ERROR | Mật khẩu phải có 8 - 50 kí tự',
+            EC: '400',
+        };
+
+    try {
+        // get email
+        await pool.query('START TRANSACTION');
+        // find current user
+        const currUser = await pool.query(
+            `SELECT xacthuc.email, xacthuc.password, xacthuc.status, xacthuc.role, nguoidung.lastname, nguoidung.avatar
+            FROM xacthuc 
+            INNER JOIN nguoidung ON xacthuc.email=nguoidung.email
+            WHERE xacthuc.email = ?`,
+            [data.email],
+        );
+
+        await pool.query('COMMIT');
+
+        if (!currUser[0][0])
+            return {
+                EM: 'LOGIN | ERROR | Tài khoản không tồn tại',
+                EC: '400',
+                DT: '',
+            };
+
+        const { email, password, status, role, lastname, avatar } = currUser[0][0];
+
+        // check status
+        if (!status)
+            return {
+                EM: 'LOGIN | ERROR | Tài khoản hiện đăng bị khoá',
+                EC: '400',
+                DT: '',
+            };
+
+        // check password
+        const isCorrectPassword = await checkPassword(data.password, password);
+        if (!isCorrectPassword)
+            return {
+                EM: 'LOGIN | ERROR | Mật khẩu không chính xác',
+                EC: '400',
+                DT: '',
+            };
+
+        let payload = {
+            email,
+            role,
+        };
+        let token = createToken(payload);
+
+        // change to switch case if have more role
+        if (role === 0)
+            // admin
+            return {
+                EM: 'LOGIN | INFO | Đăng nhập quản trị thành công',
+                EC: '201',
+                DT: {
+                    email,
+                    access_token: token,
+                    avt: avatar,
+                    username: lastname,
+                },
+            };
+
+        // nomal user
+        return {
+            EM: 'LOGIN | INFO | Đăng nhập thành công',
+            EC: '200',
+            DT: {
+                email,
+                access_token: token,
+                avt: avatar,
+                username: lastname,
+            },
+        };
+    } catch (error) {
+        await pool.query('ROLLBACK');
+        console.log('SERVICE | LOGIN | ERROR |', error);
+        return {
+            EM: 'LOGIN | ERROR | ' + error,
+            EC: '500',
+            DT: '',
+        };
+    }
+};
+
 // const handleAuthGG = async (token) => {
 //     try {
 //         const user = await User.findOne({
@@ -240,7 +297,7 @@ const handleRegister = async (data) => {
 // };
 export const services = {
     handleRegister,
-    // handleLogin,
+    handleLogin,
     // handleAuthGG,
     checkEmail,
     generateId,
