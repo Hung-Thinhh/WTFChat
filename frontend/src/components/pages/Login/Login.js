@@ -48,12 +48,12 @@ function Login() {
             if (res.EC === '200') {
                 // dang nhap thanh cong
                 setCurrUser(res.DT);
-                nav('/');
-            }
+                localStorage.setItem("jwt", JSON.stringify(res.DT));
+                nav(config.routes.home);
+            }   
             if (res.EC === '201') {
                 // dang nhap quan tri thanh cong
-                nav('/admin');
-                setCurrUser(res.DT);
+                window.location.href = config.routes.admin;
             } else if (res.EC === '400') {
                 setErr(res.EM);
             } else if (res.EC === '500') {
@@ -99,13 +99,13 @@ function Login() {
                                 value={input.password}
                                 onChange={handleChange}
                             />
-                            <button className={cx('eye-btn')} onClick={handlePassShow}>
+                            <div className={cx('eye-btn')} onClick={handlePassShow}>
                                 {showPass ? (
                                     <FontAwesomeIcon icon={faEye} />
                                 ) : (
                                     <FontAwesomeIcon icon={faEyeSlash} />
                                 )}
-                            </button>
+                            </div>
                         </div>
                         <div className={cx('forgot')}>
                             <Link to={config.routes.forgetpassword}>Quên mật khẩu ?</Link>

@@ -4,11 +4,11 @@ import Otp_service from '../services/Otp_services.js';
 export const handleRegister = async (req, res) => {
     try {
         const data = await req.body;
-        
+
         const result = await services.handleRegister(data);
 
         return res.status(200).json({
-            ...result,    
+            ...result,
             DT: '',
         });
     } catch (error) {
@@ -23,7 +23,7 @@ export const handleLogin = async (req, res) => {
     try {
         const data = await req.body;
         const result = await services.handleLogin(data);
-        
+
         if (result.DT) {
             if (data.remember) {
                 res.cookie('jwt', result.DT.access_token, {
@@ -37,7 +37,7 @@ export const handleLogin = async (req, res) => {
                 });
             }
         }
-        
+
         return res.status(200).json(result);
     } catch (error) {
         console.log('CONTROLLER | LOGIN | ERROR | ', error);
@@ -95,30 +95,37 @@ export const handleLogout = async (req, res) => {
 };
 
 export const checkAccount = async (req, res) => {
-    const account = await Authentication_service.handleCheckAccount(req.user.id);
-    if (req.user.id && account) {
+    try {
+        const account = await services.handleCheckAccount(req.user.email);
+        if (!req.user.email || !account) {
+            console.log('CONTROLER | CHECKACCOUNT | ERROR | Xác thực thất bại');
+            return res.status(200).json({
+                EM: 'CHECKACCOUNT | INFO | Xác thực thất bại',
+                EC: '403',
+            });
+        }
+
+        if (account.DT.status === 0)
+            return res.status(200).json({
+                EM: 'CHECKACCOUNT | INFO | Tài khoản đang bị khoá',
+                EC: '400',
+            });
+
         return res.status(200).json({
-            EM: 'ok!',
-            EC: '0',
+            EM: 'CHECKACCOUNT | INFO | Xác thực thành công',
+            EC: '200',
             DT: {
                 access_token: req.token,
-                // groupWithRole:req.user.groupWithRole,
                 email: req.user.email,
-                username: req.user.username,
-                avt: account.DT.avt || '',
-                myPlayLists: account.DT.myPlayLists,
-                likedSongs: account.DT.likedSongs,
-                likedPlayLists: account.DT.likedPlayLists,
-                isAdmin: account.DT.role == '0' ? true : false,
-                isBan: account.DT.role == '2' ? true : false,
-                id: account.DT.id,
+                username: account.DT.lastname,
+                avt: account.DT.avatar,
             },
         });
-    } else {
+    } catch (error) {
+        console.log('CONTROLER | CHECKACCOUNT | ERROR | ' + error);
         return res.status(200).json({
-            EM: 'not login',
-            EC: '1',
-            DT: [],
+            EM: 'CHECKACCOUNT | INFO | ' + error,
+            EC: '500',
         });
     }
 };

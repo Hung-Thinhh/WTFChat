@@ -8,3 +8,7 @@ export const register = (data) => {
 export const login = (data) => {
     return axios.post(`/api/login`, data);
 };
+
+export const checkaccount = () => {
+    return axios.get(`/api/login`);
+};

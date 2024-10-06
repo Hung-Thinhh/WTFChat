@@ -6,7 +6,7 @@ import {
     getChatController,
     deletaChatController
 } from '../controllers/chatController';
-import { handleLogin, handleRegister } from "../controllers/Authentication.js";
+import { checkAccount, handleLogin, handleRegister } from "../controllers/Authentication.js";
 // const { getRating } = require("../controller/RatingController.js");
 
 
@@ -14,6 +14,8 @@ const router = express.Router();
 
 const initApiRouter = (app) => {
     router.all("*", checkUserJWT);
+
+    router.get("/checkaccount", checkAccount);
 
     //register
     router.post("/register", handleRegister);

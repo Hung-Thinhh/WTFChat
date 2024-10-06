@@ -12,7 +12,9 @@ import { publicRoutes } from 'routes';
 import ChatDataProvider from './lib/provider/ChatDataProvider';
 
 // import { useDispatch, useSelector } from 'react-redux';
-import { Fragment, useState } from 'react';
+import { Fragment, useContext, useEffect, useState } from 'react';
+import { checkaccount } from 'controller/authen';
+import ChatDataContext from 'lib/Context/ChatContext';
 // import { faArrowLeft, faArrowRightToBracket } from '@fortawesome/free-solid-svg-icons';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import RightSidebar from "./components/layout/ChatLayout/RightSidebar";
@@ -20,7 +22,7 @@ import { Fragment, useState } from 'react';
 function App(props) {
     // const location = useLocation();
     // const prevPath = localStorage.getItem('prevPath') || '/';
-
+    const { setCurrUser } = useContext(ChatDataContext);
     const [pageProps, setPageProps] = useState({}); // những props muốn chuyền vào pages để sữ dụng
     //   const isAuthentication = useSelector(
     //     (state) => state.Authentication.defaultUser
@@ -33,6 +35,28 @@ function App(props) {
 
     // Thêm những giá trị muốn thêm vào page đặc biệt nếu có
     // setPageProps(prev => {...prev, newProps: value})
+
+    useEffect(() => { // check account whenever go to page
+        const checkAccount = async () => {
+            const res = await checkaccount();
+            if (res.EC === '200') {
+                setCurrUser(res.DT)
+            } else if (res.EC === '400') {
+                alert('Tài khoản đang bị khoá');
+                // logout
+            } else if (res.EC === '403') {
+                alert('Xác thực thất bại')
+                // logout
+            }  else if (res.EC === '500') {
+                alert(
+                    'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
+                );
+                // logout
+            }  
+
+        }
+        checkAccount();
+    }, [])
 
     return (
         <ChatDataProvider>

@@ -1,5 +1,5 @@
 const routes = {
-    admin: '/admin/*',
+    admin: 'http://localhost:8000',
     home: '/',
     login: '/login',
     register: '/register',

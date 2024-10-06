@@ -281,20 +281,41 @@ const handleLogin = async (data) => {
 //         };
 //     }
 // };
-// const handleCheckAccount = async (id) => {
-//     const user = await User.findOne({
-//         id: id,
-//     });
-//     // console.log(user);
-//     // console.log(id);
-//     if (user) {
-//         return {
-//             EM: 'ok!',
-//             EC: '0',
-//             DT: user,
-//         };
-//     }
-// };
+
+const handleCheckAccount = async (email) => {
+    try {
+        await pool.query('START TRANSACTION');
+
+        const currUser = await pool.query(
+            `SELECT xacthuc.email, xacthuc.status, nguoidung.lastname, nguoidung.avatar
+            FROM xacthuc 
+            INNER JOIN nguoidung ON xacthuc.email=nguoidung.email
+            WHERE xacthuc.email = ?`,
+            [email],
+        );
+
+        await pool.query('COMMIT');
+
+        if (!currUser) {
+            return {
+                EM: 'CHECKACCOUNT | ERROR | Xác thực thất bại',
+                EC: '403',
+            };
+        }
+
+        return {
+            EM: 'CHECKACCOUNT | INFO | Xác thực thành công',
+            EC: '200',
+            DT: currUser[0][0],
+        };
+    } catch (error) {
+        console.log('SERVICE | CHECKACCOUNT | ERROR |', error);
+        return {
+            EM: 'CHECKACCOUNT | ERROR |', error,
+            EC: '500',
+        };
+    }
+};
 export const services = {
     handleRegister,
     handleLogin,
@@ -303,5 +324,5 @@ export const services = {
     generateId,
     checkPassword,
     hashPassword,
-    // handleCheckAccount,
+    handleCheckAccount,
 };

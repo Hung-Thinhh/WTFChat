@@ -116,13 +116,13 @@ function Register() {
                                     suggested="new-password"
                                     onChange={handleChange}
                                 />
-                                <button className={cx('eye-btn')} onClick={handlePassShow}>
+                                <div className={cx('eye-btn')} onClick={handlePassShow}>
                                     {showPass ? (
                                         <FontAwesomeIcon icon={faEye} />
                                     ) : (
                                         <FontAwesomeIcon icon={faEyeSlash} />
                                     )}
-                                </button>
+                                </div>
                             </div>
                         </div>
                         <div className={cx('input-group')}>
