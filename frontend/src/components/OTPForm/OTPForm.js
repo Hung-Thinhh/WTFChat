@@ -68,16 +68,17 @@ function OTPForm() {
 
     const handlePaste = (e, index) => {
         e.preventDefault();
+
         let pastedText = e.clipboardData.getData('text/plain');
 
         if (pastedText.length > 6) pastedText = pastedText.substring(0, 6);
 
         const newOtp = [...otp];
-        newOtp.splice(index, 6, ...pastedText.split(''));
+        newOtp.splice(0, 6, ...pastedText.split(''));
         setOtp(newOtp);
 
         if (pastedText.length > index + 1) {
-            inputRefs.current[index + 1].focus();
+            inputRefs.current[index + 1].focus(); 
         }
     };
 

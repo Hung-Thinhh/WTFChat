@@ -24,7 +24,7 @@ export const verifyToken = (token) => {
   return decode;
 };
 
-const SecurePaths = ["/user", "/account", "/getInfor", "/editInfor"];
+const SecurePaths = ["/user", "/profile", "/getInfor", "/editInfor"];
 
 const extractToken = (req) => {
   if (
@@ -50,16 +50,16 @@ export const checkUserJWT = (req, res, next) => {
       next();
     } else {
       return res.status(401).json({
+        EM: "Not authenticated the user",
         EC: "-1",
         DT: "",
-        EM: "Not authenticated the user",
       });
     }
   } else {
     return res.status(401).json({
+      EM: "Not authenticated the user",
       EC: "-1",
       DT: "",
-      EM: "Not authenticated the user",
     });
   }
 };

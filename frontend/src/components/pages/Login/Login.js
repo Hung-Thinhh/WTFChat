@@ -8,6 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { login } from 'controller/authen';
 import ChatDataContext from 'lib/Context/ChatContext';
+import config from 'config';
 
 const cx = classNames.bind(styles);
 
@@ -107,7 +108,7 @@ function Login() {
                             </button>
                         </div>
                         <div className={cx('forgot')}>
-                            <Link to="/forgetpass">Quên mật khẩu ?</Link>
+                            <Link to={config.routes.forgetpassword}>Quên mật khẩu ?</Link>
                         </div>
                     </div>
                     <div className={cx('input-group', 'remeber-box')}>
@@ -131,7 +132,7 @@ function Login() {
                     </Button>
                 </form>
                 <p className={cx('signup')}>
-                    Bạn chưa có tài khoản? <Link to="/register">Đăng kí</Link>
+                    Bạn chưa có tài khoản? <Link to={config.routes.register}>Đăng kí</Link>
                 </p>
             </div>
         </div>

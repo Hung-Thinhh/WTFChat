@@ -8,6 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { getAge } from 'lib/function/function';
 import { register } from 'controller/authen';
+import config from 'config';
 
 const cx = classNames.bind(styles);
 
@@ -180,7 +181,7 @@ function Register() {
                     </Button>
                 </form>
                 <p className={cx('signup')}>
-                    Bạn đã có có tài khoản? <Link to="/login">Đăng nhập</Link>
+                    Bạn đã có có tài khoản? <Link to={config.routes.login}>Đăng nhập</Link>
                 </p>
             </div>
         </div>
