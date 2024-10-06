@@ -1,4 +1,4 @@
-import "../../../css/ChatPage.scss";
+import "./ChatPage.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import MessageBubble from "../../card/MessageBubble";

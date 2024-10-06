@@ -1,4 +1,4 @@
-import "../../../css/ChatHome.scss";
+import "./ChatHome.scss";
 
 const ChatHome = () => {
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../css/MessageBubble.scss';
+import './MessageBubble.scss';
 
 const MessageBubble = (data) => {
     const userClass = data.data.user === "me" ? "me" : "other";
