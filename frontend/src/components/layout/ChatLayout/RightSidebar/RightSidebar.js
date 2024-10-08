@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import "./RightSidebar.scss";
 import { useEffect, useState, useLocation } from "react";
 import { useDispatch } from "react-redux";
+import Footer from "./Footer";
 
 const RightSidebar = () => {
 
@@ -43,9 +44,7 @@ const RightSidebar = () => {
                 </NavLink>
             </div>
             {/* <Mascot /> */}
-            <div className="sidebar_footer">
-
-            </div>
+            <Footer />
         </div>
     );
 };
