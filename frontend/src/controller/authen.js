@@ -9,6 +9,11 @@ export const login = (data) => {
     return axios.post(`/api/login`, data);
 };
 
+export const logout = (data) => {
+    return axios.get(`/api/logout`, data);
+};
+
+
 export const checkaccount = () => {
     return axios.get(`/api/checkaccount`);
 };

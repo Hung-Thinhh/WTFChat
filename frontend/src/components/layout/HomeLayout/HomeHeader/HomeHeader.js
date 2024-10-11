@@ -9,6 +9,7 @@ import { useContext, useEffect, useState } from 'react';
 import Avatar from 'components/Avatar';
 import ChatDataContext from 'lib/Context/ChatContext';
 import config from 'config';
+import AvatarMenu from 'components/AvatarMenu';
 
 const cx = classNames.bind(styles);
 
@@ -18,7 +19,11 @@ function HomeHeader() {
     const [data, setData] = useState({});
 
     useEffect(() => {
-        if (location.pathname === config.routes.login || location.pathname === config.routes.register || location.pathname === config.routes.forgetpassword) {
+        if (
+            location.pathname === config.routes.login ||
+            location.pathname === config.routes.register ||
+            location.pathname === config.routes.forgetpassword
+        ) {
             setData({
                 to: config.routes.home,
                 icon: <FontAwesomeIcon icon={faArrowLeft} />,
@@ -36,10 +41,10 @@ function HomeHeader() {
     return (
         <div className={cx('wrapper')}>
             {currUser ? (
-                <Link className={cx('userButton')} to={config.routes.profile}>
-                    <Avatar src={currUser.avt} size='medium' />
+                <AvatarMenu>
+                    <Avatar src={currUser.avt} size="medium" />
                     <p>{currUser.username}</p>
-                </Link>
+                </AvatarMenu>
             ) : (
                 <Button to={data.to} type="text" size="small" leftIcon={data.icon}>
                     {data.content}

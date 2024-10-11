@@ -13,7 +13,7 @@ import ChatDataProvider from './lib/provider/ChatDataProvider';
 
 // import { useDispatch, useSelector } from 'react-redux';
 import { Fragment, useContext, useEffect, useState } from 'react';
-import { checkaccount } from 'controller/authen';
+import { checkaccount, logout } from 'controller/authen';
 import ChatDataContext from 'lib/Context/ChatContext';
 // import { faArrowLeft, faArrowRightToBracket } from '@fortawesome/free-solid-svg-icons';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -22,7 +22,7 @@ import ChatDataContext from 'lib/Context/ChatContext';
 function App(props) {
     // const location = useLocation();
     // const prevPath = localStorage.getItem('prevPath') || '/';
-    const { currUser, setCurrUser } = useContext(ChatDataContext);
+    const { setCurrUser } = useContext(ChatDataContext);
     const [pageProps, setPageProps] = useState({}); // những props muốn chuyền vào pages để sữ dụng
     //   const isAuthentication = useSelector(
     //     (state) => state.Authentication.defaultUser
@@ -43,21 +43,30 @@ function App(props) {
 
             if (res.EC === '200') {
                 console.log(res.DT);
-                console.log(currUser);
-
                 setCurrUser(res.DT);
                 // setCurrUser(res.DT)
-            } else if (res.EC === '400') {
-                alert('Tài khoản đang bị khoá');
+            } else {
+                if (res.EC === '400') {
+                    alert('Tài khoản đang bị khoá');
+                    // logout
+                } else if (res.EC === '403') {
+                    alert('Xác thực thất bại');
+                    // logout
+                } else if (res.EC === '500') {
+                    alert(
+                        'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
+                    );
+                }
                 // logout
-            } else if (res.EC === '403') {
-                alert('Xác thực thất bại');
-                // logout
-            } else if (res.EC === '500') {
-                alert(
-                    'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
-                );
-                // logout
+                const logoutRes = await logout();
+
+                if (logoutRes.EC === '200') {
+                    window.location.reload();
+                } else if (logoutRes.EC === '500') {
+                    alert(
+                        'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
+                    );
+                }
             }
         };
         checkAccount();

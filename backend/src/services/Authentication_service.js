@@ -316,6 +316,7 @@ const handleCheckAccount = async (email) => {
         };
     }
 };
+
 export const services = {
     handleRegister,
     handleLogin,

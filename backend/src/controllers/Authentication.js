@@ -79,17 +79,15 @@ export const handleLogout = async (req, res) => {
     try {
         res.clearCookie('jwt');
         return res.status(200).json({
-            EM: 'clear cookies',
-            EC: '0',
-            DT: '',
+            EM: 'LOGOUT | INFO | Đăng xuất thành công',
+            EC: '200',
         });
     } catch (error) {
-        console.log('error: >>>>', error);
+        console.log('CONTROLLER | LOGOUT | ERROR | ' + error);
 
         return res.status(200).json({
-            EM: 'error from server',
-            EC: '-1',
-            DT: '',
+            EM: 'LOGOUT | ERROR | ' + error,
+            EC: '500',
         });
     }
 };
@@ -97,7 +95,7 @@ export const handleLogout = async (req, res) => {
 export const checkAccount = async (req, res) => {
     try {
         const account = await services.handleCheckAccount(req.user.email);
-        
+
         if (!req.user.email || !account) {
             console.log('CONTROLER | CHECKACCOUNT | ERROR | Xác thực thất bại');
             return res.status(200).json({
