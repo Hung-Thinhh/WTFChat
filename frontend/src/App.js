@@ -58,15 +58,15 @@ function App(props) {
                     );
                 }
                 // logout
-                const logoutRes = await logout();
+                // const logoutRes = await logout();
 
-                if (logoutRes.EC === '200') {
-                    window.location.reload();
-                } else if (logoutRes.EC === '500') {
-                    alert(
-                        'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
-                    );
-                }
+                // if (logoutRes.EC === '200') {
+                //     window.location.reload();
+                // } else if (logoutRes.EC === '500') {
+                //     alert(
+                //         'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
+                //     );
+                // }
             }
         };
         checkAccount();
