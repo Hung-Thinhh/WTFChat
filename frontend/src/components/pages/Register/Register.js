@@ -62,7 +62,7 @@ function Register() {
 
             if (res.EC === '200') {
                 // dang ki thanh cong
-                nav('/login');
+                nav(config.routes.login);
                 alert('Đăng kí tài khoản thành công!');
                 setErr('');
             } else if (res.EC === '400') {

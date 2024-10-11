@@ -6,13 +6,17 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import GlobalStyles from './components/GlobalStyles';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import ChatDataProvider from 'lib/provider/ChatDataProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <Provider store={store}>
         <React.StrictMode>
             <GlobalStyles>
-                <App />
+                    <ChatDataProvider>
+                        <App />
+                    </ChatDataProvider>
             </GlobalStyles>
         </React.StrictMode>
     </Provider>,

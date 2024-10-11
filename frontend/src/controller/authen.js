@@ -10,5 +10,5 @@ export const login = (data) => {
 };
 
 export const checkaccount = () => {
-    return axios.get(`/api/login`);
+    return axios.get(`/api/checkaccount`);
 };

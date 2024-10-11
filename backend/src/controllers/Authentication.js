@@ -97,6 +97,7 @@ export const handleLogout = async (req, res) => {
 export const checkAccount = async (req, res) => {
     try {
         const account = await services.handleCheckAccount(req.user.email);
+        
         if (!req.user.email || !account) {
             console.log('CONTROLER | CHECKACCOUNT | ERROR | Xác thực thất bại');
             return res.status(200).json({
