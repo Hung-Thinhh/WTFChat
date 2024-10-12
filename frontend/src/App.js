@@ -37,36 +37,39 @@ function App(props) {
     // setPageProps(prev => {...prev, newProps: value})
 
     useEffect(() => {
+        const logout = async () => {
+            // logout
+            const logoutRes = await logout();
+
+            if (logoutRes.EC === '200') {
+                window.location.reload();
+            } else if (logoutRes.EC === '500') {
+                alert(
+                    'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
+                );
+            }
+        };
         // check account whenever go to page
         const checkAccount = async () => {
             const res = await checkaccount();
 
-            if (res.EC === '200') {
-                console.log(res.DT);
-                setCurrUser(res.DT);
-                // setCurrUser(res.DT)
-            } else {
-                if (res.EC === '400') {
-                    alert('Tài khoản đang bị khoá');
-                    // logout
-                } else if (res.EC === '403') {
-                    alert('Xác thực thất bại');
-                    // logout
-                } else if (res.EC === '500') {
-                    alert(
-                        'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
-                    );
+            if (res.ok) {
+                if (res.EC === '200') {
+                    console.log(res.DT);
+                    setCurrUser(res.DT);
+                    // setCurrUser(res.DT)
+                } else if (res.EC !== '200') {
+                    if (res.EC === '400') {
+                        alert('Tài khoản đang bị khoá');
+                    } else if (res.EC === '403') {
+                        alert('Xác thực thất bại');
+                    } else if (res.EC === '500') {
+                        alert(
+                            'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
+                        );
+                    }
+                    await logout();
                 }
-                // logout
-                // const logoutRes = await logout();
-
-                // if (logoutRes.EC === '200') {
-                //     window.location.reload();
-                // } else if (logoutRes.EC === '500') {
-                //     alert(
-                //         'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
-                //     );
-                // }
             }
         };
         checkAccount();

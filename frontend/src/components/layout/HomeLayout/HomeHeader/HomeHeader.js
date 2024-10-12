@@ -42,7 +42,7 @@ function HomeHeader() {
         <div className={cx('wrapper')}>
             {currUser ? (
                 <AvatarMenu>
-                    <Avatar src={currUser.avt} size="medium" />
+                    <Avatar src={currUser.avt} size="small" />
                     <p>{currUser.username}</p>
                 </AvatarMenu>
             ) : (
