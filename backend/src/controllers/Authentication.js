@@ -22,6 +22,8 @@ export const handleRegister = async (req, res) => {
 export const handleLogin = async (req, res) => {
     try {
         const data = await req.body;
+        console.log(data);
+        
         const result = await services.handleLogin(data);
 
         if (result.DT) {

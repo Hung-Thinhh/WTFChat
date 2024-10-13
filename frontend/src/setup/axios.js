@@ -1,7 +1,9 @@
 import axios from 'axios';
+import env from "react-dotenv";
 
 const instance = axios.create({
-    baseURL: 'http://localhost:8000',
+    // baseURL: 'http://localhost:8000',
+    baseURL: env.SERVER,
 });
 
 instance.defaults.withCredentials = true;
@@ -17,7 +19,7 @@ instance.interceptors.request.use(
     function (error) {
         // Do something with request error
         return Promise.reject(error);
-    },
+    }, 
 );
 // Add a response interceptor
 instance.interceptors.response.use(

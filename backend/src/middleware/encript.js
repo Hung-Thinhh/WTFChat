@@ -11,20 +11,11 @@ const decrypt = (encryptedMessage) => {
 };
 
 export const decryptData = async (req, res, next) => {
-    var send = res.send;
-    res.send = function (string) {
-        var body = string instanceof Buffer ? string.toString() : string;
-        body = body.replace(/<\/body>/, function (w) {
-            return 'foo' + w;
-        });
+    const encryptedMessage = await req.body.toString();
+    console.log(encryptedMessage);
+    
+    if (!encryptedMessage) next();
 
-        if (string instanceof Buffer) {
-            this.body = new Buffer(body);
-        } else {
-            this.body = body;
-        }
-
-        send.call(this);
-    };
+    res.body = decrypt(encryptedMessage);
     next();
 };
