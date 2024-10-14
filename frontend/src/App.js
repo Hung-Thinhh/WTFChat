@@ -22,7 +22,7 @@ import ChatDataContext from 'lib/Context/ChatContext';
 function App(props) {
     // const location = useLocation();
     // const prevPath = localStorage.getItem('prevPath') || '/';
-    const { setCurrUser } = useContext(ChatDataContext);
+    const { currUser, setCurrUser } = useContext(ChatDataContext);
     const [pageProps, setPageProps] = useState({}); // những props muốn chuyền vào pages để sữ dụng
     //   const isAuthentication = useSelector(
     //     (state) => state.Authentication.defaultUser
@@ -53,23 +53,19 @@ function App(props) {
         const checkAccount = async () => {
             const res = await checkaccount();
 
-            if (res.ok) {
-                if (res.EC === '200') {
-                    console.log(res.DT);
-                    setCurrUser(res.DT);
-                    // setCurrUser(res.DT)
-                } else if (res.EC !== '200') {
-                    if (res.EC === '400') {
-                        alert('Tài khoản đang bị khoá');
-                    } else if (res.EC === '403') {
-                        alert('Xác thực thất bại');
-                    } else if (res.EC === '500') {
-                        alert(
-                            'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
-                        );
-                    }
-                    await logout();
-                }
+            if (res.EC === '200') {
+                setCurrUser(res.DT);
+                // setCurrUser(res.DT)
+            } else if (res.EC === '400') {
+                alert('Tài khoản đang bị khoá');
+                await logout();
+            } else if (res.EC === '403') {
+                alert('Xác thực thất bại');
+                await logout();
+            } else if (res.EC === '500') {
+                alert(
+                    'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
+                );
             }
         };
         checkAccount();
