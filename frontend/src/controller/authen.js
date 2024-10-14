@@ -1,25 +1,35 @@
 import axios from '../setup/axios';
 import env from 'react-dotenv';
-// import crypto from 'crypto-browserify';
+import CryptoJS from 'crypto-js';
+import RSA from 'crypto-js/'
 
-// const encrypt = (message) => {
-//     // Create a TextEncoder instance
-//     const encoder = new TextEncoder();
+const publicKey = env.PUBLIC_KEY;
 
-//     // Encode the string to UTF-8
-//     const bufferMessage = encoder.encode(message);
+// only for post 
+const postData = (api, data) => { 
+    if (!publicKey) {
+        alert('Public key not loaded yet!');
+        return;
+    }
 
-//     const encryptedMessage = crypto.publicEncrypt(env.PUBLIC_KEY, bufferMessage);
+    // Encrypt the data using the public key
+    const encryptedData = CryptoJS.RSA.encrypt(
+        JSON.stringify(data), // Encrypt the data as a JSON string
+        CryptoJS.RSA.getKey(publicKey)
+    ).toString();
 
-//     return encryptedMessage.toString();
-// };
+    // Now send the encrypted data using Axios:
+    return axios.post(api, { encryptedData })
+};
+
 
 export const register = (data) => {
-    return axios.post(`/api/register`, data);
+    return postData(`/api/register`, data);
 };
 
 export const login = (data) => {
-    return axios.post(`/api/login`, data);
+    console.log(publicKey);
+    return postData(`/api/login`, data);
 };
 
 export const logout = (data) => {

@@ -60,11 +60,11 @@ function AvatarMenu({ children }) {
 
     return (
         <div
-            class={cx('tooltip-container')}
+            className={cx('tooltip-container')}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
-            <div class={cx('tooltip', { show: show })}>
+            <div className={cx('tooltip', { show: show })}>
                 {menuItems.map((item, index) => (
                     <Item key={index} onClick={() => handleEvent(item.event)} {...item} />
                 ))}

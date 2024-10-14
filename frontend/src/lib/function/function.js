@@ -1,3 +1,7 @@
+import env from 'react-dotenv';
+import CryptoJS from 'crypto-js';
+import axios from 'setup/axios';
+
 export function getAge(birthDateString) {
     var today = new Date();
     var birthDate = new Date(birthDateString);
@@ -9,30 +13,21 @@ export function getAge(birthDateString) {
     return age;
 }
 
-export function setCookie(cname, cvalue, exdays) {
-    const d = new Date();
-    d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-    let expires = 'expires=' + d.toUTCString();
-    document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
-}
+const publicKey = env.PUBLIC_KEY;
 
-export function getCookie(cname) {
-    let name = cname + '=';
-    let ca = document.cookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) === ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) === 0) {
-            return c.substring(name.length, c.length);
-        }
+// only for post 
+export const postData = (api, data) => { 
+    if (!publicKey) {
+        alert('Public key not loaded yet!');
+        return;
     }
-    return '';
-}
 
-export function deleteCookie(cname) {
-    console.log('aaaa');
-    console.log(cname);
-    document.cookie = cname + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-}
+    // Encrypt the data using the public key
+    const encryptedData = CryptoJS.RSA.encrypt(
+        JSON.stringify(data), // Encrypt the data as a JSON string
+        CryptoJS.RSA.getKey(publicKey)
+    ).toString();
+
+    // Now send the encrypted data using Axios:
+    return axios.post(api, { encryptedData })
+};
