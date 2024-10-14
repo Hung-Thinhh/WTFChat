@@ -1,0 +1,45 @@
+.main_container {
+    display: flex;
+    width: 100%;
+    border-top: #474747 0.5px solid;
+    padding: 10px;
+
+    .CR_avt {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50px;
+        width: 50px;
+        border-radius: 50%;
+        background-color: red;
+        overflow: hidden;
+
+        img {
+            height: 100%;
+            width: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    }
+
+    .CR_info {
+        display: flex;
+        justify-content: space-between;
+        margin-left: 10px;
+        color: #e3e3e3;
+        width: 100%;
+        margin: 0 10px;
+
+        .CR_left {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .CR_right {
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}

@@ -120,6 +120,7 @@ export const checkAccount = async (req, res) => {
                 email: req.user.email,
                 username: account.DT.lastname,
                 avt: account.DT.avatar,
+                friends: account.DT.friends,
             },
         });
     } catch (error) {
