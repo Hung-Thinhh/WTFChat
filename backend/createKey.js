@@ -25,6 +25,17 @@
 // // Generates the keypair
 // genKeyPair();
 
-const keypair = nacl.box.keyPair()
-const receiverPublicKey = util.encodeBase64(keypair.publicKey)
-const receiverSecretKey = util.encodeBase64(keypair.secretKey)
+const nacl = require("tweetnacl")
+const util = require("tweetnacl-util") 
+
+const genKeyPair = () => {
+
+    const keypair = nacl.box.keyPair()
+    const receiverPublicKey = util.encodeBase64(keypair.publicKey)
+    const receiverSecretKey = util.encodeBase64(keypair.secretKey)
+
+    console.log("Public: "  + receiverPublicKey);
+    console.log("Private: "  + receiverSecretKey);
+}
+
+genKeyPair();

@@ -78,7 +78,7 @@ function OTPForm() {
         setOtp(newOtp);
 
         if (pastedText.length > index + 1) {
-            inputRefs.current[index + 1].focus(); 
+            inputRefs.current[index + 1].focus();
         }
     };
 

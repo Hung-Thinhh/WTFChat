@@ -56,7 +56,7 @@ window.env = {
   "PSModulePath": "C:\\Users\\binhm\\OneDrive\\Documents\\WindowsPowerShell\\Modules;C:\\Program Files\\WindowsPowerShell\\Modules;C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules",
   "PT8HOME": "C:\\Program Files\\Cisco Packet Tracer 8.2.1",
   "PUBLIC": "C:\\Users\\Public",
-  "PUBLIC_KEY": "'-----BEGIN RSA PUBLIC KEY-----",
+  "PUBLIC_KEY": "mze19GnKfeWd1LqUbAcuBehy13c6bdd+4V1Xy3TwvQY=",
   "SERVER": "http://localhost:8000",
   "SESSIONNAME": "Console",
   "SystemDrive": "C:",
@@ -71,6 +71,6 @@ window.env = {
   "windir": "C:\\Windows",
   "WSLENV": "WT_SESSION:WT_PROFILE_ID:",
   "WT_PROFILE_ID": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
-  "WT_SESSION": "414a70bd-2f91-4ef9-b478-38adf498581b",
+  "WT_SESSION": "f66d58d7-b7ab-4954-8199-35eab89baaff",
   "ZES_ENABLE_SYSMAN": "1"
 };

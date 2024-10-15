@@ -1,6 +1,7 @@
 import env from 'react-dotenv';
-import CryptoJS from 'crypto-js';
 import axios from 'setup/axios';
+import nacl from 'tweetnacl';
+import util from 'tweetnacl-util';
 
 export function getAge(birthDateString) {
     var today = new Date();
@@ -13,21 +14,41 @@ export function getAge(birthDateString) {
     return age;
 }
 
+// encrypt data befour send them
 const publicKey = env.PUBLIC_KEY;
 
-// only for post 
-export const postData = (api, data) => { 
+const encrypt = (receiverPublicKey, msgParams) => {
+    console.log(msgParams);
+
+    const ephemeralKeyPair = nacl.box.keyPair();
+    const pubKeyUInt8Array = util.decodeBase64(receiverPublicKey);
+    const msgParamsUInt8Array = util.decodeUTF8(msgParams);
+    // const nonce = nacl.randomBytes(nacl.box.nonceLength);
+
+    // const encryptedMessage = nacl.box(
+    //     msgParamsUInt8Array,
+    //     nonce,
+    //     pubKeyUInt8Array,
+    //     ephemeralKeyPair.secretKey,
+    // );
+    // return {
+    //     ciphertext: util.encodeBase64(encryptedMessage),
+    //     ephemPubKey: util.encodeBase64(ephemeralKeyPair.publicKey),
+    //     nonce: util.encodeBase64(nonce),
+    //     version: 'x25519-xsalsa20-poly1305',
+    // };
+};
+
+// only for post
+export const postData = (api, data) => {
     if (!publicKey) {
         alert('Public key not loaded yet!');
         return;
     }
 
     // Encrypt the data using the public key
-    const encryptedData = CryptoJS.RSA.encrypt(
-        JSON.stringify(data), // Encrypt the data as a JSON string
-        CryptoJS.RSA.getKey(publicKey)
-    ).toString();
+    var encryptedData = encrypt(publicKey, data);
 
     // Now send the encrypted data using Axios:
-    return axios.post(api, { encryptedData })
+    return axios.post(api, { encryptedData });
 };

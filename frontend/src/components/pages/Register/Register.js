@@ -45,7 +45,7 @@ function Register() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setLoading(true)
+        setLoading(true);
 
         // for avaiable input
         if (!input.email) setErr('Email không thể để trống');
@@ -74,7 +74,7 @@ function Register() {
             }
         }
 
-        setLoading(false)
+        setLoading(false);
     };
 
     return (
@@ -169,12 +169,12 @@ function Register() {
                             ))}
                         </div>
                     </div>
-                    {err && <div className={cx('err-tag')}>* {err}</div>}
+                    {!!err && <div className={cx('err-tag')}>* {err}</div>}
                     <Button
                         className={cx('sign')}
                         type="rounded"
                         size="medium"
-                        disabled={err || loading}
+                        disabled={!!err || loading}
                         onClick={handleSubmit}
                     >
                         Đăng kí
