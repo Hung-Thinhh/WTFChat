@@ -6,7 +6,7 @@ import {
     getChatController,
     deletaChatController
 } from '../controllers/chatController';
-import { checkAccount, handleLogin, handleLogout, handleRegister } from "../controllers/Authentication.js";
+import { checkAccount, getPublicKey, handleLogin, handleLogout, handleRegister } from "../controllers/Authentication.js";
 // const { getRating } = require("../controller/RatingController.js");
 
 
@@ -17,6 +17,7 @@ const initApiRouter = (app) => {
 
     // auth
     router.get("/checkaccount", checkAccount);
+    router.get("/getPublicKey", getPublicKey);
     router.get("/logout", handleLogout);
     router.post("/register", handleRegister);
     router.post("/login", handleLogin);

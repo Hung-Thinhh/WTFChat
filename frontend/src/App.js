@@ -71,6 +71,17 @@ function App(props) {
         checkAccount();
     }, []);
 
+    // getPublicKey - use when update key pair to daly change
+    // useEffect(() => {
+    //     const getPublicKey = async () => {
+    //         const res = await getPublicKey();
+
+    //         if (res.EC === '200') {
+    //             setPublicKey(res.DT);
+    //         }
+    //     };
+    // }, []);
+
     return (
         <Router>
             <Routes>

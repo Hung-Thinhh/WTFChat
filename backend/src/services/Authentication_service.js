@@ -144,6 +144,8 @@ const handleLogin = async (data) => {
             EC: '401',
         };
 
+    console.log(data.email);
+    
     if (!data.email)
         return {
             EM: 'LOGIN | ERROR | Email không thể để trống',

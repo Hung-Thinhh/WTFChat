@@ -48,7 +48,7 @@ function Login() {
             if (res.EC === '200') {
                 // dang nhap thanh cong
                 setCurrUser(res.DT);
-                localStorage.setItem('jwt', JSON.stringify(res.DT));
+                localStorage.setItem('jwt', res.DT);
                 nav(config.routes.home);
             }
             if (res.EC === '201') {

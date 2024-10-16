@@ -18,25 +18,23 @@ export function getAge(birthDateString) {
 const publicKey = env.PUBLIC_KEY;
 
 const encrypt = (receiverPublicKey, msgParams) => {
-    console.log(msgParams);
-
     const ephemeralKeyPair = nacl.box.keyPair();
     const pubKeyUInt8Array = util.decodeBase64(receiverPublicKey);
     const msgParamsUInt8Array = util.decodeUTF8(msgParams);
-    // const nonce = nacl.randomBytes(nacl.box.nonceLength);
+    const nonce = nacl.randomBytes(nacl.box.nonceLength);
 
-    // const encryptedMessage = nacl.box(
-    //     msgParamsUInt8Array,
-    //     nonce,
-    //     pubKeyUInt8Array,
-    //     ephemeralKeyPair.secretKey,
-    // );
-    // return {
-    //     ciphertext: util.encodeBase64(encryptedMessage),
-    //     ephemPubKey: util.encodeBase64(ephemeralKeyPair.publicKey),
-    //     nonce: util.encodeBase64(nonce),
-    //     version: 'x25519-xsalsa20-poly1305',
-    // };
+    const encryptedMessage = nacl.box(
+        msgParamsUInt8Array,
+        nonce,
+        pubKeyUInt8Array,
+        ephemeralKeyPair.secretKey,
+    );
+    return {
+        ciphertext: util.encodeBase64(encryptedMessage),
+        ephemPubKey: util.encodeBase64(ephemeralKeyPair.publicKey),
+        nonce: util.encodeBase64(nonce),
+        version: 'x25519-xsalsa20-poly1305',
+    };
 };
 
 // only for post
@@ -47,7 +45,7 @@ export const postData = (api, data) => {
     }
 
     // Encrypt the data using the public key
-    var encryptedData = encrypt(publicKey, data);
+    var encryptedData = encrypt(publicKey, JSON.stringify(data));
 
     // Now send the encrypted data using Axios:
     return axios.post(api, { encryptedData });

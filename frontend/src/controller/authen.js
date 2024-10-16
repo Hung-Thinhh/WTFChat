@@ -1,6 +1,5 @@
 import { postData } from 'lib/function/function';
 import axios from '../setup/axios';
-import env from 'react-dotenv';
 
 export const register = (data) => {
     return postData(`/api/register`, data);
@@ -16,4 +15,8 @@ export const logout = (data) => {
 
 export const checkaccount = () => {
     return axios.get(`/api/checkaccount`);
+};
+
+export const getPublicKey = () => {
+    return axios.get(`/api/getPublicKey`);
 };
