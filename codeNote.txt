@@ -45,3 +45,4 @@ exp:
     + Trong thư mục cha tạo thư mục <Tên component>Reducer (bao gồm action.js, reducer.js)
     + action.js bao gồm các action type và hàm action (để chuyển đổi dữ liệu của dispatch).
     + reducer.js bao gồm initstate và hàm reducer.
+- Tham khảo reducer của trang Register
