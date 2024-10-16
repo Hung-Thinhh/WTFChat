@@ -4,31 +4,38 @@ import { faCircle, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import MessageBubble from "../../card/MessageBubble";
 import MessageInput from "../../card/MessageInput";
 import sentChat from '../../../services/sendchat';
+import { useContext, useEffect } from 'react';
+import ChatDataContext from 'lib/Context/ChatContext';
+import { checkaccount } from 'controller/authen';
 
 const ChatPage = () => {
+    const { currUser } = useContext(ChatDataContext);
+    // console.log(currUser);
+    // useEffect(async () => {
+    //     const res = await checkaccount()
+    //     if (res.ok) {
+    //         if (res.EC === '200') {
+    //             console.log(res.DT);
+    //         }
+    //     }
+    // }, [])
 
+
+
+    if (!currUser) return null;
     return (
         <div className="chatPage_container">
             <div className="chatpage_header">
                 <div className="chatPage_chat_avt">
-                    <img src="https://meliawedding.com.vn/wp-content/uploads/2022/03/avatar-gai-xinh-1.jpg" alt="user-avt" />
+                    <img src={currUser.avt ? currUser.avt : "https://meliawedding.com.vn/wp-content/uploads/2022/03/avatar-gai-xinh-1.jpg"} alt="user-avt" />
                 </div>
                 <div className="chatPage_chat_name">
-                    <h3>Nguyễn Văn A</h3>
+                    <h3>{currUser.username}</h3>
                     <p> <FontAwesomeIcon icon={faCircle} /></p>
                 </div>
             </div>
 
             <div className="ChatWindow">
-                <MessageBubble data={
-                    {
-                        img: "",
-                        avt: "https://meliawedding.com.vn/wp-content/uploads/2022/03/avatar-gai-xinh-1.jpg",
-                        content: "ĐỊT CON ĐĨ MẸ NHÀ MÀY LÚC SÚC VẬT",
-                        time: "25:00",
-                        user: "i"
-                    }
-                } />
                 <MessageBubble data={
                     {
                         img: "https://meliawedding.com.vn/wp-content/uploads/2022/03/avatar-gai-xinh-1.jpg",
