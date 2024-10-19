@@ -46,3 +46,5 @@ exp:
     + action.js bao gồm các action type và hàm action (để chuyển đổi dữ liệu của dispatch).
     + reducer.js bao gồm initstate và hàm reducer.
 - Tham khảo reducer của trang Register
+
+{"web":{"client_id":"189751039003-uc541j85fmvkvplv9fpe0rv8jo8gsd93.apps.googleusercontent.com","project_id":"chatproject-439107","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"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","redirect_uris":["https://developers.google.com/oauthplayground"],"javascript_origins":["http://localhost:8000"]}}

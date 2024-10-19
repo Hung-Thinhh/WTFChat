@@ -12,6 +12,7 @@ import {
     handleLogin,
     handleLogout,
     handleRegister,
+    sendMail,
 } from '../controllers/AuthenController.js';
 // const { getRating } = require("../controller/RatingController.js");
 
@@ -26,7 +27,10 @@ const initApiRouter = (app) => {
     router.get('/logout', handleLogout);
     router.post('/register', handleRegister);
     router.post('/login', handleLogin);
+    router.post('/sendmail', sendMail);
 
+
+    // chat
     router.post('/chat', chatController);
     router.get('/getchat', getChatController);
     router.get('/deletechat', deletaChatController);
