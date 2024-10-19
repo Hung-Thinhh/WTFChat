@@ -96,6 +96,7 @@ const handleRegister = async (data) => {
             const hashPass = hashPassword(data.password);
             const firstName = username.split(' ').slice(0, -1).join(' ');
             const lastName = username.split(' ').slice(-1).join(' ');
+            const today = new Date();
 
             // insert user information
             const insertUser = await pool.query(
@@ -111,13 +112,14 @@ const handleRegister = async (data) => {
 
             // insert user authen
             await pool.query(
-                `INSERT INTO  xacthuc (id, email, password, status) VALUES (
+                `INSERT INTO  xacthuc (id, email, password, status, time) VALUES (
                         ?,
                         ?,
                         ?, 
+                        ?,
                         ?
                     )`,
-                [insertUser[0].insertId, email, hashPass, true],
+                [insertUser[0].insertId, email, hashPass, true, today],
             );
 
             await pool.query('COMMIT');

@@ -26,7 +26,6 @@ export const reducer = (state, action) => {
                 },
             };
         case SHOW_PASS:
-            console.log(action);
             return {
                 ...state,
                 showPass: action.payload,

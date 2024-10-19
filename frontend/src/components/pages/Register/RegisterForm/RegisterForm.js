@@ -10,20 +10,19 @@ import { getAge } from 'lib/function/function';
 import { register } from 'controller/authen';
 import config from 'config';
 import { initState, reducer } from '../RegisterReducer/reducer';
-import { setError, setInput, setLoading, showPass } from '../RegisterReducer/action';
+import { setError, setInput, showPass } from '../RegisterReducer/action';
 
 const cx = classNames.bind(styles);
 
 const genderList = ['Nam', 'Nữ', 'Khác'];
 
-function RegisterForm() {
-    const [state, dispatch] = useReducer(reducer, initState);
+function RegisterForm({ state, dispatch }) {
+    // const [state, dispatch] = useReducer(reducer, initState);
 
     const handleChange = (event) => {
         dispatch(setInput({ key: event.target.name, value: event.target.value }));
         if (state.err) {
-            dispatch(setError(true));
-            dispatch(setLoading(false));
+            dispatch(setError(''));
         }
     };
 

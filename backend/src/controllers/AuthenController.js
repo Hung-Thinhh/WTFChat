@@ -1,5 +1,5 @@
 require('dotenv').config();
-import { services } from '../services/Authentication_service.js';
+import { services } from '../services/AuthenService.js';
 import Otp_service from '../services/Otp_services.js';
 
 export const getPublicKey = async (req, res) => {

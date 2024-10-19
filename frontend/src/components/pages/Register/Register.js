@@ -90,7 +90,7 @@ function Register() {
                     <p className={cx('title')}>THAM GIA ChatTime</p>
                 </div>
                 <form className={cx('form')}>
-                    <RegisterForm />
+                    <RegisterForm state={state} dispatch={dispatch} />
                     {!!state.err && <div className={cx('err-tag')}>* {state.err}</div>}
                     <Button
                         className={cx('sign')}
