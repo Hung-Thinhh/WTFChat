@@ -11,7 +11,7 @@ export const setInput = (payload) => ({
 
 export const showPass = (payload) => ({
     type: SHOW_PASS,
-    payload: !payload,
+    payload: true,
 });
 
 export const setError = (payload) => ({
