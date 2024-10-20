@@ -23,3 +23,8 @@ export const setLoading = (payload) => ({
     type: SET_LOADING,
     payload,
 });
+
+export const setOTP = (payload) => ({
+    type: SET_OTP,
+    payload,
+});
