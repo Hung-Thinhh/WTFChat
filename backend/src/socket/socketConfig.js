@@ -11,7 +11,7 @@ const setupWebSocket = (server) => {
       console.log('Một người dùng đã kết nối:', socket.id);
   
       // Place event handlers here
-      require('./event/comment')(io, socket);
+      require('./event/chat')(io, socket);
   
       socket.on('disconnect', () => {
         console.log('Người dùng đã ngắt kết nối:', socket.id);

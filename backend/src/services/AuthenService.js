@@ -300,7 +300,9 @@ const handleCheckAccount = async (email) => {
         const friends = await pool.query(
             `SELECT 
                 nguoidung.firstname AS first_name,
-                nguoidung.lastname AS last_name
+                nguoidung.lastname AS last_name,
+                nguoidung.avatar AS avt,
+                nguoidung.id AS id
             FROM 
                 banbe
             JOIN 

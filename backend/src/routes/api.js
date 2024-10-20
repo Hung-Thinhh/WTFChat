@@ -21,7 +21,7 @@ const router = express.Router();
 const initApiRouter = (app) => {
     router.all('*', checkUserJWT);
 
-    // auth
+    // auth  router.get('/checkaccount', checkAccount);
     router.get('/checkaccount', checkAccount);
     router.get('/getPublicKey', getPublicKey);
     router.get('/logout', handleLogout);
@@ -30,10 +30,10 @@ const initApiRouter = (app) => {
     router.post('/sendmail', sendMail);
 
 
-    // chat
-    router.post('/chat', chatController);
-    router.get('/getchat', getChatController);
-    router.get('/deletechat', deletaChatController);
+    router.post("/chat", chatController);// api gửi tin nhắn 
+    router.post("/getchat", getChatController);// api lấy tin nhắn
+    router.get("/deletechat", deletaChatController);// api xoa tin nhắn
+
 
     return app.use('/api', router);
 };

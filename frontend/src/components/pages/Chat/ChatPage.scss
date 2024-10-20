@@ -1,8 +1,8 @@
 .chatPage_container {
     position: fixed;
-    left: 26%;
+    left: 30%;
     top: 5%;
-    width: 71%;
+    width: 65%;
     height: 90%;
     display: flex;
     flex-direction: column;
@@ -61,8 +61,19 @@
         width: 100%;
         background-image: linear-gradient(to right bottom, #694cff, #5343cf, #41399f, #322e71, #252246, #2a2548, #2e2749, #322a4b, #523b78, #7a4aa6, #aa57d2, #e05ffb);
         height: 100%;
-
         overflow-y: scroll;
+        &.animate-new-message {
+            animation: fadeIn 0.5s ease;
+          }
+        
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+            }
+            to {
+              opacity: 1;
+            }
+          }
     }
 
     .input_container {
