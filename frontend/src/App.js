@@ -11,13 +11,9 @@ import { publicRoutes } from 'routes';
 
 import ChatDataProvider from './lib/provider/ChatDataProvider';
 
-// import { useDispatch, useSelector } from 'react-redux';
 import { Fragment, useContext, useEffect, useState } from 'react';
 import { checkaccount, logout } from 'controller/authen';
 import ChatDataContext from 'lib/Context/ChatContext';
-// import { faArrowLeft, faArrowRightToBracket } from '@fortawesome/free-solid-svg-icons';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import RightSidebar from "./components/layout/ChatLayout/RightSidebar";
 
 function App(props) {
     // const location = useLocation();
@@ -70,6 +66,17 @@ function App(props) {
         };
         checkAccount();
     }, []);
+
+    // getPublicKey - use when update key pair to daly change
+    // useEffect(() => {
+    //     const getPublicKey = async () => {
+    //         const res = await getPublicKey();
+
+    //         if (res.EC === '200') {
+    //             setPublicKey(res.DT);
+    //         }
+    //     };
+    // }, []);
 
     return (
         <Router>

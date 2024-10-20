@@ -1,5 +1,15 @@
-import { services } from '../services/Authentication_service.js';
+require('dotenv').config();
+import { services } from '../services/AuthenService.js';
+import { mailServices } from '../services/MailService.js';
 import Otp_service from '../services/Otp_services.js';
+
+export const getPublicKey = async (req, res) => {
+    return res.status(200).json({
+        EM: 'PUBLICKEY | INFO | Get publickey success',
+        EC: '200',
+        DT: process.env.PUBLIC_KEY,
+    });
+};
 
 export const handleRegister = async (req, res) => {
     try {
@@ -22,8 +32,7 @@ export const handleRegister = async (req, res) => {
 export const handleLogin = async (req, res) => {
     try {
         const data = await req.body;
-        console.log(data);
-        
+
         const result = await services.handleLogin(data);
 
         if (result.DT) {
@@ -51,7 +60,7 @@ export const handleLogin = async (req, res) => {
     }
 };
 
-export const handleLogingg = async (req, res) => {
+export const handleLoginGG = async (req, res) => {
     try {
         let check = await Authentication_service.handleAuthGG(req.body.id);
         if (check) {
@@ -128,6 +137,21 @@ export const checkAccount = async (req, res) => {
         console.log('CONTROLER | CHECKACCOUNT | ERROR | ' + error);
         return res.status(200).json({
             EM: 'CHECKACCOUNT | INFO | ' + error,
+            EC: '500',
+        });
+    }
+};
+
+export const sendMail = async (req, res) => {
+    try {
+        const email = await req.body.email;
+
+        const result = await mailServices.sendMail(email);
+
+        return res.status(200).json(result);
+    } catch (error) {
+        return res.status(200).json({
+            EM: 'CONTROLLER | SEND_MAIL | ERROR | ' + error,
             EC: '500',
         });
     }

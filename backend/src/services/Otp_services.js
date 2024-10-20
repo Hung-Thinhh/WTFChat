@@ -1,5 +1,5 @@
 // import Otp from "../models/OTP_model.js";
-import { hashPassword, checkPassword } from "./Authentication_service.js";
+import { hashPassword, checkPassword } from "./AuthenService.js";
 const otpGenerator = require("otp-generator");
 
 // export const CreateOtp = async (valueLogin) => {

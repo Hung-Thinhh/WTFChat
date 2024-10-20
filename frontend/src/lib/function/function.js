@@ -1,3 +1,8 @@
+import env from 'react-dotenv';
+import axios from 'setup/axios';
+import nacl from 'tweetnacl';
+import util from 'tweetnacl-util';
+
 export function getAge(birthDateString) {
     var today = new Date();
     var birthDate = new Date(birthDateString);
@@ -9,30 +14,39 @@ export function getAge(birthDateString) {
     return age;
 }
 
-export function setCookie(cname, cvalue, exdays) {
-    const d = new Date();
-    d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-    let expires = 'expires=' + d.toUTCString();
-    document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
-}
+// encrypt data befour send them
+const publicKey = env.PUBLIC_KEY;
 
-export function getCookie(cname) {
-    let name = cname + '=';
-    let ca = document.cookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) === ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) === 0) {
-            return c.substring(name.length, c.length);
-        }
+const encrypt = (receiverPublicKey, msgParams) => {
+    const ephemeralKeyPair = nacl.box.keyPair();
+    const pubKeyUInt8Array = util.decodeBase64(receiverPublicKey);
+    const msgParamsUInt8Array = util.decodeUTF8(msgParams);
+    const nonce = nacl.randomBytes(nacl.box.nonceLength);
+
+    const encryptedMessage = nacl.box(
+        msgParamsUInt8Array,
+        nonce,
+        pubKeyUInt8Array,
+        ephemeralKeyPair.secretKey,
+    );
+    return {
+        ciphertext: util.encodeBase64(encryptedMessage),
+        ephemPubKey: util.encodeBase64(ephemeralKeyPair.publicKey),
+        nonce: util.encodeBase64(nonce),
+        version: 'x25519-xsalsa20-poly1305',
+    };
+};
+
+// only for post
+export const postData = (api, data) => {
+    if (!publicKey) {
+        alert('Public key not loaded yet!');
+        return;
     }
-    return '';
-}
 
-export function deleteCookie(cname) {
-    console.log('aaaa');
-    console.log(cname);
-    document.cookie = cname + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-}
+    // Encrypt the data using the public key
+    var encryptedData = encrypt(publicKey, JSON.stringify(data));
+
+    // Now send the encrypted data using Axios:
+    return axios.post(api, { encryptedData });
+};

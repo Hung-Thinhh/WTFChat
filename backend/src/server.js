@@ -7,6 +7,8 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import { setupWebSocket } from "./socket/socketConfig.js";
+// middleware
+import { decryptData } from './middleware/encript.js';
 
 require('dotenv').config()
 
@@ -30,6 +32,9 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.use(express.json());
+
+// middleware
+app.use(decryptData);
 
 configViewEngine(app);
 initWebRouter(app);

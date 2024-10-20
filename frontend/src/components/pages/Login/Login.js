@@ -48,9 +48,9 @@ function Login() {
             if (res.EC === '200') {
                 // dang nhap thanh cong
                 setCurrUser(res.DT);
-                localStorage.setItem("jwt", JSON.stringify(res.DT));
+                localStorage.setItem('jwt', res.DT);
                 nav(config.routes.home);
-            }   
+            }
             if (res.EC === '201') {
                 // dang nhap quan tri thanh cong
                 window.location.href = config.routes.admin;
@@ -120,12 +120,12 @@ function Login() {
                         />
                         <label htmlFor="remember">Ghi nhớ đăng nhập</label>
                     </div>
-                    {err && <div className={cx('err-tag')}>* {err}</div>}
+                    {!!err && <div className={cx('err-tag')}>* {err}</div>}
                     <Button
                         className={cx('sign')}
                         type="rounded"
                         size="medium"
-                        disabled={err || loading}
+                        // disabled={!!err || loading}
                         onClick={handleSubmit}
                     >
                         Đăng nhập
