@@ -9,9 +9,6 @@ window.env = {
   "ComSpec": "C:\\Windows\\system32\\cmd.exe",
   "DriverData": "C:\\Windows\\System32\\Drivers\\DriverData",
   "EDITOR": "C:\\Windows\\notepad.exe",
-  "EFC_9160": "1",
-  "FPS_BROWSER_APP_PROFILE_STRING": "Internet Explorer",
-  "FPS_BROWSER_USER_PROFILE_STRING": "Default",
   "GIT_LFS_PATH": "C:\\Program Files\\Git LFS",
   "HOME": "C:\\Users\\nguye",
   "HOMEDRIVE": "C:",
@@ -73,7 +70,7 @@ window.env = {
   "USERPROFILE": "C:\\Users\\nguye",
   "windir": "C:\\Windows",
   "WSLENV": "WT_SESSION:WT_PROFILE_ID:",
-  "WT_PROFILE_ID": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
-  "WT_SESSION": "414a70bd-2f91-4ef9-b478-38adf498581b",
+  "WT_PROFILE_ID": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+  "WT_SESSION": "b4a1f3ed-aefa-48e8-9d2b-728c1dff8910",
   "ZES_ENABLE_SYSMAN": "1"
 };

@@ -15,7 +15,7 @@ import env from 'react-dotenv';
 // };
 
 export const register = (data) => {
-    return axios.post(`/api/register`, encrypt(data));
+    return axios.post(`/api/register`,data);
 };
 
 export const login = (data) => {

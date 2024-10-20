@@ -1,28 +1,66 @@
 import "./ChatPage.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircle, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import MessageBubble from "../../card/MessageBubble";
 import MessageInput from "../../card/MessageInput";
-import sentChat from '../../../services/sendchat';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import ChatDataContext from 'lib/Context/ChatContext';
-import { checkaccount } from 'controller/authen';
+import sentChat from "services/sendchat";
+import getChat from "services/getChat";
+import { socket } from '../../../socket';
 
 const ChatPage = () => {
     const { currUser } = useContext(ChatDataContext);
-    // console.log(currUser);
-    // useEffect(async () => {
-    //     const res = await checkaccount()
-    //     if (res.ok) {
-    //         if (res.EC === '200') {
-    //             console.log(res.DT);
-    //         }
-    //     }
-    // }, [])
+    const [chatData, setChatData] = useState([]);
 
+    const fetchNewMessages = async () => {
+        try {
+            const response = await getChat({ id: currUser.id });
+            setChatData(response.DT); // Giả sử API trả về danh sách tin nhắn trong response.DT
+        } catch (error) {
+            console.error('Error fetching new messages:', error);
+        }
+    };
 
+    const handleSetData = (message) => {
+        setChatData((prevMessages) => 
+            [...prevMessages, message]
+        );
+    };
+
+    const handleSentChat = async (message) => {
+        try {
+            handleSetData(message); // Hiển thị tin nhắn ngay lập tức trên client
+
+            // Gửi dữ liệu lên API
+            const data = await sentChat(message);
+            // Phát sự kiện socket tới các client khác
+            socket.emit('new_mess', data.DT);
+        } catch (error) {
+            console.error('Error sending message to API:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (currUser) {
+            fetchNewMessages(); // Lấy tin nhắn mới khi component mount
+
+            const handleNewMessage = (message) => {
+                console.log('New message received from socket:', message);
+                handleSetData(message); // Cập nhật giao diện người dùng với tin nhắn mới
+            };
+
+            socket.on('new_mess', handleNewMessage);
+
+            // Cleanup khi component unmounts
+            return () => {
+                socket.off('new_mess', handleNewMessage);
+            };
+        }
+    }, [currUser]);
 
     if (!currUser) return null;
+
     return (
         <div className="chatPage_container">
             <div className="chatpage_header">
@@ -31,31 +69,22 @@ const ChatPage = () => {
                 </div>
                 <div className="chatPage_chat_name">
                     <h3>{currUser.username}</h3>
-                    <p> <FontAwesomeIcon icon={faCircle} /></p>
+                    <p><FontAwesomeIcon icon={faCircle} /></p>
                 </div>
             </div>
 
-            <div className="ChatWindow">
-                <MessageBubble data={
-                    {
-                        img: "https://meliawedding.com.vn/wp-content/uploads/2022/03/avatar-gai-xinh-1.jpg",
-                        avt: "https://meliawedding.com.vn/wp-content/uploads/2022/03/avatar-gai-xinh-1.jpg",
-                        content: "ĐỊT CON ĐĨ MẸ NHÀ MÀY LÚC SÚC VẬT, WIBU THÌ ĐÃ SAO HẢ MẤY CON CHÓ ĂN CỨC RẢNH LỒN KHÔNG CÓ CHUYỆN GÌ LÀM ĐI GATO VS WIBU HẢ? WIBU ĂN HẾT CÁI LỒN CON ĐĨ MẸ MÀY HAY GÌ CỨ HỞ TÍ WIBU LÀ SAO HẢ CÁI CON THÚ HOANG RÁC RƯỞI, ĐỊT HẾT CÁC ĐỜI TỔ TÔNG GIA PHẢ NHÀ CON ĐĨ MẸ MÀY, TAO WIBU THÌ SAO? TỤI MÀY KO ĐC LÀM WIBU NHƯ TỤI TAO RỒI TỤI M TỨK HẢ? TỤI MÀY ĐÉO CÓ GỐI ÔM CỦA REM ĐỂ ĐỤ NÊN TỨK HẢ? TỤI MÀY ĐÉO CÓ THIỂU NĂNG NHƯ TỤI TAO TỤI MÀY TỨK HAY GÌ? TAO LÀ 1 WIBU CHÂN CHÍNH NÊN ĐỪNG ĐỤNG VÔ TỤI TAO, NẾU CÒN ĐỤNG VÔ THÌ TAO SẼ HOÁ ZORO CẦM 3 THANH KIẾM CHÉM MÀY RA HÀNG TRĂM MẢNH RỒI CHO CÁ SẤU ĂN ĐÓ, ĐỤ MẸ TỤI T NGỒI K CŨNG CÓ ĂN NÈ ĐÂU NHƯ TỤI M LÀM NHƯ CHÓ TỚI CUỐI THÁNG MỚI CÓ LƯƠNG ĐÂU, TỤI TAO NGỒI K ĂN BÁT VÀNG NÈ CON ĐĨ MẸ TỤI MÀY, TAO TỨK QUÁ MÀ, DÒNG ĐĨ NỨNG LỒN, NỨNG CẶC GÌ ĐÂU K À 😡😡😡😡😡😡😡",
-                        time: "25:00",
-                        user: "me"
-                    }
-                } />
-                <MessageBubble data={
-                    {
-                        img: "https://meliawedding.com.vn/wp-content/uploads/2022/03/avatar-gai-xinh-1.jpg",
-                        avt: "https://meliawedding.com.vn/wp-content/uploads/2022/03/avatar-gai-xinh-1.jpg",
-                        content: "",
-                        time: "25:00",
-                        user: "i"
-                    }
-                } />
+            <div className="ChatWindow" ref={(el) => { if (el) el.scrollTop = el.scrollHeight; }}>
+                {chatData && chatData.map((item, index) => (
+                    <MessageBubble key={index} data={{
+                        img: item.avt,
+                        avt: item.avt,
+                        content: item.content,
+                        time: item.time,
+                        user: item.senderid === currUser.id ? "i" : "me" // nếu là me thì là tin nhấn của bản thân user 
+                    }} />
+                ))}
             </div>
-            <MessageInput func={sentChat} />
+            <MessageInput func={handleSentChat} friendid={638} groupid={null} senderid={currUser.id} value={handleSetData} />
         </div>
     );
 }

@@ -22,9 +22,9 @@ const initApiRouter = (app) => {
     router.post("/login", handleLogin);
 
 
-    router.post("/chat", chatController);
-    router.get("/getchat", getChatController);
-    router.get("/deletechat", deletaChatController);
+    router.post("/chat", chatController);// api gửi tin nhắn 
+    router.post("/getchat", getChatController);// api lấy tin nhắn
+    router.get("/deletechat", deletaChatController);// api xoa tin nhắn
 
 
     return app.use("/api", router);

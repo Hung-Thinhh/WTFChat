@@ -6,11 +6,16 @@ import {
 import { getIO } from "../socket/socketConfig.js";
 
 const chatController = async (req, res) => {
-    const message = req.body.messages;
     try {
+        const senderid = req.body.senderid;
+        const friendid = req.body.friendid;
+        const groupid = req.body.groupid;
+        const content = req.body.content;
+        const time = req.body.time;
+        const numlike = req.body.numlike;
         const io = getIO();
-        const data = await createChat();
-        io.emit('edit_comment', data.DT);
+        const data = await createChat(senderid, friendid, groupid, content, time, numlike);
+        io.emit('new_mess', data.DT);
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,
@@ -20,7 +25,7 @@ const chatController = async (req, res) => {
         console.log(error);
         return res.status(500).json({
             EM: "SERVICE | CHAT CONTROLLER | ERROR | ",
-            EC: "-1",
+            EC: error,
             DT: "",
         });
     }
@@ -28,7 +33,8 @@ const chatController = async (req, res) => {
 
 const getChatController = async (req, res) => {
     try {
-        const data = await getChat();
+        const id = req.body.id;
+        const data = await getChat(id);
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,
@@ -38,7 +44,7 @@ const getChatController = async (req, res) => {
         console.log(error);
         return res.status(500).json({
             EM: "SERVICE | CHAT CONTROLLER | ERROR | ",
-            EC: "-1",
+            EC: error,
             DT: "",
         });
     }
@@ -55,7 +61,7 @@ const deletaChatController = async (req, res) => {
         console.log(error);
         return res.status(500).json({
             EM: "SERVICE | CHAT CONTROLLER | ERROR | ",
-            EC: "-1",
+            EC: error,
             DT: "",
         });
     }

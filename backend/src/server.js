@@ -12,7 +12,7 @@ require('dotenv').config()
 
 
 const app = express()
-const PORT = process.env.PORT || 6969
+const PORT = process.env.PORT || 8000
 const server = require('http').createServer(app);
 setupWebSocket(server);
 
@@ -35,6 +35,6 @@ configViewEngine(app);
 initWebRouter(app);
 initApiRouter(app);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(" Running on port " + PORT + ":  http://localhost:" + PORT);
 })
