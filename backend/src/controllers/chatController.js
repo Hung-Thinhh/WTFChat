@@ -15,7 +15,7 @@ const chatController = async (req, res) => {
         const numlike = req.body.numlike;
         const io = getIO();
         const data = await createChat(senderid, friendid, groupid, content, time, numlike);
-        io.emit('new_mess', data.DT);
+        io.emit('new_chat', data);
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,

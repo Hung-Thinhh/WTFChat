@@ -4,6 +4,7 @@ import moment from 'moment';
 
 
 const MessageBubble = (data) => {
+
     const userClass = data.data.user === "me" ? "me" : "other";
 
     const formatTime = (time) => {

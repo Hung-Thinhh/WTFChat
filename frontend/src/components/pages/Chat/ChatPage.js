@@ -12,52 +12,87 @@ import { socket } from '../../../socket';
 const ChatPage = () => {
     const { currUser } = useContext(ChatDataContext);
     const [chatData, setChatData] = useState([]);
+    const [isSending, setIsSending] = useState(false); // Thêm state để kiểm tra trạng thái gửi
 
     const fetchNewMessages = async () => {
         try {
             const response = await getChat({ id: currUser.id });
+            console.log("push mảng 1");
             setChatData(response.DT); // Giả sử API trả về danh sách tin nhắn trong response.DT
         } catch (error) {
             console.error('Error fetching new messages:', error);
         }
     };
 
-    const handleSetData = (message) => {
-        setChatData((prevMessages) => 
-            [...prevMessages, message]
+
+    const handleSetData = async (message) => {
+        if (isSending) return; // Kiểm tra xem đang gửi hay không
+
+        setIsSending(true); // Đánh dấu là đang gửi
+        console.log("push mảng 2", message); // tin nhắn socket gửi
+        setChatData((prevMessages) =>
+            [
+                ...prevMessages,
+                {
+                    content: message,
+                    senderid: currUser.id,
+                    friendid: null,
+                    groupid: 638,
+                    time: new Date().toISOString().split('T')[0],
+                    numlike: 0,
+                }
+            ]
         );
-    };
-
-    const handleSentChat = async (message) => {
+        const messageData = {
+            content: message,
+            senderid: currUser.id,
+            friendid: 638,
+            groupid: null,
+            time: new Date().toISOString().split('T')[0],
+            numlike: 0,
+        };
+        // socket.emit('send_mess', messageData); //  Gửi tin nhắn qua socket trực tiếp không qua API
         try {
-            handleSetData(message); // Hiển thị tin nhắn ngay lập tức trên client
-
-            // Gửi dữ liệu lên API
-            const data = await sentChat(message);
-            // Phát sự kiện socket tới các client khác
-            socket.emit('new_mess', data.DT);
+            await sentChat(messageData); // Chờ kết quả từ sentChat
+            setIsSending(false); // Gửi thành công thì đánh dấu là đã gửi
         } catch (error) {
-            console.error('Error sending message to API:', error);
+            setIsSending(false); // Gửi thất bại thì đánh dấu là đã gửi
         }
     };
 
+
+
+    useEffect(() => {
+        const handleNewChat = (data) => {
+            console.log("lụm từ socket", data); // tin nhắn socket nhận
+            setChatData((prevMessages) =>
+                [
+                    ...prevMessages,
+                    {
+                        content: data.DT.content,
+                        senderid: data.DT.senderid,
+                        friendid: data.DT.friendid,
+                        groupid: data.DT.groupid,
+                        time: data.DT.time,
+                        numlike: data.DT.numlike,
+                    }
+                ]
+            );
+        };
+
+        socket.on('new_chat', handleNewChat);
+
+        return () => {
+            socket.off('new_chat', handleNewChat);
+        };
+    }, []);
     useEffect(() => {
         if (currUser) {
             fetchNewMessages(); // Lấy tin nhắn mới khi component mount
-
-            const handleNewMessage = (message) => {
-                console.log('New message received from socket:', message);
-                handleSetData(message); // Cập nhật giao diện người dùng với tin nhắn mới
-            };
-
-            socket.on('new_mess', handleNewMessage);
-
-            // Cleanup khi component unmounts
-            return () => {
-                socket.off('new_mess', handleNewMessage);
-            };
         }
     }, [currUser]);
+
+
 
     if (!currUser) return null;
 
@@ -80,11 +115,11 @@ const ChatPage = () => {
                         avt: item.avt,
                         content: item.content,
                         time: item.time,
-                        user: item.senderid === currUser.id ? "i" : "me" // nếu là me thì là tin nhấn của bản thân user 
+                        user: item.senderid === currUser.id ? "other" : "me" // nếu là other thì là tin nhấn của bản thân user 
                     }} />
                 ))}
             </div>
-            <MessageInput func={handleSentChat} friendid={638} groupid={null} senderid={currUser.id} value={handleSetData} />
+            <MessageInput value={handleSetData} />
         </div>
     );
 }

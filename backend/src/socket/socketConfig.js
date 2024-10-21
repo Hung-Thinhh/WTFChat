@@ -1,5 +1,9 @@
 import { Server } from "socket.io";
 let io;
+
+import {
+  createChat,
+} from "../services/chatService.js";
 const setupWebSocket = (server) => {
      io = new Server(server, {
         cors: {
@@ -12,7 +16,6 @@ const setupWebSocket = (server) => {
   
       // Place event handlers here
       require('./event/chat')(io, socket);
-  
       socket.on('disconnect', () => {
         console.log('Người dùng đã ngắt kết nối:', socket.id);
       });
