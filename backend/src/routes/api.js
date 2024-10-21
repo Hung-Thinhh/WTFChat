@@ -21,7 +21,6 @@ const router = express.Router();
 const initApiRouter = (app) => {
     router.all('*', checkUserJWT);
 
-    // auth  router.get('/checkaccount', checkAccount);
     router.get('/checkaccount', checkAccount);
     router.get('/getPublicKey', getPublicKey);
     router.get('/logout', handleLogout);
