@@ -1,4 +1,4 @@
-const { SET_INPUT, SHOW_PASS, SET_ERROR, SET_LOADING } = require('./action');
+const { SET_INPUT, SHOW_PASS, SET_ERROR, SET_LOADING, SET_OTP } = require('./action');
 
 export const initState = {
     input: {
@@ -12,6 +12,7 @@ export const initState = {
     showPass: false,
     err: '',
     loading: false,
+    otp: Array(6).fill(''),
 };
 
 export const reducer = (state, action) => {
@@ -40,6 +41,12 @@ export const reducer = (state, action) => {
                 ...state,
                 loading: action.payload,
             };
+        case SET_OTP:
+            return {
+                ...state,
+                otp: action.payload,
+            };
+
         default:
             throw new Error('Thay đổi không hợp lệ');
     }

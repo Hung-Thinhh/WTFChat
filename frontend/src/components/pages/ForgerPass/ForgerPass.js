@@ -14,7 +14,7 @@ function ForgetPass() {
                     <p className={cx('title')}>Nhập mã OTP</p>
                 </div>
                 <form className={cx('form')}>
-                    <OTPForm />
+                    {/* <OTPForm /> */}
                     <Button
                         className={cx('sign')}
                         type="rounded"

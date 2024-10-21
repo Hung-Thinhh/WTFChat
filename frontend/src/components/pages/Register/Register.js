@@ -12,12 +12,14 @@ import config from 'config';
 import RegisterForm from './RegisterForm';
 import { initState, reducer } from './RegisterReducer/reducer';
 import { setError, setLoading } from './RegisterReducer/action';
+import OTPForm from 'components/OTPForm';
 
 const cx = classNames.bind(styles);
 
 function Register() {
     const nav = useNavigate();
     const [state, dispatch] = useReducer(reducer, initState);
+    const [page, setPage] = useState(0);
     // const [input, setInput] = useState({
     //     email: '',
     //     username: '',
@@ -47,8 +49,7 @@ function Register() {
     //     event.preventDefault();
     //     setInput((prev) => ({ ...prev, gender: value }));
     // };
-
-    const handleSubmit = async (event) => {
+    const handleRegister = async (event) => {
         event.preventDefault();
         dispatch(setLoading(true));
         // for avaiable input
@@ -83,27 +84,54 @@ function Register() {
         dispatch(setLoading(false));
     };
 
+    const handleGetOTP = async (event) => {
+        setPage(1);
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        if (page === 0) await handleGetOTP(event);
+        else await handleRegister(event);
+    };
+
     return (
         <div className={cx('wraper')}>
             <div className={cx('form-container')}>
                 <div className={cx('image-box')}>
-                    <p className={cx('title')}>THAM GIA ChatTime</p>
+                    <p className={cx('title')}>
+                        {page === 0 ? 'THAM GIA ChatTime' : 'Nhập mã OTP'}
+                    </p>
                 </div>
                 <form className={cx('form')}>
-                    <RegisterForm state={state} dispatch={dispatch} />
+                    {page === 0 ? (
+                        <RegisterForm state={state} dispatch={dispatch} />
+                    ) : (
+                        <OTPForm state={state} dispatch={dispatch} />
+                    )}
                     {!!state.err && <div className={cx('err-tag')}>* {state.err}</div>}
                     <Button
                         className={cx('sign')}
                         type="rounded"
                         size="medium"
                         disabled={!!state.err || state.loading}
-                        onClick={handleSubmit}
+                        onClick={(e) => handleSubmit(e)}
                     >
-                        Đăng kí
+                        {page === 0 ? 'Đăng kí' : 'Xác nhận'}
                     </Button>
                 </form>
                 <p className={cx('signup')}>
-                    Bạn đã có có tài khoản? <Link to={config.routes.login}>Đăng nhập</Link>
+                    {page === 0 ? (
+                        <>
+                            Bạn đã có có tài khoản? <Link to={config.routes.login}>Đăng nhập</Link>
+                        </>
+                    ) : (
+                        <>
+                            Bạn chưa nhận được mã?{' '}
+                            <Link to="" type="text">
+                                Gửi lại mã
+                            </Link>
+                        </>
+                    )}
                 </p>
             </div>
         </div>

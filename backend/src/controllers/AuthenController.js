@@ -15,12 +15,12 @@ export const handleRegister = async (req, res) => {
     try {
         const data = await req.body;
 
+        const otpVarifier = await mailServices.otpVerifier({ email: data.email, otp: data.otp });
+        if (otpVarifier.EC !== '200') return res.status(200).json(otpVarifier);
+
         const result = await services.handleRegister(data);
 
-        return res.status(200).json({
-            ...result,
-            DT: '',
-        });
+        return res.status(200).json(result);
     } catch (error) {
         return res.status(200).json({
             EM: 'CONTROLLER | REGISTER | ERROR | ' + error,

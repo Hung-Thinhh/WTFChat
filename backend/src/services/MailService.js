@@ -2,6 +2,7 @@ require('dotenv').config();
 import nodemailer from 'nodemailer';
 import { OAuth2Client } from 'google-auth-library';
 import otpGenerator from 'otp-generator';
+import { redisClient } from '../server';
 
 const GOOGLE_MAILER_CLIENT_ID = process.env.CLIENT_ID;
 const GOOGLE_MAILER_CLIENT_SECRET = process.env.CLIENT_SECRET;
@@ -37,7 +38,6 @@ const generateOtpMail = (otp) => {
     `;
 };
 
-// Tạo API /email/send với method POST
 const sendMail = async (email) => {
     try {
         if (!email)
@@ -70,9 +70,23 @@ const sendMail = async (email) => {
             specialChars: false,
         });
 
+        // đếm số lần người dùng nhận otp | nếu key chưa tồn tại hàm sẽ đặt bằng 0 rồi tăng
+        const userCallTime = await redisClient.incr(email + 'Calltime');
+        if (userCallTime >= 6)
+            return {
+                EM: 'SEND_MAIL | ERROR | Lượt gửi otp của người dùng trong ngày đã hết',
+                EC: '400',
+            };
+        // Lưu vào redis với key là email người dùng và value là otp
+        // Ghi lại giá trị mới nếu key tồn tại
+        await redisClient.set(email, otp);
+        // Tự động xoá key sau 5'
+        await redisClient.expire(email, 300);
+
+        // mail form
         const mailOptions = {
             to: email,
-            subject: otp + ' là mã xác thực của bạn, mã này sẽ hết hạn sau 5 phút.',
+            subject: otp + ' là mã xác thực của bạn.',
             html: generateOtpMail(otp),
         };
 
@@ -94,6 +108,32 @@ const sendMail = async (email) => {
     }
 };
 
+const otpVerifier = async (data) => {
+    try {
+        const { otp, email } = data;
+
+        const authOTP = await redisClient.get(email);
+        if (otp !== authOTP)
+            return {
+                EM: 'SEND_MAIL | ERROR | Mã xác thực không chính xác',
+                EC: '400',
+            };
+
+        return {
+            EM: 'SEND_MAIL | INFO | Mã xác thực chính xác',
+            EC: '200',
+        };
+    } catch (error) {
+        // Có lỗi thì các bạn log ở đây cũng như gửi message lỗi về phía client
+        console.log('SERVICE | SEND_MAIL | ERROR | ' + error);
+        return {
+            EM: 'SEND_MAIL | ERROR | ' + error,
+            EC: '500',
+        };
+    }
+};
+
 export const mailServices = {
     sendMail,
+    otpVerifier,
 };
