@@ -21,7 +21,7 @@ function Register() {
     const [state, dispatch] = useReducer(reducer, initState);
     const [page, setPage] = useState(0);
 
-    const handleRegister = async (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         dispatch(setLoading(true));
         // for avaiable input
@@ -56,44 +56,6 @@ function Register() {
         dispatch(setLoading(false));
     };
 
-    const handleGetOTP = async (event) => {
-        event.preventDefault();
-        dispatch(setLoading(true));
-        // for avaiable input
-        if (!state.input.email) dispatch(setError('Email không thể để trống'));
-        else if (!state.input.username) dispatch(setError('Họ và tên không thể để trống'));
-        else if (state.input.username.length > 100) dispatch(setError('Tên của bạn quá dài'));
-        else if (state.input.password.length < 8 || state.input.password.length > 50)
-            dispatch(setError('Mật khẩu phải có 8 - 50 kí tự'));
-        else if (state.input.repass !== state.input.password)
-            dispatch(setError('Mật khẩu nhập lại không trùng khớp'));
-        else if (!state.input.birthdate) dispatch(setError('Ngày sinh không thể để trống'));
-        else if (getAge(state.input.birthdate) <= 13) dispatch(setError('Độ tuổi tối thiểu là 13'));
-        else if (state.input.gender < 0 || state.input.gender > 3)
-            dispatch(setError('Giới tính không tồn tại'));
-        else {
-            const res = await sendMail({ email: state.input.email });
-
-            if (res.EC === '200') {
-                setPage(1);
-            } else if (res.EC === '400') {
-                dispatch(setError(res.EM));
-            } else if (res.EC === '500') {
-                alert(
-                    'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
-                );
-            }
-        }
-
-        dispatch(setLoading(false));
-    };
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        if (page === 0) await handleGetOTP(event);
-        else await handleRegister(event);
-    };
-
     return (
         <div className={cx('wraper')}>
             <div className={cx('form-container')}>
@@ -103,11 +65,7 @@ function Register() {
                     </p>
                 </div>
                 <form className={cx('form')}>
-                    {page === 0 ? (
-                        <RegisterForm state={state} dispatch={dispatch} />
-                    ) : (
-                        <OTPForm state={state} dispatch={dispatch} />
-                    )}
+                    <RegisterForm state={state} dispatch={dispatch} />
                     {!!state.err && <div className={cx('err-tag')}>* {state.err}</div>}
                     <Button
                         className={cx('sign')}

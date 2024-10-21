@@ -20,7 +20,3 @@ export const checkaccount = () => {
 export const getPublicKey = () => {
     return axios.get(`/api/getPublicKey`);
 };
-
-export const sendMail = (data) => {
-    return postData(`/api/sendmail`, data);
-};

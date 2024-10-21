@@ -8,6 +8,7 @@ const hash = bcrypt.hashSync('B4c0//', salt);
 import { v4 as uuidv4 } from 'uuid';
 import { getAge } from '../lib/globalFunct.js';
 import pool from '../connectDB.js';
+import redisClient from '../connectRedis.js';
 
 const hashPassword = (password) => {
     const pass_hash = bcrypt.hashSync(password, salt);
@@ -92,41 +93,42 @@ const handleRegister = async (data) => {
         };
     } else {
         try {
-            await pool.query('START TRANSACTION');
-            const hashPass = hashPassword(data.password);
-            const firstName = username.split(' ').slice(0, -1).join(' ');
-            const lastName = username.split(' ').slice(-1).join(' ');
-            const today = new Date();
+            await redisClient.set(email + 'emailAuth', token);
+            // await pool.query('START TRANSACTION');
+            // const hashPass = hashPassword(data.password);
+            // const firstName = username.split(' ').slice(0, -1).join(' ');
+            // const lastName = username.split(' ').slice(-1).join(' ');
+            // const today = new Date();
 
-            // insert user information
-            const insertUser = await pool.query(
-                `INSERT INTO  nguoidung (firstname, lastname, email, birthdate, gender) VALUES (
-					?,
-					?, 
-					?,
-					?,
-					?
-				)`,
-                [firstName, lastName, email, birthdate, +gender],
-            );
+            // // insert user information
+            // const insertUser = await pool.query(
+            //     `INSERT INTO  nguoidung (firstname, lastname, email, birthdate, gender) VALUES (
+            // 		?,
+            // 		?,
+            // 		?,
+            // 		?,
+            // 		?
+            // 	)`,
+            //     [firstName, lastName, email, birthdate, +gender],
+            // );
 
-            // insert user authen
-            await pool.query(
-                `INSERT INTO  xacthuc (id, email, password, status, time) VALUES (
-                        ?,
-                        ?,
-                        ?, 
-                        ?,
-                        ?
-                    )`,
-                [insertUser[0].insertId, email, hashPass, true, today],
-            );
+            // // insert user authen
+            // await pool.query(
+            //     `INSERT INTO  xacthuc (id, email, password, status, time) VALUES (
+            //             ?,
+            //             ?,
+            //             ?,
+            //             ?,
+            //             ?
+            //         )`,
+            //     [insertUser[0].insertId, email, hashPass, true, today],
+            // );
 
-            await pool.query('COMMIT');
-            return {
-                EM: 'REGISTER | INFO | Đăng ký thành công',
-                EC: '200',
-            };
+            // await pool.query('COMMIT');
+            // return {
+            //     EM: 'REGISTER | INFO | Đăng ký thành công',
+            //     EC: '200',
+            // };
         } catch (error) {
             await pool.query('ROLLBACK');
 
@@ -146,8 +148,6 @@ const handleLogin = async (data) => {
             EC: '401',
         };
 
-    console.log(data.email);
-    
     if (!data.email)
         return {
             EM: 'LOGIN | ERROR | Email không thể để trống',
@@ -160,7 +160,7 @@ const handleLogin = async (data) => {
         };
 
     try {
-        // get email
+        // check user status
         await pool.query('START TRANSACTION');
         // find current user
         const currUser = await pool.query(
@@ -310,7 +310,7 @@ const handleCheckAccount = async (email) => {
             WHERE 
                 (banbe.useroneid = ? OR banbe.usertwoid = ?)
                 AND nguoidung.id != ?`,
-            [currUser[0][0].id, currUser[0][0].id, currUser[0][0].id]
+            [currUser[0][0].id, currUser[0][0].id, currUser[0][0].id],
         );
 
         currUser[0][0].friends = friends[0];
@@ -332,7 +332,8 @@ const handleCheckAccount = async (email) => {
     } catch (error) {
         console.log('SERVICE | CHECKACCOUNT | ERROR |', error);
         return {
-            EM: 'CHECKACCOUNT | ERROR |', error,
+            EM: 'CHECKACCOUNT | ERROR |',
+            error,
             EC: '500',
         };
     }

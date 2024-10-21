@@ -2,7 +2,7 @@ require('dotenv').config();
 import nodemailer from 'nodemailer';
 import { OAuth2Client } from 'google-auth-library';
 import otpGenerator from 'otp-generator';
-import { redisClient } from '../server';
+import redisClient from '../connectRedis.js';
 
 const GLOBAL_LINK = 'http://localhost:' + process.env.PORT;
 const GOOGLE_MAILER_CLIENT_ID = process.env.CLIENT_ID;
