@@ -199,4 +199,19 @@
         line-height: 1rem;
         color: var(--text-color);
     }
+
+    .email-check-box {
+        display: flex;
+        justify-content: flex-end;
+
+        .sign {
+            width: 50%;
+            margin: 0;
+        }
+
+        .greenSign {
+            background-color: greenyellow;
+            color: black;
+        }
+    }
 }

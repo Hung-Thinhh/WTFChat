@@ -15,9 +15,6 @@ export const handleRegister = async (req, res) => {
     try {
         const data = await req.body;
 
-        const otpVarifier = await mailServices.otpVerifier({ email: data.email, otp: data.otp });
-        if (otpVarifier.EC !== '200') return res.status(200).json(otpVarifier);
-
         const result = await services.handleRegister(data);
 
         return res.status(200).json(result);
@@ -157,6 +154,22 @@ export const sendMail = async (req, res) => {
     }
 };
 
+export const mailVerify = async (req, res) => {
+    try {
+        const data = await req.query;
+        
+
+        const result = await mailServices.mailVerify(data);
+
+        return res.status(200).json(result);
+    } catch (error) {
+        return res.status(200).json({
+            EM: 'CONTROLLER | SEND_MAIL | ERROR | ' + error,
+            EC: '500',
+        });
+    }
+};
+
 export const handleForgotPassword = async (req, res) => {
     try {
         if (!req.body.email) {
@@ -243,12 +256,3 @@ export const handleVerifyOtp = async (req, res) => {
         });
     }
 };
-
-// module.exports = {
-//   handleRegister,
-//   handleLogin,
-//   handleLogingg,
-//   handleLogout,
-//   checkAccount,
-//   handleForgotPassword,handleVerifyOtp,RequestOTP
-// };

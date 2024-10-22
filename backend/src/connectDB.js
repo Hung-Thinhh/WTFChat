@@ -1,5 +1,4 @@
 import mysql from 'mysql2/promise';
-import util from 'util';
 require('dotenv').config();
 
 const pool = mysql.createPool({
@@ -8,7 +7,7 @@ const pool = mysql.createPool({
     password: process.env.SQL_PASS,
     database: process.env.SQL_DBNAME,
     port: process.env.SQL_PORT,
-    connectionLimit: 10
+    connectionLimit: 10,
 });
 
 
@@ -17,11 +16,9 @@ pool.getConnection()
     .then((connection) => {
         console.log('Kết nối thành DB công!');
         connection.release();
-    })  
-    .catch((err) => {  
+    })
+    .catch((err) => {
         console.error('Kết nối thất bại:', err);
     });
-
-// export const queryAsync = pool.query;
 
 export default pool;

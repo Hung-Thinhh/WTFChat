@@ -9,8 +9,6 @@ import cookieParser from 'cookie-parser';
 import { setupWebSocket } from './socket/socketConfig.js';
 // middleware
 import { decryptData } from './middleware/encript.js';
-//redis
-import { createClient } from 'redis';
 
 require('dotenv').config();
 
@@ -35,11 +33,6 @@ app.use(express.json());
 
 // middleware
 app.use(decryptData);
-
-// redis
-// export const redisClient = createClient();
-// redisClient.on('error', (err) => console.log('Redis Client Error', err));
-// await redisClient.connect();
 
 configViewEngine(app);
 initWebRouter(app);

@@ -1,55 +1,23 @@
 import classNames from 'classnames/bind';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import styles from '../Login/Login.module.scss';
 import Button from 'components/Button';
-import { useReducer, useState } from 'react';
+import { useReducer } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { getAge } from 'lib/function/function';
 import { register } from 'controller/authen';
 import config from 'config';
 import RegisterForm from './RegisterForm';
 import { initState, reducer } from './RegisterReducer/reducer';
 import { setError, setLoading } from './RegisterReducer/action';
-import OTPForm from 'components/OTPForm';
 
 const cx = classNames.bind(styles);
 
 function Register() {
     const nav = useNavigate();
     const [state, dispatch] = useReducer(reducer, initState);
-    const [page, setPage] = useState(0);
-    // const [input, setInput] = useState({
-    //     email: '',
-    //     username: '',
-    //     password: '',
-    //     repass: '',
-    //     birthdate: '',
-    //     gender: 0,
-    // });
-    // const [showPass, setShowPass] = useState(false);
-    // const [err, setErr] = useState('');
-    // const [loading, setLoading] = useState(false);
 
-    // const handleChange = (event) => {
-    //     dispatch({
-    //         type: SET_INPUT,
-    //         payload: { key: event.target.name, value: event.target.value },
-    //     });
-    //     if (err) dispatch({ type: SET_ERROR, payload: true });
-    // };
-
-    // const handlePassShow = (event) => {
-    //     event.preventDefault();
-    //     setShowPass((prev) => !prev);
-    // };
-
-    // const handleRatio = (event, value) => {
-    //     event.preventDefault();
-    //     setInput((prev) => ({ ...prev, gender: value }));
-    // };
-    const handleRegister = async (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         dispatch(setLoading(true));
         // for avaiable input
@@ -84,30 +52,14 @@ function Register() {
         dispatch(setLoading(false));
     };
 
-    const handleGetOTP = async (event) => {
-        setPage(1);
-    };
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        if (page === 0) await handleGetOTP(event);
-        else await handleRegister(event);
-    };
-
     return (
         <div className={cx('wraper')}>
             <div className={cx('form-container')}>
                 <div className={cx('image-box')}>
-                    <p className={cx('title')}>
-                        {page === 0 ? 'THAM GIA ChatTime' : 'Nhập mã OTP'}
-                    </p>
+                    <p className={cx('title')}>THAM GIA ChatTime</p>
                 </div>
                 <form className={cx('form')}>
-                    {page === 0 ? (
-                        <RegisterForm state={state} dispatch={dispatch} />
-                    ) : (
-                        <OTPForm state={state} dispatch={dispatch} />
-                    )}
+                    <RegisterForm state={state} dispatch={dispatch} />
                     {!!state.err && <div className={cx('err-tag')}>* {state.err}</div>}
                     <Button
                         className={cx('sign')}
@@ -116,22 +68,11 @@ function Register() {
                         disabled={!!state.err || state.loading}
                         onClick={(e) => handleSubmit(e)}
                     >
-                        {page === 0 ? 'Đăng kí' : 'Xác nhận'}
+                        Đăng kí
                     </Button>
                 </form>
                 <p className={cx('signup')}>
-                    {page === 0 ? (
-                        <>
-                            Bạn đã có có tài khoản? <Link to={config.routes.login}>Đăng nhập</Link>
-                        </>
-                    ) : (
-                        <>
-                            Bạn chưa nhận được mã?{' '}
-                            <Link to="" type="text">
-                                Gửi lại mã
-                            </Link>
-                        </>
-                    )}
+                    Bạn đã có có tài khoản? <Link to={config.routes.login}>Đăng nhập</Link>
                 </p>
             </div>
         </div>

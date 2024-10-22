@@ -9,6 +9,10 @@ export const login = (data) => {
     return postData(`/api/login`, data);
 };
 
+export const sendVerifyMail = (data) => {
+    return postData(`/api/sendmail`, data);
+};
+
 export const logout = (data) => {
     return axios.get(`/api/logout`, data);
 };
