@@ -11,14 +11,14 @@ import { socket } from '../../../socket';
 
 const ChatPage = () => {
     const { currUser } = useContext(ChatDataContext);
-    const [chatData, setChatData] = useState([]);
+    const { ChatData } = useContext(ChatDataContext);
+    const [curChatData, setcurChatData] = useState([]);
     const [isSending, setIsSending] = useState(false); // Thêm state để kiểm tra trạng thái gửi
 
     const fetchNewMessages = async () => {
         try {
-            const response = await getChat({ id: currUser.id });
-            console.log("push mảng 1");
-            setChatData(response.DT); // Giả sử API trả về danh sách tin nhắn trong response.DT
+            const response = await getChat({ id: ChatData });
+            setcurChatData(response.DT); // Giả sử API trả về danh sách tin nhắn trong response.DT
         } catch (error) {
             console.error('Error fetching new messages:', error);
         }
@@ -27,10 +27,8 @@ const ChatPage = () => {
 
     const handleSetData = async (message) => {
         if (isSending) return; // Kiểm tra xem đang gửi hay không
-
         setIsSending(true); // Đánh dấu là đang gửi
-        console.log("push mảng 2", message); // tin nhắn socket gửi
-        setChatData((prevMessages) =>
+        setcurChatData((prevMessages) =>
             [
                 ...prevMessages,
                 {
@@ -45,14 +43,14 @@ const ChatPage = () => {
         );
         const messageData = {
             content: message,
-            senderid: currUser.id,
-            friendid: 638,
+            senderid: 638,
+            friendid: currUser.id,
             groupid: null,
             time: new Date().toISOString().split('T')[0],
             numlike: 0,
         };
-        // socket.emit('send_mess', messageData); //  Gửi tin nhắn qua socket trực tiếp không qua API
         try {
+            // socket.emit('send_mess', messageData); //  Gửi tin nhắn qua socket trực tiếp không qua API
             await sentChat(messageData); // Chờ kết quả từ sentChat
             setIsSending(false); // Gửi thành công thì đánh dấu là đã gửi
         } catch (error) {
@@ -63,9 +61,9 @@ const ChatPage = () => {
 
 
     useEffect(() => {
+        fetchNewMessages();
         const handleNewChat = (data) => {
-            console.log("lụm từ socket", data); // tin nhắn socket nhận
-            setChatData((prevMessages) =>
+            setcurChatData((prevMessages) =>
                 [
                     ...prevMessages,
                     {
@@ -86,12 +84,12 @@ const ChatPage = () => {
             socket.off('new_chat', handleNewChat);
         };
     }, []);
-    useEffect(() => {
-        if (currUser) {
-            fetchNewMessages(); // Lấy tin nhắn mới khi component mount
-        }
-    }, [currUser]);
 
+
+
+    // useEffect(() => {
+    //     fetchNewMessages();
+    // }, [curChatData]);
 
 
     if (!currUser) return null;
@@ -109,7 +107,7 @@ const ChatPage = () => {
             </div>
 
             <div className="ChatWindow" ref={(el) => { if (el) el.scrollTop = el.scrollHeight; }}>
-                {chatData && chatData.map((item, index) => (
+                {curChatData && curChatData.map((item, index) => (
                     <MessageBubble key={index} data={{
                         img: item.avt,
                         avt: item.avt,

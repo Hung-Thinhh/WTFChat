@@ -16,6 +16,15 @@ const setupWebSocket = (server) => {
   
       // Place event handlers here
       require('./event/chat')(io, socket);
+      socket.on('send_mess', async (data) => {
+        try {
+          const chat = await createChat(data.senderid, data.friendid, data.groupid, data.content, data.time, data.numlike);
+          console.log('Tin nhắn mới: nè cd', data);
+          io.emit('new_chat', chat);
+        } catch (error) {
+          console.error('Error creating chat:', error);
+        }
+      });
       socket.on('disconnect', () => {
         console.log('Người dùng đã ngắt kết nối:', socket.id);
       });

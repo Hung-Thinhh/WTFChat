@@ -37,9 +37,9 @@ app.use(express.json());
 app.use(decryptData);
 
 // redis
-export const redisClient = createClient();
-redisClient.on('error', (err) => console.log('Redis Client Error', err));
-await redisClient.connect();
+// export const redisClient = createClient();
+// redisClient.on('error', (err) => console.log('Redis Client Error', err));
+// await redisClient.connect();
 
 configViewEngine(app);
 initWebRouter(app);
