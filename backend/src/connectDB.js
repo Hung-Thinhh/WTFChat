@@ -10,8 +10,6 @@ const pool = mysql.createPool({
     connectionLimit: 10,
 });
 
-
-
 pool.getConnection()
     .then((connection) => {
         console.log('Kết nối thành DB công!');

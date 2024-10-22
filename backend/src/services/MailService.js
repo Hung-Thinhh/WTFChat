@@ -126,40 +126,40 @@ const sendMail = async (email) => {
     }
 };
 
-const mailVerify = async (data) => {
-    try {
-        const { token, email } = data;
-        const authToken = await redisClient.get(email + 'token');
-        console.log(authToken);
-        
-        if (token !== authToken)
-            return {
-                EM: 'MAIL_VERIFY | ERROR | Xác thực email thành công',
-                EC: '400',
-            };
+// const mailVerify = async (data) => {
+//     try {
+//         const { token, email } = data;
+//         const authToken = await redisClient.get(email + 'token');
+//         console.log(authToken);
 
-        await redisClient.set(email + 'token', true);
-    console.log('a');
-        
-        return {
-            EM: 'MAIL_VERIFY | INFO | Xác thực email thành công',
-            EC: '200',
-        };
-    } catch (error) {
-        // Có lỗi thì các bạn log ở đây cũng như gửi message lỗi về phía client
-        console.log('SERVICE | MAIL_VERIFY | ERROR | ' + error);
-        return {
-            EM: 'MAIL_VERIFY | ERROR | ' + error,
-            EC: '500',
-        };
-    }
-};
+//         if (token !== authToken)
+//             return {
+//                 EM: 'MAIL_VERIFY | ERROR | Xác thực email thành công',
+//                 EC: '400',
+//             };
+
+//         await redisClient.set(email + 'token', true);
+//         console.log('a');
+
+//         return {
+//             EM: 'MAIL_VERIFY | INFO | Xác thực email thành công',
+//             EC: '200',
+//         };
+//     } catch (error) {
+//         // Có lỗi thì các bạn log ở đây cũng như gửi message lỗi về phía client
+//         console.log('SERVICE | MAIL_VERIFY | ERROR | ' + error);
+//         return {
+//             EM: 'MAIL_VERIFY | ERROR | ' + error,
+//             EC: '500',
+//         };
+//     }
+// };
 
 const sendOTP = async (email) => {
     try {
         if (!email)
             return {
-                EM: 'SEND_MAIL | ERROR | Không có email người nhận',
+                EM: 'SEND_OTP | ERROR | Không có email người nhận',
                 EC: '400',
             };
 
@@ -192,14 +192,14 @@ const sendOTP = async (email) => {
         const userCallTime = await redisClient.incr(email + 'Calltime');
         if (userCallTime >= 6)
             return {
-                EM: 'SEND_MAIL | ERROR | Lượt gửi otp của người dùng trong ngày đã hết',
+                EM: 'SEND_OTP | ERROR | Lượt gửi otp của người dùng trong ngày đã hết',
                 EC: '400',
             };
         // Lưu vào redis với key là email người dùng và value là otp
         // Ghi lại giá trị mới nếu key tồn tại
-        await redisClient.set(email, otp);
+        await redisClient.set(email + 'OTP', otp);
         // Tự động xoá key sau 5'
-        await redisClient.expire(email, 300);
+        await redisClient.expire(email + 'OTP', 300);
 
         // mail form
         const mailOptions = {
@@ -213,14 +213,14 @@ const sendOTP = async (email) => {
 
         // Không có lỗi gì thì trả về success
         return {
-            EM: 'SEND_MAIL | INFO | Gửi mail thành công',
+            EM: 'SEND_OTP | INFO | Gửi mail thành công',
             EC: '200',
         };
     } catch (error) {
         // Có lỗi thì các bạn log ở đây cũng như gửi message lỗi về phía client
-        console.log('SERVICE | SEND_MAIL | ERROR | ' + error);
+        console.log('SERVICE | SEND_OTP | ERROR | ' + error);
         return {
-            EM: 'SEND_MAIL | ERROR | ' + error,
+            EM: 'SEND_OTP | ERROR | ' + error,
             EC: '500',
         };
     }
@@ -253,6 +253,6 @@ const otpVerifier = async (data) => {
 
 export const mailServices = {
     sendMail,
-    mailVerify,
+    sendOTP,
     otpVerifier,
 };

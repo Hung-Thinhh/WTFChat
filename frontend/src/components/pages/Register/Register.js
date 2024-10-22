@@ -2,20 +2,42 @@ import classNames from 'classnames/bind';
 
 import styles from '../Login/Login.module.scss';
 import Button from 'components/Button';
-import { useReducer } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAge } from 'lib/function/function';
-import { register } from 'controller/authen';
+import { register, sendOTP } from 'controller/authen';
 import config from 'config';
 import RegisterForm from './RegisterForm';
 import { initState, reducer } from './RegisterReducer/reducer';
 import { setError, setLoading } from './RegisterReducer/action';
+import OTPForm from 'components/OTPForm';
 
 const cx = classNames.bind(styles);
 
 function Register() {
     const nav = useNavigate();
     const [state, dispatch] = useReducer(reducer, initState);
+    const [page, setPage] = useState(true);
+    const [countDown, setCountDown] = useState(30);
+
+    useEffect(() => {
+        const id = setInterval(() => {
+            if (countDown === 0) clearInterval(id);
+            setCountDown((prev) => prev - 1);
+        }, 1000);
+
+        return () => {
+            clearInterval(id);
+        };
+    }, []);
+
+    const handleCountDown = () => {
+        const id = setInterval(() => {
+            setCountDown((prev) => prev - 1);
+        }, 1000);
+
+        return;
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -33,7 +55,11 @@ function Register() {
         else if (state.input.gender < 0 || state.input.gender > 3)
             dispatch(setError('Giới tính không tồn tại'));
         else {
-            const res = await register({ ...state.input, password: state.input.repass });
+            const res = await register({
+                ...state.input,
+                password: state.input.repass,
+                otp: state.otp.join(''),
+            });
 
             if (res.EC === '200') {
                 // dang ki thanh cong
@@ -52,27 +78,61 @@ function Register() {
         dispatch(setLoading(false));
     };
 
+    const handleOtpVerify = async (event) => {
+        dispatch(setLoading(true));
+        event.preventDefault();
+        const res = await sendOTP({ email: state.input.email });
+
+        if (res.EC === '200') {
+            alert('Kiểm tra hộp thư email của bạn');
+            setPage(false);
+            dispatch(setError(''));
+        } else if (res.EC === '400') {
+            dispatch(setError('Email không thể để trống'));
+        } else if (res.EC === '500') {
+            alert('Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com');
+        }
+        dispatch(setLoading(false));
+    };
+
     return (
         <div className={cx('wraper')}>
             <div className={cx('form-container')}>
                 <div className={cx('image-box')}>
-                    <p className={cx('title')}>THAM GIA ChatTime</p>
+                    <p className={cx('title')}>{page ? 'THAM GIA ChatTime' : 'Nhập mã OTP'}</p>
                 </div>
                 <form className={cx('form')}>
-                    <RegisterForm state={state} dispatch={dispatch} />
+                    {page ? (
+                        <RegisterForm state={state} dispatch={dispatch} />
+                    ) : (
+                        <OTPForm state={state} dispatch={dispatch} />
+                    )}
                     {!!state.err && <div className={cx('err-tag')}>* {state.err}</div>}
                     <Button
                         className={cx('sign')}
                         type="rounded"
                         size="medium"
                         disabled={!!state.err || state.loading}
-                        onClick={(e) => handleSubmit(e)}
+                        onClick={(e) => {
+                            page ? handleOtpVerify(e) : handleSubmit(e);
+                        }}
                     >
-                        Đăng kí
+                        {page ? 'Đăng kí' : 'Xác nhận'}
                     </Button>
                 </form>
                 <p className={cx('signup')}>
-                    Bạn đã có có tài khoản? <Link to={config.routes.login}>Đăng nhập</Link>
+                    {page ? (
+                        <>
+                            Bạn đã có có tài khoản? <Link to={config.routes.login}>Đăng nhập</Link>
+                        </>
+                    ) : (
+                        <>
+                            Bạn chưa nhận được mã?{' '}
+                            <Link to="" type="text">
+                                Gửi lại mã
+                            </Link>
+                        </>
+                    )}
                 </p>
             </div>
         </div>

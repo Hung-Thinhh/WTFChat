@@ -20,7 +20,7 @@ const checkEmail = async (email) => {
     try {
         const mailVerifier = redisClient.get(email + 'token');
         if (!mailVerifier) return false;
-        
+
         await pool.query('START TRANSACTION');
         const user = await pool.query(`SELECT email FROM xacthuc WHERE email = ?`, [email]);
 
@@ -49,7 +49,7 @@ const handleRegister = async (data) => {
             EC: '401',
         };
 
-    const { email, username, password, birthdate, gender } = data;
+    const { email, username, password, birthdate, gender, otp } = data;
     // first check
     if (!email)
         return {
@@ -87,6 +87,18 @@ const handleRegister = async (data) => {
             EC: '400',
         };
 
+    const authOTP = await redisClient.get(email + 'OTP');
+
+    console.log(otp, authOTP);
+    
+
+    if (otp !== authOTP) {
+        return {
+            EM: 'REGISTER | ERROR | Mã xác thực không chính xác',
+            EC: '400',
+        };
+    }
+
     const isEmailExist = await checkEmail(data.email);
 
     if (isEmailExist) {
@@ -94,52 +106,52 @@ const handleRegister = async (data) => {
             EM: 'REGISTER | ERROR | Email đã tồn tại',
             EC: '400',
         };
-    } else {
-        try {
-            await pool.query('START TRANSACTION');
-            const hashPass = hashPassword(data.password);
-            const firstName = username.split(' ').slice(0, -1).join(' ');
-            const lastName = username.split(' ').slice(-1).join(' ');
-            const today = new Date();
+    }
 
-            // insert user information
-            const insertUser = await pool.query(
-                `INSERT INTO  nguoidung (firstname, lastname, email, birthdate, gender) VALUES (
+    try {
+        await pool.query('START TRANSACTION');
+        const hashPass = hashPassword(data.password);
+        const firstName = username.split(' ').slice(0, -1).join(' ');
+        const lastName = username.split(' ').slice(-1).join(' ');
+        const today = new Date();
+
+        // insert user information
+        const insertUser = await pool.query(
+            `INSERT INTO  nguoidung (firstname, lastname, email, birthdate, gender) VALUES (
             		?,
             		?,
             		?,
             		?,
             		?
             	)`,
-                [firstName, lastName, email, birthdate, +gender],
-            );
+            [firstName, lastName, email, birthdate, +gender],
+        );
 
-            // insert user authen
-            await pool.query(
-                `INSERT INTO  xacthuc (id, email, password, status, time) VALUES (
+        // insert user authen
+        await pool.query(
+            `INSERT INTO  xacthuc (id, email, password, status, time) VALUES (
                         ?,
                         ?,
                         ?,
                         ?,
                         ?
                     )`,
-                [insertUser[0].insertId, email, hashPass, true, today],
-            );
+            [insertUser[0].insertId, email, hashPass, true, today],
+        );
 
-            await pool.query('COMMIT');
-            return {
-                EM: 'REGISTER | INFO | Đăng ký thành công',
-                EC: '200',
-            };
-        } catch (error) {
-            await pool.query('ROLLBACK');
+        await pool.query('COMMIT');
+        return {
+            EM: 'REGISTER | INFO | Đăng ký thành công',
+            EC: '200',
+        };
+    } catch (error) {
+        await pool.query('ROLLBACK');
 
-            console.log('SERVICE | REGISTER | ERROR | ', error);
-            return {
-                EM: 'REGISTER | ERROR | ' + error,
-                EC: '500',
-            };
-        }
+        console.log('SERVICE | REGISTER | ERROR | ', error);
+        return {
+            EM: 'REGISTER | ERROR | ' + error,
+            EC: '500',
+        };
     }
 };
 

@@ -2,7 +2,7 @@ import classNames from 'classnames/bind';
 
 import styles from './OTPForm.module.scss';
 import { useRef, useState } from 'react';
-import { setOTP } from 'components/pages/Register/RegisterReducer/action';
+import { setError, setOTP } from 'components/pages/Register/RegisterReducer/action';
 
 const cx = classNames.bind(styles);
 
@@ -14,6 +14,7 @@ function OTPForm({ state, dispatch }) {
         const newOtp = [...state.otp];
         newOtp[index] = value;
         dispatch(setOTP(newOtp));
+        dispatch(setError(''));
 
         if (value.length === 0) {
             // Check if input is empty (character deleted)

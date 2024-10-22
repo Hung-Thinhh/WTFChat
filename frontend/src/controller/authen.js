@@ -9,8 +9,8 @@ export const login = (data) => {
     return postData(`/api/login`, data);
 };
 
-export const sendVerifyMail = (data) => {
-    return postData(`/api/sendmail`, data);
+export const sendOTP = (data) => {
+    return postData(`/api/sendOTP`, data);
 };
 
 export const logout = (data) => {

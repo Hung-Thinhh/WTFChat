@@ -18,6 +18,7 @@ import {
     handleRegister,
     mailVerify,
     sendMail,
+    sendOTP,
 } from '../controllers/AuthenController.js';
 // const { getRating } = require("../controller/RatingController.js");
 
@@ -28,11 +29,10 @@ const initApiRouter = (app) => {
 
     router.get('/checkaccount', checkAccount);
     router.get('/getPublicKey', getPublicKey);
-    router.get('/verify', mailVerify);
     router.get('/logout', handleLogout);
     router.post('/register', handleRegister);
     router.post('/login', handleLogin);
-    router.post('/sendmail', sendMail);
+    router.post('/sendOTP', sendOTP);
 
 
     router.post("/chat", chatController);// api gửi tin nhắn 
