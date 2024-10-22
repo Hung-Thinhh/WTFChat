@@ -7,7 +7,7 @@ import { useReducer, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { getAge } from 'lib/function/function';
-import { register } from 'controller/authen';
+import { register, sendVerifyMail } from 'controller/authen';
 import config from 'config';
 import { initState, reducer } from '../RegisterReducer/reducer';
 import { setError, setInput, showPass } from '../RegisterReducer/action';
@@ -36,6 +36,20 @@ function RegisterForm({ state, dispatch }) {
         dispatch(setInput({ key: 'gender', value: value }));
     };
 
+    const handleEmailVerify = async (event) => {
+        event.preventDefault();
+        const res = await sendVerifyMail({ email: state.input.email });
+
+        if (res.EC === '200') {
+            alert('Hãy kiểm tra hộ thư đến email của bạn');
+            dispatch(setError(''));
+        } else if (res.EC === '400') {
+            dispatch(setError('Email không thể để trống'));
+        } else if (res.EC === '500') {
+            alert('Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com');
+        }
+    };
+
     return (
         <>
             <div className={cx('input-group')}>
@@ -47,6 +61,17 @@ function RegisterForm({ state, dispatch }) {
                     value={state.input.email}
                     onChange={handleChange}
                 />
+            </div>
+            <div className={cx('input-group', 'email-check-box')}>
+                <Button
+                    className={cx('sign')}
+                    // disabled
+                    type="rounded"
+                    size="small"
+                    onClick={handleEmailVerify}
+                >
+                    Xác nhận email
+                </Button>
             </div>
             <div className={cx('input-group')}>
                 <input

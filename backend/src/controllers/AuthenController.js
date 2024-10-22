@@ -154,6 +154,22 @@ export const sendMail = async (req, res) => {
     }
 };
 
+export const mailVerify = async (req, res) => {
+    try {
+        const data = await req.query;
+        
+
+        const result = await mailServices.mailVerify(data);
+
+        return res.status(200).json(result);
+    } catch (error) {
+        return res.status(200).json({
+            EM: 'CONTROLLER | SEND_MAIL | ERROR | ' + error,
+            EC: '500',
+        });
+    }
+};
+
 export const handleForgotPassword = async (req, res) => {
     try {
         if (!req.body.email) {

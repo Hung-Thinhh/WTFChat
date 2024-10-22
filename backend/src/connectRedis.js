@@ -1,24 +1,20 @@
 import { createClient } from 'redis';
 
 const redisClient = createClient({
-    host: '::1',
-    port: 6379,
+    password: 'qgmcRli0moFhKIV59AJPijzoSCLGo6gf',
+    socket: {
+        host: 'redis-13202.c295.ap-southeast-1-1.ec2.redns.redis-cloud.com',
+        port: 13202,
+    },
 });
 
-export const connectToRedis = async () => {
-    try {
-        await redisClient.connect();
-        console.log('Redis Client Is Connected!');
-    } catch (err) {
-        console.error('Redis Client Error:', err);
-        throw err; // Re-throw the error to be handled by the caller
-    }
-};
-
-redisClient.on('error', (err) => {
-    console.error('Redis Client Error:', err);
+//check for connection
+redisClient.on('connect', function () {
+    console.log('Kết nối thành Redis công');
 });
 
-redisClient.on('disconnect', () => {
-    console.log('Redis Client Disconnected!');
-});
+redisClient.on('error', (err) => console.log('Redis Client Error', err));
+
+redisClient.connect();
+
+export default redisClient;

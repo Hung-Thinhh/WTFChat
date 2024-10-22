@@ -18,6 +18,9 @@ const hashPassword = (password) => {
 const checkEmail = async (email) => {
     // add check by sending email add later
     try {
+        const mailVerifier = redisClient.get(email + 'token');
+        if (!mailVerifier) return false;
+        
         await pool.query('START TRANSACTION');
         const user = await pool.query(`SELECT email FROM xacthuc WHERE email = ?`, [email]);
 
@@ -93,42 +96,41 @@ const handleRegister = async (data) => {
         };
     } else {
         try {
-            await redisClient.set(email + 'emailAuth', token);
-            // await pool.query('START TRANSACTION');
-            // const hashPass = hashPassword(data.password);
-            // const firstName = username.split(' ').slice(0, -1).join(' ');
-            // const lastName = username.split(' ').slice(-1).join(' ');
-            // const today = new Date();
+            await pool.query('START TRANSACTION');
+            const hashPass = hashPassword(data.password);
+            const firstName = username.split(' ').slice(0, -1).join(' ');
+            const lastName = username.split(' ').slice(-1).join(' ');
+            const today = new Date();
 
-            // // insert user information
-            // const insertUser = await pool.query(
-            //     `INSERT INTO  nguoidung (firstname, lastname, email, birthdate, gender) VALUES (
-            // 		?,
-            // 		?,
-            // 		?,
-            // 		?,
-            // 		?
-            // 	)`,
-            //     [firstName, lastName, email, birthdate, +gender],
-            // );
+            // insert user information
+            const insertUser = await pool.query(
+                `INSERT INTO  nguoidung (firstname, lastname, email, birthdate, gender) VALUES (
+            		?,
+            		?,
+            		?,
+            		?,
+            		?
+            	)`,
+                [firstName, lastName, email, birthdate, +gender],
+            );
 
-            // // insert user authen
-            // await pool.query(
-            //     `INSERT INTO  xacthuc (id, email, password, status, time) VALUES (
-            //             ?,
-            //             ?,
-            //             ?,
-            //             ?,
-            //             ?
-            //         )`,
-            //     [insertUser[0].insertId, email, hashPass, true, today],
-            // );
+            // insert user authen
+            await pool.query(
+                `INSERT INTO  xacthuc (id, email, password, status, time) VALUES (
+                        ?,
+                        ?,
+                        ?,
+                        ?,
+                        ?
+                    )`,
+                [insertUser[0].insertId, email, hashPass, true, today],
+            );
 
-            // await pool.query('COMMIT');
-            // return {
-            //     EM: 'REGISTER | INFO | Đăng ký thành công',
-            //     EC: '200',
-            // };
+            await pool.query('COMMIT');
+            return {
+                EM: 'REGISTER | INFO | Đăng ký thành công',
+                EC: '200',
+            };
         } catch (error) {
             await pool.query('ROLLBACK');
 

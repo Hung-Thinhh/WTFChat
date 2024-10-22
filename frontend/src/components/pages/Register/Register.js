@@ -1,25 +1,21 @@
 import classNames from 'classnames/bind';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import styles from '../Login/Login.module.scss';
 import Button from 'components/Button';
-import { useReducer, useState } from 'react';
+import { useReducer } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { getAge } from 'lib/function/function';
-import { register, sendMail } from 'controller/authen';
+import { register } from 'controller/authen';
 import config from 'config';
 import RegisterForm from './RegisterForm';
 import { initState, reducer } from './RegisterReducer/reducer';
 import { setError, setLoading } from './RegisterReducer/action';
-import OTPForm from 'components/OTPForm';
 
 const cx = classNames.bind(styles);
 
 function Register() {
     const nav = useNavigate();
     const [state, dispatch] = useReducer(reducer, initState);
-    const [page, setPage] = useState(0);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -60,9 +56,7 @@ function Register() {
         <div className={cx('wraper')}>
             <div className={cx('form-container')}>
                 <div className={cx('image-box')}>
-                    <p className={cx('title')}>
-                        {page === 0 ? 'THAM GIA ChatTime' : 'Nhập mã OTP'}
-                    </p>
+                    <p className={cx('title')}>THAM GIA ChatTime</p>
                 </div>
                 <form className={cx('form')}>
                     <RegisterForm state={state} dispatch={dispatch} />
@@ -74,22 +68,11 @@ function Register() {
                         disabled={!!state.err || state.loading}
                         onClick={(e) => handleSubmit(e)}
                     >
-                        {page === 0 ? 'Đăng kí' : 'Xác nhận'}
+                        Đăng kí
                     </Button>
                 </form>
                 <p className={cx('signup')}>
-                    {page === 0 ? (
-                        <>
-                            Bạn đã có có tài khoản? <Link to={config.routes.login}>Đăng nhập</Link>
-                        </>
-                    ) : (
-                        <>
-                            Bạn chưa nhận được mã?{' '}
-                            <Link to="" type="text">
-                                Gửi lại mã
-                            </Link>
-                        </>
-                    )}
+                    Bạn đã có có tài khoản? <Link to={config.routes.login}>Đăng nhập</Link>
                 </p>
             </div>
         </div>

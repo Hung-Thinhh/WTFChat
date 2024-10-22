@@ -12,6 +12,7 @@ import {
     handleLogin,
     handleLogout,
     handleRegister,
+    mailVerify,
     sendMail,
 } from '../controllers/AuthenController.js';
 // const { getRating } = require("../controller/RatingController.js");
@@ -23,6 +24,7 @@ const initApiRouter = (app) => {
 
     router.get('/checkaccount', checkAccount);
     router.get('/getPublicKey', getPublicKey);
+    router.get('/verify', mailVerify);
     router.get('/logout', handleLogout);
     router.post('/register', handleRegister);
     router.post('/login', handleLogin);
