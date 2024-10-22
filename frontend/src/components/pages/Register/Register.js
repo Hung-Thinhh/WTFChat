@@ -22,22 +22,14 @@ function Register() {
 
     useEffect(() => {
         const id = setInterval(() => {
-            if (countDown === 0) clearInterval(id);
+            if (countDown <= 0) clearInterval(id);
             setCountDown((prev) => prev - 1);
         }, 1000);
 
         return () => {
             clearInterval(id);
         };
-    }, []);
-
-    const handleCountDown = () => {
-        const id = setInterval(() => {
-            setCountDown((prev) => prev - 1);
-        }, 1000);
-
-        return;
-    };
+    }, [countDown]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -89,6 +81,8 @@ function Register() {
             dispatch(setError(''));
         } else if (res.EC === '400') {
             dispatch(setError('Email không thể để trống'));
+        } else if (res.EC === '401') {
+            dispatch(setError('Đã hết lượt gửi trong ngày'));
         } else if (res.EC === '500') {
             alert('Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com');
         }
@@ -108,17 +102,30 @@ function Register() {
                         <OTPForm state={state} dispatch={dispatch} />
                     )}
                     {!!state.err && <div className={cx('err-tag')}>* {state.err}</div>}
-                    <Button
-                        className={cx('sign')}
-                        type="rounded"
-                        size="medium"
-                        disabled={!!state.err || state.loading}
-                        onClick={(e) => {
-                            page ? handleOtpVerify(e) : handleSubmit(e);
-                        }}
-                    >
-                        {page ? 'Đăng kí' : 'Xác nhận'}
-                    </Button>
+                    <div className={cx('btn-group')}>
+                        {page || (
+                            <Button
+                                className={cx('sign')}
+                                type="rounded"
+                                size="medium"
+                                disabled={!!state.err || state.loading}
+                                onClick={setPage(true)}
+                            >
+                                Trở lại
+                            </Button>
+                        )}
+                        <Button
+                            className={cx('sign')}
+                            type="rounded"
+                            size="medium"
+                            disabled={!!state.err || state.loading}
+                            onClick={(e) => {
+                                page ? handleOtpVerify(e) : handleSubmit(e);
+                            }}
+                        >
+                            {page ? 'Đăng kí' : 'Xác nhận'}
+                        </Button>
+                    </div>
                 </form>
                 <p className={cx('signup')}>
                     {page ? (
@@ -128,8 +135,15 @@ function Register() {
                     ) : (
                         <>
                             Bạn chưa nhận được mã?{' '}
-                            <Link to="" type="text">
-                                Gửi lại mã
+                            <Link
+                                to=""
+                                type="text"
+                                onClick={(e) => {
+                                    handleOtpVerify(e);
+                                    setCountDown(30);
+                                }}
+                            >
+                                {countDown <= 0 ? 'Gửi lại mã' : countDown + 's'}
                             </Link>
                         </>
                     )}

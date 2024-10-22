@@ -193,7 +193,7 @@ const sendOTP = async (email) => {
         if (userCallTime >= 6)
             return {
                 EM: 'SEND_OTP | ERROR | Lượt gửi otp của người dùng trong ngày đã hết',
-                EC: '400',
+                EC: '401',
             };
         // Lưu vào redis với key là email người dùng và value là otp
         // Ghi lại giá trị mới nếu key tồn tại

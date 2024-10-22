@@ -89,9 +89,6 @@ const handleRegister = async (data) => {
 
     const authOTP = await redisClient.get(email + 'OTP');
 
-    console.log(otp, authOTP);
-    
-
     if (otp !== authOTP) {
         return {
             EM: 'REGISTER | ERROR | Mã xác thực không chính xác',
