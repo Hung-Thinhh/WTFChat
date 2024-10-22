@@ -49,7 +49,7 @@ const generateMailAuth = (token, email) => {
             </div>
             <p style="font-size:1.1em">Xin chào,</p>
             <p>Cảm ơn vì đã sử dụng WTFChat. Hãy nhấn nút xác nhận email này là của bạn để hoàn thành đăng ký tài khoản.</p>
-            <a href="${GLOBAL_LINK}/api/verify?token=${token}&email=${email}" style="display: block; margin: 20px auto; background: #00466a; color: #fff; padding: 10px 20px; text-align: center; text-decoration: none; border-radius: 4px; width: max-content;">Xác nhận</a>
+            <a href="${GLOBAL_LINK}/api/verify?token=${token}%26email=${email}" style="display: block; margin: 20px auto; background: #00466a; color: #fff; padding: 10px 20px; text-align: center; text-decoration: none; border-radius: 4px; width: max-content;">Xác nhận</a>
             <p style="font-size:0.9em;">Trân trọng,<br />WTF Chat</p>
             <hr style="border:none;border-top:1px solid #eee" />
             <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
@@ -107,7 +107,7 @@ const sendMail = async (email) => {
             subject: 'Email này giúp chung tôi xác nhận email này là của bạn.',
             html: generateMailAuth(token, email),
         };
-            
+
         // Gọi hành động gửi email
         await transport.sendMail(mailOptions);
 
@@ -130,6 +130,8 @@ const mailVerify = async (data) => {
     try {
         const { token, email } = data;
         const authToken = await redisClient.get(email + 'token');
+        console.log(authToken);
+        
         if (token !== authToken)
             return {
                 EM: 'MAIL_VERIFY | ERROR | Xác thực email thành công',
@@ -137,6 +139,8 @@ const mailVerify = async (data) => {
             };
 
         await redisClient.set(email + 'token', true);
+    console.log('a');
+        
         return {
             EM: 'MAIL_VERIFY | INFO | Xác thực email thành công',
             EC: '200',
