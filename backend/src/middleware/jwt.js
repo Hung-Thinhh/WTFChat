@@ -35,22 +35,22 @@ const extractToken = (req) => {
 
 export const checkUserJWT = (req, res, next) => {
     if (!SecurePaths.includes(req.path)) return next();
-    let cookies = req.cookies;
-    let tokenFromHeader = extractToken(req);
-    if ((cookies && cookies.jwt) || tokenFromHeader) {
-        const token = cookies && cookies.jwt ? cookies.jwt : tokenFromHeader;
-        // console.log(token)
-        const decoded = verifyToken(token);
+    let session = req.session;
+    // let tokenFromHeader = extractToken(req);
+    if (session && session.userId) {
+        // const token = session && session.userId ? session.userId : tokenFromHeader;
 
-        if (!decoded) {
-            return res.status(401).json({
-                EM: 'JWT | ERROR | Xác thực thất bại',
-                EC: '401',
-            });
-        }
+        // const decoded = verifyToken(token);
 
-        req.user = decoded;
-        req.token = token;
+        // if (!decoded) {
+        //     return res.status(401).json({
+        //         EM: 'JWT | ERROR | Xác thực thất bại',
+        //         EC: '401',
+        //     });
+        // }
+
+        // req.user = decoded;
+        // req.token = token;
         next();
     } else {
         return res.status(401).json({

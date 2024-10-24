@@ -231,6 +231,12 @@ const otpVerifier = async (data) => {
         const { otp, email } = data;
 
         const authOTP = await redisClient.get(email);
+        if (!authOTP)
+            return {
+                EM: 'SEND_MAIL | ERROR | Mã xác thực đã hêt hạn',
+                EC: '400',
+            };
+
         if (otp !== authOTP)
             return {
                 EM: 'SEND_MAIL | ERROR | Mã xác thực không chính xác',

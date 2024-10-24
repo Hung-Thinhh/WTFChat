@@ -9,6 +9,8 @@ import cookieParser from 'cookie-parser';
 import { setupWebSocket } from './socket/socketConfig.js';
 // middleware
 import { decryptData } from './middleware/encript.js';
+import { redisStore } from './connectRedis.js';
+import session from 'express-session';
 
 require('dotenv').config();
 
@@ -33,6 +35,20 @@ app.use(express.json());
 
 // middleware
 app.use(decryptData);
+
+// Initialize sesssion storage.
+app.use(
+    session({
+        store: redisStore,
+        resave: false,
+        saveUninitialized: false,
+        secret: 'keyboard cat',
+        cookie: {
+            httpOnly: true,
+            secure: true,
+        },
+    }),
+);
 
 configViewEngine(app);
 initWebRouter(app);
