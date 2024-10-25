@@ -1,0 +1,34 @@
+.input-group {
+    position: relative;
+    margin-top: 0.25rem;
+    margin-bottom: 1.8rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+
+    input {
+        width: 100%;
+        border-radius: 0.375rem;
+        border: 1px solid rgba(55, 65, 81, 1);
+        outline: 0;
+        background-color: var(--white);
+        padding: 1.25rem 1rem;
+        color: var(--text-color);
+    }
+}
+
+.sub-heading {
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+    color: black;
+    line-height: 17px;
+    text-align: center;
+}
+
+.userinfo_group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.3rem;
+}

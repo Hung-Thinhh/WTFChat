@@ -49,6 +49,8 @@ function App(props) {
         const checkAccount = async () => {
             const res = await checkaccount();
 
+            console.log(res);
+
             if (res.EC === '200') {
                 setCurrUser(res.DT);
                 // setCurrUser(res.DT)

@@ -45,7 +45,7 @@ app.use(
         secret: 'keyboard cat',
         cookie: {
             httpOnly: true,
-            secure: true,
+            secure: false,
         },
     }),
 );

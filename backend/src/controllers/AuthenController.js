@@ -42,17 +42,6 @@ export const handleLogin = async (req, res) => {
                 // Set session data without extended expiration
                 req.session.userId = result.DT.access_token;
             }
-            // if (data.remember) {
-            //     res.cookie('jwt', result.DT.access_token, {
-            //         httpOnly: true,
-            //         maxAge: 30 * 24 * 60 * 60 * 1000,
-            //     });
-            // } else {
-            //     res.cookie('jwt', result.DT.access_token, {
-            //         httpOnly: true,
-            //         maxAge: 24 * 60 * 60 * 1000,
-            //     });
-            // }
         }
 
         return res.status(200).json(result);
@@ -95,13 +84,16 @@ export const handleLogin = async (req, res) => {
 export const handleLogout = async (req, res) => {
     try {
         // Destroy the session
+        res.clearCookie(req.sessionID);
         req.session.destroy((err) => {
             if (err) {
-                console.error('Error destroying session:', err);
-                res.status(500).send('Error logging out');
+                console.error('LOGOUT | INFO | Lỗi xoá session ' + err);
+                return res.status(200).json({
+                    EM: 'LOGOUT | ERROR | Lỗi xoá session ' + err,
+                    EC: '500',
+                });
             }
         });
-        res.clearCookie(req.sessionID);
         return res.status(200).json({
             EM: 'LOGOUT | INFO | Đăng xuất thành công',
             EC: '200',
