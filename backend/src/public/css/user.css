@@ -1,0 +1,73 @@
+table.table tr th,
+table.table tr td {
+    padding: 12px 15px;
+    vertical-align: middle;
+}
+
+table.table tr th:first-child {
+    width: 60px;
+}
+
+table.table tr th:last-child {
+    width: 150px;
+}
+
+table.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #ecf9ff;
+}
+
+table.table-striped tbody tr:hover {
+    background-color: #ddecf5;
+}
+
+.username {
+    display: inline-block;
+    color: #566787;
+}
+
+.username img {
+    width: 38px;
+     border-radius: 50%;
+     vertical-align: middle;
+     margin-right: 8px;
+ 
+}
+
+.status {
+    font-size: 30px;
+    margin: -5px 2px 0 0;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 10px;
+}
+.text-success {
+    color: #28a745 !important;
+}
+td button {
+    border: 0;
+    background-color: transparent !important;
+}
+.action{
+    display: flex;
+    justify-items: center;
+    align-items: center;
+}
+.action button {
+    margin: 0 5px 0 0;
+}
+.action button i{
+    font-size: 18px;
+}
+.action button:nth-of-type(1) i{
+    color: #369ff3;
+}
+.action button:nth-of-type(2) i{
+    color: #f45449;
+}
+.hidden{
+    display: none !important;
+}
+.form-loading{
+    min-height: 300px;
+    align-items: center;
+}

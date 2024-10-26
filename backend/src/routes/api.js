@@ -7,6 +7,7 @@ import {
     deletaChatController
 } from '../controllers/chatController';
 import { handleRegister } from "../controllers/Authentication.js";
+import {getUserById,editUser,getListUserAPI} from "../controllers/AdminUserController.js"
 // const { getRating } = require("../controller/RatingController.js");
 
 
@@ -22,6 +23,11 @@ const initApiRouter = (app) => {
     router.get("/chat", chatController);
     router.get("/getchat", getChatController);
     router.get("/deletechat", deletaChatController);
+
+    //admin
+    router.get("/getUserById/:id", getUserById);
+    router.get("/getUser/:page", getListUserAPI);
+    router.post("/edit-user", editUser);
 
 
     return app.use("/api", router);

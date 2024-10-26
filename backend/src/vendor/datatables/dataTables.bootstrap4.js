@@ -127,30 +127,34 @@ DataTable.ext.renderer.pageButton.bootstrap = function ( settings, host, idx, bu
 						break;
 				}
 
-				if ( btnDisplay ) {
+				if (btnDisplay) {
 					node = $('<li>', {
-							'class': classes.sPageButton+' '+btnClass,
-							'id': idx === 0 && typeof button === 'string' ?
-								settings.sTableId +'_'+ button :
-								null
-						} )
-						.append( $('<a>', {
-								'href': '#',
-								'aria-controls': settings.sTableId,
-								'aria-label': aria[ button ],
-								'data-dt-idx': counter,
-								'tabindex': settings.iTabIndex,
-								'class': 'page-link'
-							} )
-							.html( btnDisplay )
-						)
-						.appendTo( container );
-
-					settings.oApi._fnBindAction(
-						node, {action: button}, clickHandler
-					);
-
-					counter++;
+						'class': classes.sPageButton + ' ' + btnClass,
+						'id': idx === 0 && typeof button === 'string' ?
+							settings.sTableId + '_' + button :
+							null
+					})
+					.append($('<a>', {
+						'href': `http://localhost:8000/user/${counter}`,
+						'aria-controls': settings.sTableId,
+						'aria-label': aria[button],
+						'data-dt-idx': counter,
+						'tabindex': settings.iTabIndex,
+						'class': 'page-link'
+					})
+					.html(btnDisplay))
+					.appendTo(container);
+				
+					// Thêm sự kiện click cho từng ô phân trang
+					node.on('click', function(e) {
+						e.preventDefault();
+						console.log('hâhahahahaha');
+				
+						if (!$(this).hasClass('disabled')) {
+							// Sử dụng $(this).data('dt-idx') để lấy giá trị của button
+							api.page($(this).data('dt-idx')).draw('page');
+						}
+					});
 				}
 			}
 		}
