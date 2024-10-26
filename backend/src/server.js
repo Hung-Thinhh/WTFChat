@@ -9,7 +9,6 @@ import cookieParser from 'cookie-parser';
 import { setupWebSocket } from './socket/socketConfig.js';
 // middleware
 import { decryptData } from './middleware/encript.js';
-
 require('dotenv').config();
 
 const app = express();

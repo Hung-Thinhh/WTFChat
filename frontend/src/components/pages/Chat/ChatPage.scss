@@ -1,3 +1,10 @@
+h1 {
+    color: white;
+    text-align: center;
+    font-size: 2rem;
+    margin-top: 30%;
+    margin-left: 30%;
+}
 .chatPage_container {
     position: fixed;
     left: 30%;
@@ -31,7 +38,7 @@
         .chatPage_chat_avt {
             width: 4rem;
             height: 4rem;
-        
+
 
             img {
                 width: 100%;
@@ -40,15 +47,18 @@
                 object-fit: cover;
             }
         }
+
         .chatPage_chat_name {
             width: 95%;
             font-size: 1.5rem;
             color: #FFFFFF;
-            h3{
+
+            h3 {
                 width: 30%;
                 text-align: left;
             }
-            p{
+
+            p {
                 width: 10%;
                 text-align: left;
                 font-size: 5px;
@@ -62,18 +72,27 @@
         background-image: linear-gradient(to right bottom, #694cff, #5343cf, #41399f, #322e71, #252246, #2a2548, #2e2749, #322a4b, #523b78, #7a4aa6, #aa57d2, #e05ffb);
         height: 100%;
         overflow-y: scroll;
+
         &.animate-new-message {
             animation: fadeIn 0.5s ease;
-          }
-        
-          @keyframes fadeIn {
+        }
+
+        @keyframes fadeIn {
             from {
-              opacity: 0;
+                opacity: 0;
             }
+
             to {
-              opacity: 1;
+                opacity: 1;
             }
-          }
+        }
+
+        h1{
+            color: white;
+            text-align: center;
+            font-size: 2rem;
+            margin-top: 2rem;
+        }
     }
 
     .input_container {

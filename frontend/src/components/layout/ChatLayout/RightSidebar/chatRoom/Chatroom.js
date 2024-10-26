@@ -5,8 +5,10 @@ import classNames from 'classnames';
 
 const ChatRoom = ({ id, avt, name, time, mess }) => {
     const { ChatData, setChatData } = useContext(ChatDataContext);
+    const { setRoomInfo } = useContext(ChatDataContext);
     const handleClick = () => {
         setChatData(id);
+        setRoomInfo({ id, avt, name });
     }
     return (
         <div
