@@ -1,25 +1,13 @@
 import React from 'react';
+import { useEffect, useState } from 'react';
 import './MessageBubble.scss';
-// import moment from 'moment';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faCheckDouble, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+
 
 const MessageBubble = (data) => {
+    const [status, setStatus] = useState('sending');
     const userClass = data.data.user === 'me' ? 'me' : 'other';
-
-    // const formatTime = (time) => {
-    //     const messageTime = moment(time);
-    //     const now = moment();
-    //     const diffHours = now.diff(messageTime, 'hours');
-    //     const diffDays = now.diff(messageTime, 'days');
-
-    //     if (diffHours < 24) {
-    //         return `${diffHours} giờ trước`;
-    //     } else if (diffDays < 30) {
-    //         return messageTime.format('DD/MM');
-    //     } else {
-    //         return messageTime.format('DD/MM/YYYY');
-    //     }
-    // };
-
     const formatTime = (datestring) => {
         const date = new Date(datestring);
         const now = new Date();
@@ -48,11 +36,20 @@ const MessageBubble = (data) => {
             return `${diffYears} năm trước`;
         }
     };
+    useEffect(() => {
+        if (data.data.status === 'sending') {
+            setStatus('sending');
+        } else if (data.data.status === 'done') {
+            setStatus('done');
+        } else {
+            setStatus('failed');
+        }
+    }, [data.data.status]);
 
     return (
         <div className={`messageBubble ${userClass}`}>
             <div className={`messageContent ${userClass}`}>
-                <div className="userAvatar">
+                <div className="userAvatar">    
                     <img
                         alt="User Avatar"
                         src={
@@ -65,10 +62,20 @@ const MessageBubble = (data) => {
                     {data.data.img && <img src={data.data.img} alt="Attached image" />}
                     <div className="messageText">
                         <p>{data.data.content}</p>
-                        <div className="messageTime">{formatTime(data.data.time)}</div>
+                        <div className="messageTime_container">
+                            <div className="messageTime">{formatTime(data.data.time)}</div>
+                            {status === 'sending' ? (
+                                <FontAwesomeIcon icon={faCheck} className="load_icon" />
+                            ) : status === 'done' ? (
+                                <FontAwesomeIcon icon={faCheckDouble} className="load_icon" />
+                            ) : (
+                                <FontAwesomeIcon icon={faCircleXmark} className="load_icon" />
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
     );
 };

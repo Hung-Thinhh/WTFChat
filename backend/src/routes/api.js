@@ -20,6 +20,7 @@ import {
     sendOTP,
 } from '../controllers/AuthenController.js';
 // const { getRating } = require("../controller/RatingController.js");
+import {getUserById,editUser,getListUserAPI} from "../controllers/AdminUserController.js"
 
 const router = express.Router();
 
@@ -39,8 +40,12 @@ const initApiRouter = (app) => {
     router.post("/getchat", getChatController);// api lấy tin nhắn
     router.get("/deletechat", deletaChatController);// api xoa tin nhắn
     router.post("/getchatroom", getRoomController);// api xoa tin nhắn
+    router.post("/createroom", getRoomController);// api xoa tin nhắn
 
-
+//admin
+router.get("/getUserById/:id", getUserById);
+router.get("/getUser/:page", getListUserAPI);
+router.post("/edit-user", editUser);
     return app.use('/api', router);
 };
 

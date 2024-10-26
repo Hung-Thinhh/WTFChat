@@ -1,0 +1,84 @@
+import pool from '../connectDB.js';
+const getUsers = async (page) => {
+    try {
+        const usersPerPage = 5;
+        const currentPage = page || 1;
+        const users = await pool.query(
+            `SELECT u.firstname,u.lastname,u.avatar, a.time,a.status, a.role, a.id  
+            FROM nguoidung u JOIN xacthuc a ON u.id = a.id LIMIT ? OFFSET ?`,
+            [usersPerPage, (currentPage - 1) * usersPerPage],
+        );
+        const CountUser = await pool.query('SELECT COUNT(*) FROM nguoidung');
+        
+        const totalPages = CountUser[0][0]['COUNT(*)'];
+
+        return {
+            user: users[0],
+            totalPages: Math.ceil(totalPages / usersPerPage)
+        };
+    } catch (error) {
+        console.log(error);
+
+        return error;
+    }
+};
+const getUserByID = async (id) => {
+    try {
+        const users = await pool.query(
+            `SELECT u.*, a.status,a.role,a.time  FROM nguoidung u JOIN xacthuc a ON u.id=a.id WHERE u.id= ${id}`,
+        );
+        console.log(users[0][0]);
+        return {
+            EM: 'Success',
+            EC: 0,
+            DT: users[0],
+        };
+    } catch (error) {
+        console.log(error);
+
+        return {
+            EM: error.message,
+            EC: 1,
+            DT: [],
+        };
+    }
+};
+const editUserById = async (data) => {
+    console.log(data);
+    try {
+        const [users] = await pool.query(
+            `UPDATE nguoidung SET firstname=?, lastname=?, birthdate=?, gender=? WHERE id=?`,
+            [data.firstName, data.lastName, data.birthday, data.gender, data.id],
+        );
+
+        // Sử dụng then() trên Promise được trả về bởi pool.query()
+        // Kiểm tra kết quả của câu lệnh UPDATE
+        if (users.affectedRows > 0) {
+            console.log('Cập nhật thành công!');
+            return {
+                EM: 'Success',
+                EC: 0,
+                DT: '',
+            };
+        } else {
+            console.log('Cập nhật thất bại!');
+            return {
+                EM: 'Cập nhật thất bại!',
+                EC: -1,
+                DT: '',
+            };
+        }
+    } catch (error) {
+        console.error('Lỗi khi cập nhật:', error);
+        return {
+            EM: error.message,
+            EC: 1,
+            DT: [],
+        };
+    }
+};
+export const adminUser = {
+    getUsers,
+    getUserByID,
+    editUserById,
+};
