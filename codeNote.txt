@@ -1,6 +1,15 @@
-Một số lưu ý:
-- .prettierrc đã được set up khi hoàn thành đoạn code nhớ alt + shift + F để clean code
 
+// Backend //////////////////////////////////////////////////////////////////////////////////////////
+Một số lưu ý:
+- TK quản trị:
+    TK: admin 
+    MK: admin123
+
+- role của người dùng: 
+    0: admin
+    1: user
+
+- .prettierrc đã được set up khi hoàn thành đoạn code nhớ alt + shift + F để clean code
 
 ***Lưu ý khi triễn khai API:
 - Khi thực hiện hiễn thị trả về cần ghi rõ vị trí hàm bị và nội dung 
@@ -24,3 +33,18 @@ exp:
             });
         }
     };
+
+***Mã hoá dữ liệu khi gửi dữ liệu bằng giao thức POST
+- Khi request data lên server bằng POST thì sữ dụng hàm "postData" thay vì gửi trực tiếp bằng axios
+- Setup hàm trong controller và gọi hàm để sử dụng.
+
+// Frontend //////////////////////////////////////////////////////////////////////////////////////////
+***Quy tác sử dụng useReducer:
+- Chỉ sử dụng khi state buộc phải truyền giữa 3 component trở lên hoặc để quản lý số lượng state lớn cùng lúc (5 state).
+- Thiết lập reducer cần tác riêng và thiết lập:
+    + Trong thư mục cha tạo thư mục <Tên component>Reducer (bao gồm action.js, reducer.js)
+    + action.js bao gồm các action type và hàm action (để chuyển đổi dữ liệu của dispatch).
+    + reducer.js bao gồm initstate và hàm reducer.
+- Tham khảo reducer của trang Register
+
+{"web":{"client_id":"189751039003-uc541j85fmvkvplv9fpe0rv8jo8gsd93.apps.googleusercontent.com","project_id":"chatproject-439107","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"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","redirect_uris":["https://developers.google.com/oauthplayground"],"javascript_origins":["http://localhost:8000"]}}

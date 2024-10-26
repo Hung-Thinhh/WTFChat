@@ -84,6 +84,7 @@
                 top: 50%;
                 right: 10px;
                 transform: translate(0, -50%);
+                font-size: 1.3rem;
                 background-color: transparent;
             }
         }
@@ -116,6 +117,18 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+    }
+
+    .remeber-box {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 5px;
+        font-size: 1.3rem;
+
+        input {
+            width: auto;
+        }
     }
 
     .forgot {
@@ -179,10 +192,31 @@
         }
     }
 
+    // register form
     .signup {
         text-align: center;
         font-size: 1rem;
         line-height: 1rem;
         color: var(--text-color);
+    }
+
+    .email-check-box {
+        display: flex;
+        justify-content: flex-end;
+
+        .sign {
+            width: 50%;
+            margin: 0;
+        }
+
+        .greenSign {
+            background-color: greenyellow;
+            color: black;
+        }
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 10px;
     }
 }

@@ -1,48 +1,54 @@
 {
-  "name": "wtfchat_be",
-  "version": "1.0.0",
-  "description": "backend nodejs WTFChat",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --exec babel-node src/server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Hung-Thinhh/WTFChat_BE.git"
-  },
-  "keywords": [
-    "WTFChat",
-    "backend"
-  ],
-  "author": "WTF_Team",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Hung-Thinhh/WTFChat_BE/issues"
-  },
-  "homepage": "https://github.com/Hung-Thinhh/WTFChat_BE#readme",
-  "dependencies": {
-    "@babel/core": "^7.25.2",
-    "@babel/node": "^7.25.0",
-    "@babel/preset-env": "^7.25.4",
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.20.2",
-    "cookie-parser": "^1.4.6",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "ejs": "^3.1.10",
-    "express": "^4.19.2",
-    "express-mysql-session": "^3.0.3",
-    "express-session": "^1.18.0",
-    "fs": "^0.0.1-security",
-    "jsonwebtoken": "^9.0.2",
-    "mysql": "^2.18.1",
-    "mysql2": "^3.11.3",
-    "mysql2-promise": "^0.1.4",
-    "nodemon": "^3.1.4",
-    "otp-generator": "^4.0.1",
-    "socket.io": "^4.7.5",
-    "uuid": "^10.0.0",
-    "websocket": "^1.0.35"
-  }
+    "name": "wtfchat_be",
+    "version": "1.0.0",
+    "description": "backend nodejs WTFChat",
+    "main": "server.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "nodemon --exec babel-node src/server.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Hung-Thinhh/WTFChat_BE.git"
+    },
+    "keywords": [
+        "WTFChat",
+        "backend"
+    ],
+    "author": "WTF_Team",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Hung-Thinhh/WTFChat_BE/issues"
+    },
+    "homepage": "https://github.com/Hung-Thinhh/WTFChat_BE#readme",
+    "dependencies": {
+        "@babel/core": "^7.25.2",
+        "@babel/node": "^7.25.0",
+        "@babel/preset-env": "^7.25.4",
+        "bcryptjs": "^2.4.3",
+        "body-parser": "^1.20.2",
+        "connect-redis": "^7.1.1",
+        "cookie-parser": "^1.4.6",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.5",
+        "ejs": "^3.1.10",
+        "express": "^4.19.2",
+        "express-mysql-session": "^3.0.3",
+        "express-session": "^1.18.1",
+        "fs": "^0.0.1-security",
+        "google-auth-library": "^9.14.2",
+        "jsonwebtoken": "^9.0.2",
+        "mysql": "^2.18.1",
+        "mysql2": "^3.11.3",
+        "mysql2-promise": "^0.1.4",
+        "nodemailer": "^6.9.15",
+        "nodemon": "^3.1.4",
+        "otp-generator": "^4.0.1",
+        "redis": "^4.7.0",
+        "socket.io": "^4.7.5",
+        "tweetnacl": "^1.0.3",
+        "tweetnacl-util": "^0.15.1",
+        "uuid": "^10.0.0",
+        "websocket": "^1.0.35"
+    }
 }

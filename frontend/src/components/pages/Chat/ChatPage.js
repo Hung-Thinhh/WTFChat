@@ -1,61 +1,123 @@
-import "../../../css/ChatPage.scss";
+import "./ChatPage.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircle, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import MessageBubble from "../../card/MessageBubble";
 import MessageInput from "../../card/MessageInput";
+import { useContext, useEffect, useState } from 'react';
+import ChatDataContext from 'lib/Context/ChatContext';
+import sentChat from "services/sendchat";
+import getChat from "services/getChat";
+import { socket } from '../../../socket';
+
 const ChatPage = () => {
+    const { currUser } = useContext(ChatDataContext);
+    const { ChatData } = useContext(ChatDataContext);
+    const [curChatData, setcurChatData] = useState([]);
+    const [isSending, setIsSending] = useState(false); // Thêm state để kiểm tra trạng thái gửi
+
+    const fetchNewMessages = async () => {
+        try {
+            const response = await getChat({ id: ChatData });
+            setcurChatData(response.DT); // Giả sử API trả về danh sách tin nhắn trong response.DT
+        } catch (error) {
+            console.error('Error fetching new messages:', error);
+        }
+    };
+
+
+    const handleSetData = async (message) => {
+        if (isSending) return; // Kiểm tra xem đang gửi hay không
+        setIsSending(true); // Đánh dấu là đang gửi
+        setcurChatData((prevMessages) =>
+            [
+                ...prevMessages,
+                {
+                    content: message,
+                    senderid: currUser.id,
+                    friendid: null,
+                    groupid: 638,
+                    time: new Date().toISOString().split('T')[0],
+                    numlike: 0,
+                }
+            ]
+        );
+        const messageData = {
+            content: message,
+            senderid: 638,
+            friendid: currUser.id,
+            groupid: null,
+            time: new Date().toISOString().split('T')[0],
+            numlike: 0,
+        };
+        try {
+            // socket.emit('send_mess', messageData); //  Gửi tin nhắn qua socket trực tiếp không qua API
+            await sentChat(messageData); // Chờ kết quả từ sentChat
+            setIsSending(false); // Gửi thành công thì đánh dấu là đã gửi
+        } catch (error) {
+            setIsSending(false); // Gửi thất bại thì đánh dấu là đã gửi
+        }
+    };
+
+
+
+    useEffect(() => {
+        fetchNewMessages();
+        const handleNewChat = (data) => {
+            setcurChatData((prevMessages) =>
+                [
+                    ...prevMessages,
+                    {
+                        content: data.DT.content,
+                        senderid: data.DT.senderid,
+                        friendid: data.DT.friendid,
+                        groupid: data.DT.groupid,
+                        time: data.DT.time,
+                        numlike: data.DT.numlike,
+                    }
+                ]
+            );
+        };
+
+        socket.on('new_chat', handleNewChat);
+
+        return () => {
+            socket.off('new_chat', handleNewChat);
+        };
+    }, []);
+
+
+
+    // useEffect(() => {
+    //     fetchNewMessages();
+    // }, [curChatData]);
+
+
+    if (!currUser) return null;
+
     return (
         <div className="chatPage_container">
             <div className="chatpage_header">
                 <div className="chatPage_chat_avt">
-                    <img src="https://meliawedding.com.vn/wp-content/uploads/2022/03/avatar-gai-xinh-1.jpg" alt="user-avt" />
+                    <img src={currUser.avt ? currUser.avt : "https://meliawedding.com.vn/wp-content/uploads/2022/03/avatar-gai-xinh-1.jpg"} alt="user-avt" />
                 </div>
                 <div className="chatPage_chat_name">
-                    <h3>Nguyễn Văn A</h3>
-                    <p> <FontAwesomeIcon icon={faCircle} /></p>
+                    <h3>{currUser.username}</h3>
+                    <p><FontAwesomeIcon icon={faCircle} /></p>
                 </div>
             </div>
 
-            <div className="ChatWindow">
-                <MessageBubble data={
-                    {
-                        img:"",
-                        avt: "https://meliawedding.com.vn/wp-content/uploads/2022/03/avatar-gai-xinh-1.jpg",
-                        content: "ĐỊT CON ĐĨ MẸ NHÀ MÀY LÚC SÚC VẬT",
-                        time: "25:00",
-                        user: "i"
-                    }
-                } />
-                <MessageBubble data={
-                    {
-                        img:"https://meliawedding.com.vn/wp-content/uploads/2022/03/avatar-gai-xinh-1.jpg",
-                        avt: "https://meliawedding.com.vn/wp-content/uploads/2022/03/avatar-gai-xinh-1.jpg",
-                        content: "ĐỊT CON ĐĨ MẸ NHÀ MÀY LÚC SÚC VẬT, WIBU THÌ ĐÃ SAO HẢ MẤY CON CHÓ ĂN CỨC RẢNH LỒN KHÔNG CÓ CHUYỆN GÌ LÀM ĐI GATO VS WIBU HẢ? WIBU ĂN HẾT CÁI LỒN CON ĐĨ MẸ MÀY HAY GÌ CỨ HỞ TÍ WIBU LÀ SAO HẢ CÁI CON THÚ HOANG RÁC RƯỞI, ĐỊT HẾT CÁC ĐỜI TỔ TÔNG GIA PHẢ NHÀ CON ĐĨ MẸ MÀY, TAO WIBU THÌ SAO? TỤI MÀY KO ĐC LÀM WIBU NHƯ TỤI TAO RỒI TỤI M TỨK HẢ? TỤI MÀY ĐÉO CÓ GỐI ÔM CỦA REM ĐỂ ĐỤ NÊN TỨK HẢ? TỤI MÀY ĐÉO CÓ THIỂU NĂNG NHƯ TỤI TAO TỤI MÀY TỨK HAY GÌ? TAO LÀ 1 WIBU CHÂN CHÍNH NÊN ĐỪNG ĐỤNG VÔ TỤI TAO, NẾU CÒN ĐỤNG VÔ THÌ TAO SẼ HOÁ ZORO CẦM 3 THANH KIẾM CHÉM MÀY RA HÀNG TRĂM MẢNH RỒI CHO CÁ SẤU ĂN ĐÓ, ĐỤ MẸ TỤI T NGỒI K CŨNG CÓ ĂN NÈ ĐÂU NHƯ TỤI M LÀM NHƯ CHÓ TỚI CUỐI THÁNG MỚI CÓ LƯƠNG ĐÂU, TỤI TAO NGỒI K ĂN BÁT VÀNG NÈ CON ĐĨ MẸ TỤI MÀY, TAO TỨK QUÁ MÀ, DÒNG ĐĨ NỨNG LỒN, NỨNG CẶC GÌ ĐÂU K À 😡😡😡😡😡😡😡",
-                        time: "25:00",
-                        user: "me"
-                    }
-                } />
-                <MessageBubble data={
-                    {
-                        img:"https://meliawedding.com.vn/wp-content/uploads/2022/03/avatar-gai-xinh-1.jpg",
-                        avt: "https://meliawedding.com.vn/wp-content/uploads/2022/03/avatar-gai-xinh-1.jpg",
-                        content: "",
-                        time: "25:00",
-                        user: "i"
-                    }
-                } />
+            <div className="ChatWindow" ref={(el) => { if (el) el.scrollTop = el.scrollHeight; }}>
+                {curChatData && curChatData.map((item, index) => (
+                    <MessageBubble key={index} data={{
+                        img: item.avt,
+                        avt: item.avt,
+                        content: item.content,
+                        time: item.time,
+                        user: item.senderid === currUser.id ? "other" : "me" // nếu là other thì là tin nhấn của bản thân user 
+                    }} />
+                ))}
             </div>
-
-
-
-            <div className="input_container">
-                <MessageInput />
-                <button
-                    className="chatPage_chat_btn"
-                >
-                    <FontAwesomeIcon icon={faPaperPlane} className="chatPage_chat_avt" />
-                </button>
-            </div>
+            <MessageInput value={handleSetData} />
         </div>
     );
 }

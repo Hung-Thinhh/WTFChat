@@ -1,171 +1,152 @@
 import classNames from 'classnames/bind';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import styles from '../Login/Login.module.scss';
 import Button from 'components/Button';
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
+import { useEffect, useReducer, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { getAge } from 'lib/function/function';
-import { register } from 'controller/authen';
-import { info } from 'sass';
+import { register, sendOTP } from 'controller/authen';
+import config from 'config';
+import RegisterForm from './RegisterForm';
+import { initState, reducer } from './RegisterReducer/reducer';
+import { setError, setLoading } from './RegisterReducer/action';
+import OTPForm from 'components/OTPForm';
 
 const cx = classNames.bind(styles);
 
-const genderList = ['Nam', 'Nữ', 'Khác'];
-
 function Register() {
-    const [input, setInput] = useState({
-        email: '',
-        username: '',
-        password: '',
-        repass: '',
-        birthdate: '',
-        gender: 0,
-    });
-    const [showPass, setShowPass] = useState(false);
-    const [err, setErr] = useState('');
+    const nav = useNavigate();
+    const [state, dispatch] = useReducer(reducer, initState);
+    const [page, setPage] = useState(true);
+    const [countDown, setCountDown] = useState(30);
 
-    const handleChange = (event) => {
-        setInput((prev) => ({ ...prev, [event.target.name]: event.target.value }));
-        if (err) setErr('');
-    };
+    useEffect(() => {
+        const id = setInterval(() => {
+            if (countDown <= 0) clearInterval(id);
+            setCountDown((prev) => prev - 1);
+        }, 1000);
 
-    const handlePassShow = (event) => {
+        return () => {
+            clearInterval(id);
+        };
+    }, [countDown]);
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        setShowPass((prev) => !prev);
-    };
-
-    const handleRatio = (event, value) => {
-        event.preventDefault();
-        setInput((prev) => ({ ...prev, gender: value }));
-    };
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-
+        dispatch(setLoading(true));
         // for avaiable input
-        if (!input.email) setErr('Email không thể để trống');
-        else if (!input.username) setErr('Họ và tên không thể để trống');
-        else if (input.username.length > 100) setErr('Tên của bạn quá dài');
-        else if (input.password.length < 8 || input.password.length > 50)
-            setErr('Mật khẩu phải có 8 - 50 kí tự');
-        else if (!input.repass) setErr('Nhập lại mật khẩu không thể để trống');
-        else if (input.repass !== input.password) setErr('Mật khẩu nhập lại không trùng khớp');
-        else if (!input.birthdate) setErr('Ngày sinh không thể để trống');
-        else if (getAge(input.birthdate) <= 13) setErr('Độ tuổi tối thiểu là 13');
-        else if (input.gender < 0 || input.gender > 3) setErr('Giới tính không tồn tại');
+        if (!state.input.email) dispatch(setError('Email không thể để trống'));
+        else if (!state.input.username) dispatch(setError('Họ và tên không thể để trống'));
+        else if (state.input.username.length > 100) dispatch(setError('Tên của bạn quá dài'));
+        else if (state.input.password.length < 8 || state.input.password.length > 50)
+            dispatch(setError('Mật khẩu phải có 8 - 50 kí tự'));
+        else if (state.input.repass !== state.input.password)
+            dispatch(setError('Mật khẩu nhập lại không trùng khớp'));
+        else if (!state.input.birthdate) dispatch(setError('Ngày sinh không thể để trống'));
+        else if (getAge(state.input.birthdate) <= 13) dispatch(setError('Độ tuổi tối thiểu là 13'));
+        else if (state.input.gender < 0 || state.input.gender > 3)
+            dispatch(setError('Giới tính không tồn tại'));
         else {
-            register({ ...input, password: input.repass });
-            setErr('');
+            const res = await register({
+                ...state.input,
+                password: state.input.repass,
+                otp: state.otp.join(''),
+            });
+
+            if (res.EC === '200') {
+                // dang ki thanh cong
+                nav(config.routes.login);
+                alert('Đăng kí tài khoản thành công!');
+                dispatch(setError(''));
+            } else if (res.EC === '400') {
+                dispatch(setError(res.EM));
+            } else if (res.EC === '500') {
+                alert(
+                    'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
+                );
+            }
         }
+
+        dispatch(setLoading(false));
+    };
+
+    const handleOtpVerify = async (event) => {
+        dispatch(setLoading(true));
+        event.preventDefault();
+        const res = await sendOTP({ email: state.input.email });
+
+        if (res.EC === '200') {
+            alert('Kiểm tra hộp thư email của bạn');
+            setPage(false);
+            dispatch(setError(''));
+        } else if (res.EC === '400') {
+            dispatch(setError('Email không thể để trống'));
+        } else if (res.EC === '401') {
+            dispatch(setError('Đã hết lượt gửi trong ngày'));
+        } else if (res.EC === '500') {
+            alert('Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com');
+        }
+        dispatch(setLoading(false));
     };
 
     return (
         <div className={cx('wraper')}>
             <div className={cx('form-container')}>
                 <div className={cx('image-box')}>
-                    <p className={cx('title')}>THAM GIA ChatTime</p>
+                    <p className={cx('title')}>{page ? 'THAM GIA ChatTime' : 'Nhập mã OTP'}</p>
                 </div>
                 <form className={cx('form')}>
-                    <div className={cx('input-group')}>
-                        <input
-                            type="email"
-                            name="email"
-                            id="email"
-                            placeholder="Email"
-                            value={input.email}
-                            onChange={handleChange}
-                        />
+                    {page ? (
+                        <RegisterForm state={state} dispatch={dispatch} />
+                    ) : (
+                        <OTPForm state={state} dispatch={dispatch} />
+                    )}
+                    {!!state.err && <div className={cx('err-tag')}>* {state.err}</div>}
+                    <div className={cx('btn-group')}>
+                        {page || (
+                            <Button
+                                className={cx('sign')}
+                                type="rounded"
+                                size="medium"
+                                disabled={!!state.err || state.loading}
+                                onClick={setPage(true)}
+                            >
+                                Trở lại
+                            </Button>
+                        )}
+                        <Button
+                            className={cx('sign')}
+                            type="rounded"
+                            size="medium"
+                            disabled={!!state.err || state.loading}
+                            onClick={(e) => {
+                                page ? handleOtpVerify(e) : handleSubmit(e);
+                            }}
+                        >
+                            {page ? 'Đăng kí' : 'Xác nhận'}
+                        </Button>
                     </div>
-                    <div className={cx('input-group')}>
-                        <input
-                            type="text"
-                            name="username"
-                            id="username"
-                            placeholder="Họ và tên"
-                            value={input.username}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className={cx('pass-container')}>
-                        <div className={cx('input-group')}>
-                            <div className={cx('pass-input')}>
-                                <input
-                                    type={showPass ? 'text' : 'password'}
-                                    name="password"
-                                    id="password"
-                                    placeholder="Mật khẩu"
-                                    value={input.password}
-                                    suggested="new-password"
-                                    onChange={handleChange}
-                                />
-                                <button className={cx('eye-btn')} onClick={handlePassShow}>
-                                    {showPass ? (
-                                        <FontAwesomeIcon icon={faEye} />
-                                    ) : (
-                                        <FontAwesomeIcon icon={faEyeSlash} />
-                                    )}
-                                </button>
-                            </div>
-                        </div>
-                        <div className={cx('input-group')}>
-                            <input
-                                type="password"
-                                name="repass"
-                                id="repass"
-                                placeholder="Nhập lại mật khẩu"
-                                suggested="new-password"
-                                value={input.repass}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    </div>
-                    <div className={cx('input-group')}>
-                        <label className={cx('label')} htmlFor="birthdate">
-                            Ngày sinh
-                        </label>
-                        <input
-                            type="date"
-                            name="birthdate"
-                            id="birthdate"
-                            value={input.birthdate}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className={cx('input-group', 'ratio-group')}>
-                        <label className={cx('gender-title')} htmlFor="birthdate">
-                            Giới tính:
-                        </label>
-                        <div className={cx('ratio')}>
-                            {genderList.map((gender, index) => (
-                                <Button
-                                    key={index}
-                                    className={cx('gender', {
-                                        'gender-selected': index === input.gender,
-                                    })}
-                                    type="primary"
-                                    size="medium"
-                                    onClick={(event) => handleRatio(event, index)}
-                                >
-                                    {gender}
-                                </Button>
-                            ))}
-                        </div>
-                    </div>
-                    {err && <div className={cx('err-tag')}>* {err}</div>}
-                    <Button
-                        className={cx('sign')}
-                        type="rounded"
-                        size="medium"
-                        disabled={err}
-                        onClick={handleSubmit}
-                    >
-                        Đăng kí
-                    </Button>
                 </form>
                 <p className={cx('signup')}>
-                    Bạn đã có có tài khoản? <Link to="/login">Đăng nhập</Link>
+                    {page ? (
+                        <>
+                            Bạn đã có có tài khoản? <Link to={config.routes.login}>Đăng nhập</Link>
+                        </>
+                    ) : (
+                        <>
+                            Bạn chưa nhận được mã?{' '}
+                            <Link
+                                to=""
+                                type="text"
+                                onClick={(e) => {
+                                    handleOtpVerify(e);
+                                    setCountDown(30);
+                                }}
+                            >
+                                {countDown <= 0 ? 'Gửi lại mã' : countDown + 's'}
+                            </Link>
+                        </>
+                    )}
                 </p>
             </div>
         </div>

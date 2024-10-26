@@ -1,10 +1,21 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 .messageBubble {
     width: 100%;
     display: flex;
     align-items: center;
     flex-direction: row;
     margin: 2rem 1rem;
-  
+
+      animation: fadeIn 0.5s ease-out;
     &.me {
       justify-content: flex-start;
     }
@@ -74,7 +85,7 @@
   
           p {
             margin: 0;
-            font-size: 1.2rem;
+            font-size: 1.8rem;
             font-weight: 500;
             padding: 1rem;
             text-align: justify;
@@ -85,6 +96,7 @@
             width: 100%;
             padding-left: 1rem;
             padding-bottom: 1rem;
+            font-size: 1rem;
           }
         }
       }

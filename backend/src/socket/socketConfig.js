@@ -1,5 +1,9 @@
 import { Server } from "socket.io";
 let io;
+
+import {
+  createChat,
+} from "../services/chatService.js";
 const setupWebSocket = (server) => {
      io = new Server(server, {
         cors: {
@@ -11,8 +15,16 @@ const setupWebSocket = (server) => {
       console.log('Một người dùng đã kết nối:', socket.id);
   
       // Place event handlers here
-      require('./event/comment')(io, socket);
-  
+      require('./event/chat')(io, socket);
+      socket.on('send_mess', async (data) => {
+        try {
+          const chat = await createChat(data.senderid, data.friendid, data.groupid, data.content, data.time, data.numlike);
+          console.log('Tin nhắn mới: nè cd', data);
+          io.emit('new_chat', chat);
+        } catch (error) {
+          console.error('Error creating chat:', error);
+        }
+      });
       socket.on('disconnect', () => {
         console.log('Người dùng đã ngắt kết nối:', socket.id);
       });
