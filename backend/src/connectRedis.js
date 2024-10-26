@@ -1,3 +1,4 @@
+import RedisStore from 'connect-redis';
 import { createClient } from 'redis';
 
 const redisClient = createClient({
@@ -16,5 +17,11 @@ redisClient.on('connect', function () {
 redisClient.on('error', (err) => console.log('Redis Client Error', err));
 
 redisClient.connect();
+
+export const redisStore = new RedisStore({
+    client: redisClient,
+    prefix: 'WTFChat:',
+    ttl: 30 * 24 * 60 * 60, // 30 days (for "remember me")
+});
 
 export default redisClient;

@@ -35,11 +35,11 @@ const extractToken = (req) => {
 
 export const checkUserJWT = (req, res, next) => {
     if (!SecurePaths.includes(req.path)) return next();
-    let cookies = req.cookies;
+    let session = req.session;
     let tokenFromHeader = extractToken(req);
-    if ((cookies && cookies.jwt) || tokenFromHeader) {
-        const token = cookies && cookies.jwt ? cookies.jwt : tokenFromHeader;
-        // console.log(token)
+    if (session && session.userId) {
+        const token = session && session.userId ? session.userId : tokenFromHeader;
+
         const decoded = verifyToken(token);
 
         if (!decoded) {

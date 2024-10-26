@@ -1,5 +1,5 @@
 import axios from 'axios';
-import env from "react-dotenv";
+import env from 'react-dotenv';
 
 const instance = axios.create({
     // baseURL: 'http://localhost:8000',
@@ -19,7 +19,7 @@ instance.interceptors.request.use(
     function (error) {
         // Do something with request error
         return Promise.reject(error);
-    }, 
+    },
 );
 // Add a response interceptor
 instance.interceptors.response.use(
@@ -38,7 +38,8 @@ instance.interceptors.response.use(
                 if (
                     window.location.pathname !== '/' &&
                     window.location.pathname !== '/login' &&
-                    window.location.pathname !== '/register'
+                    window.location.pathname !== '/register' &&
+                    window.location.pathname !== '/forgetpassword'
                 ) {
                     alert('Not authenticated the user');
                 }

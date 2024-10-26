@@ -34,15 +34,13 @@ export const handleLogin = async (req, res) => {
 
         if (result.DT) {
             if (data.remember) {
-                res.cookie('jwt', result.DT.access_token, {
-                    httpOnly: true,
-                    maxAge: 30 * 24 * 60 * 60 * 1000,
-                });
+                // Set session data
+                req.session.userId = result.DT.access_token;
+                // Set extended expiration time
+                req.session.store.client.expire(req.sessionID, 30 * 24 * 60 * 60);
             } else {
-                res.cookie('jwt', result.DT.access_token, {
-                    httpOnly: true,
-                    maxAge: 24 * 60 * 60 * 1000,
-                });
+                // Set session data without extended expiration
+                req.session.userId = result.DT.access_token;
             }
         }
 
@@ -57,35 +55,45 @@ export const handleLogin = async (req, res) => {
     }
 };
 
-export const handleLoginGG = async (req, res) => {
-    try {
-        let check = await Authentication_service.handleAuthGG(req.body.id);
-        if (check) {
-            res.cookie('jwt', check.DT.access_token, {
-                httpOnly: true,
-                maxAge: 30 * 24 * 60 * 60 * 1000,
-            });
+// export const handleLoginGG = async (req, res) => {
+//     try {
+//         let check = await Authentication_service.handleAuthGG(req.body.id);
+//         if (check) {
+//             res.cookie('jwt', check.DT.access_token, {
+//                 httpOnly: true,
+//                 maxAge: 30 * 24 * 60 * 60 * 1000,
+//             });
 
-            return res.status(200).json({
-                EM: check.EM,
-                EC: check.EC,
-                DT: check.DT,
-            });
-        }
-    } catch (error) {
-        console.log('error: >>>>', error);
+//             return res.status(200).json({
+//                 EM: check.EM,
+//                 EC: check.EC,
+//                 DT: check.DT,
+//             });
+//         }
+//     } catch (error) {
+//         console.log('error: >>>>', error);
 
-        return res.status(200).json({
-            EM: 'error from server',
-            EC: '-1',
-            DT: '',
-        });
-    }
-};
+//         return res.status(200).json({
+//             EM: 'error from server',
+//             EC: '-1',
+//             DT: '',
+//         });
+//     }
+// };
 
 export const handleLogout = async (req, res) => {
     try {
-        res.clearCookie('jwt');
+        // Destroy the session
+        res.clearCookie(req.sessionID);
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('LOGOUT | INFO | Lỗi xoá session ' + err);
+                return res.status(200).json({
+                    EM: 'LOGOUT | ERROR | Lỗi xoá session ' + err,
+                    EC: '500',
+                });
+            }
+        });
         return res.status(200).json({
             EM: 'LOGOUT | INFO | Đăng xuất thành công',
             EC: '200',
@@ -139,11 +147,11 @@ export const checkAccount = async (req, res) => {
     }
 };
 
-export const sendMail = async (req, res) => {
+export const sendOTP = async (req, res) => {
     try {
         const email = await req.body.email;
 
-        const result = await mailServices.sendMail(email);
+        const result = await mailServices.sendOTP(email);
 
         return res.status(200).json(result);
     } catch (error) {
@@ -154,21 +162,20 @@ export const sendMail = async (req, res) => {
     }
 };
 
-export const mailVerify = async (req, res) => {
-    try {
-        const data = await req.query;
-        
+// export const mailVerify = async (req, res) => {
+//     try {
+//         const data = await req.query;
 
-        const result = await mailServices.mailVerify(data);
+//         const result = await mailServices.mailVerify(data);
 
-        return res.status(200).json(result);
-    } catch (error) {
-        return res.status(200).json({
-            EM: 'CONTROLLER | SEND_MAIL | ERROR | ' + error,
-            EC: '500',
-        });
-    }
-};
+//         return res.status(200).json(result);
+//     } catch (error) {
+//         return res.status(200).json({
+//             EM: 'CONTROLLER | SEND_MAIL | ERROR | ' + error,
+//             EC: '500',
+//         });
+//     }
+// };
 
 export const handleForgotPassword = async (req, res) => {
     try {
