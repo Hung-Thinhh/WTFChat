@@ -1,56 +1,41 @@
 import classNames from 'classnames/bind';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import styles from './FindEmailForm.module.scss';
-import Button from 'components/Button';
-import { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
-import { login } from 'controller/authen';
-import ChatDataContext from 'lib/Context/ChatContext';
-import config from 'config';
 import Avatar from 'components/Avatar';
-import { setError, setInput } from 'components/pages/ForgerPass/ForgetPassReducer/action';
-import { useDebounce } from 'hooks';
+import {
+    setError,
+    setInput,
+    setSearchUser,
+} from 'components/pages/ForgerPass/ForgetPassReducer/action';
+import { setLoading } from 'components/pages/Register/RegisterReducer/action';
+import Button from 'components/Button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { searchMail } from 'controller/authen';
 
 const cx = classNames.bind(styles);
 
 function FindEmailForm({ state, dispatch }) {
-    const emailDebounce = useDebounce(state.input.email, 1000);
-    const [searchUser, setSearchUser] = useState(null);
-
-    useEffect(() => {
-        if (emailDebounce === '') {
-            setSearchUser(null);
-            return;
-        }
-
-        const fetchApi = async () => {
-            // setLoading(true);
-            // const response = await fetch('/api/v1/search/search', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({ searchValue }),
-            // });
-            // if (response.ok) {
-            //     // setLoading(false);
-            //     const res: ResultInterface = await response.json();
-            //     setSearchResult(res);
-            // } else if (response.status === 400) {
-            //     showAlert('!', 'error');
-            // } else if (response.status === 500) {
-            //     showAlert('Lỗi, hãy báo cáo lại với chúng tôi cảm ơn', 'error');
-            // }
-        };
-
-        fetchApi();
-    }, [emailDebounce]);
-
     const handleChange = (event) => {
+        console.log('aaa');
+
         dispatch(setInput({ key: event.target.name, value: event.target.value }));
         if (state.err) dispatch(setError(''));
-        // setInput((prev) => ({ ...prev, [event.target.name]: event.target.value }));
-        // if (err) setErr('');
+    };
+
+    const handleSearchEmail = async (event) => {
+        event.preventDefault();
+        dispatch(setLoading(true));
+
+        const res = await searchMail({ email: state.input.email });
+
+        if (res.EC === '200') {
+            dispatch(setSearchUser(res.DT));
+        } else if (res.EC === '400') {
+            dispatch(setSearchUser('Tài khoản không tồn tại'));
+        } else if (res.EC === '500') {
+            alert('Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com');
+        }
+        dispatch(setLoading(false));
     };
 
     return (
@@ -64,17 +49,29 @@ function FindEmailForm({ state, dispatch }) {
                     value={state.input.email}
                     onChange={handleChange}
                 />
+                <Button
+                    className={cx('search-btn')}
+                    type="circle"
+                    size="small"
+                    onClick={handleSearchEmail}
+                >
+                    <FontAwesomeIcon icon={faSearch} />
+                </Button>
             </div>
-            {searchUser ? (
+            {state.searchUser ? (
                 <>
                     <p className={cx('sub-heading')}>Đây có phải là tài khoản của bạn?</p>
                     <div className={cx('input-group', 'userinfo_group')}>
-                        <Avatar alt="" src="" size="large" />
-                        <p>Email: binhminh19112003@gmail.com</p>
+                        <Avatar alt="avatar" src={state.searchUser.avatar} size="large" />
+                        <p>Email: {state.searchUser.email}</p>
+                        <p>
+                            Họ và tên:{' '}
+                            {state.searchUser.firstname + ' ' + state.searchUser.lastname}
+                        </p>
                     </div>
                 </>
             ) : (
-                <p className={cx('sub-heading')}>Không thể tìm thấy tài khoản của bạn</p>
+                <p className={cx('sub-heading')}>Tài khoản không tồn tại</p>
             )}
         </>
     );

@@ -71,8 +71,8 @@ function Register() {
     };
 
     const handleOtpVerify = async (event) => {
-        dispatch(setLoading(true));
         event.preventDefault();
+        dispatch(setLoading(true));
         const res = await sendOTP({ email: state.input.email });
 
         if (res.EC === '200') {

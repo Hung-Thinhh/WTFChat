@@ -16,8 +16,7 @@ import {
     handleLogin,
     handleLogout,
     handleRegister,
-    mailVerify,
-    sendMail,
+    seachMail,
     sendOTP,
 } from '../controllers/AuthenController.js';
 // const { getRating } = require("../controller/RatingController.js");
@@ -33,6 +32,7 @@ const initApiRouter = (app) => {
     router.post('/register', handleRegister);
     router.post('/login', handleLogin);
     router.post('/sendOTP', sendOTP);
+    router.post('/searchMail', seachMail);
 
 
     router.post("/chat", chatController);// api gửi tin nhắn 
