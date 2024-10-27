@@ -3,6 +3,7 @@ export const SHOW_PASS = 'showPass';
 export const SET_ERROR = 'setError';
 export const SET_LOADING = 'setLoading';
 export const SET_OTP = 'setOtp';
+export const SET_SEARCH_USER = 'setSearchUser';
 
 export const setInput = (payload) => ({
     type: SET_INPUT,
@@ -26,5 +27,10 @@ export const setLoading = (payload) => ({
 
 export const setOTP = (payload) => ({
     type: SET_OTP,
+    payload,
+});
+
+export const setSearchUser = (payload) => ({
+    type: SET_SEARCH_USER,
     payload,
 });

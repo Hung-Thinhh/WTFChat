@@ -2,7 +2,7 @@ import pool from '../connectDB.js';
 
 const getChatRoom = async (id) => {
     try {
-        const [row] = await pool.query(
+        const [rows] = await pool.query(
             `SELECT 
                 nguoidung.firstname AS first_name,
                 nguoidung.lastname AS last_name,
@@ -34,10 +34,23 @@ const getChatRoom = async (id) => {
             AND nguoidung.id != ?;`,
             [id, id, id]
         );
+        for (const row of rows) {
+            const [room] = await pool.query(`SELECT * FROM phongchat WHERE (useroneid = ? AND usertwoid = ?) OR (useroneid = ? AND usertwoid = ?)`, [id, row.id, row.id, id]);
+            let roomId;
+            if (room.length > 0) {
+                // Phòng chat đã tồn tại
+                roomId = room[0].id;
+            } else {
+                // Tạo phòng chat mới
+                const [newRoom] = await pool.query(`INSERT INTO phongchat(useroneid, usertwoid) VALUES (?, ?)`, [id, row.id]);
+                roomId = newRoom.insertId;
+            }
+        }
+
         return {
             EM: 'Success',
             EC: 1,
-            DT: row
+            DT: rows
         };
     } catch (error) {
         console.log('SERVICE | CHAT SERVICE | ERROR | ', error); // dAev only

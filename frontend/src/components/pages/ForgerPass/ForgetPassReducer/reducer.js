@@ -1,4 +1,11 @@
-const { SET_INPUT, SHOW_PASS, SET_ERROR, SET_LOADING, SET_OTP } = require('./action');
+const {
+    SET_INPUT,
+    SHOW_PASS,
+    SET_ERROR,
+    SET_LOADING,
+    SET_OTP,
+    SET_SEARCH_USER,
+} = require('./action');
 
 export const initState = {
     input: {
@@ -10,6 +17,7 @@ export const initState = {
     err: '',
     loading: false,
     otp: Array(6).fill(''),
+    searchUser: '',
 };
 
 export const reducer = (state, action) => {
@@ -43,7 +51,11 @@ export const reducer = (state, action) => {
                 ...state,
                 otp: action.payload,
             };
-
+        case SET_SEARCH_USER:
+            return {
+                ...state,
+                searchUser: action.payload,
+            };
         default:
             throw new Error('Thay đổi không hợp lệ');
     }

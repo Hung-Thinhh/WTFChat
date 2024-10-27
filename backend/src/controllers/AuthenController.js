@@ -177,64 +177,6 @@ export const sendOTP = async (req, res) => {
 //     }
 // };
 
-export const handleForgotPassword = async (req, res) => {
-    try {
-        if (!req.body.email) {
-            return res.status(500).json({
-                EM: 'Email rỗng!',
-                EC: '-1',
-                DT: '',
-            });
-        }
-        let check = await Otp_service.CreateOtp(req.body.email);
-        if (check) {
-            res.cookie('userIdentifier', `${check.DT}`, {
-                maxAge: 900000,
-                httpOnly: true,
-            });
-            return res.status(200).json({
-                EM: check.EM,
-                EC: check.EC,
-                DT: {},
-            });
-        }
-    } catch (error) {
-        console.log('error: >>>>', error);
-
-        return res.status(200).json({
-            EM: 'error from server',
-            EC: '-1',
-            DT: '',
-        });
-    }
-};
-
-export const RequestOTP = async (req, res) => {
-    try {
-        const id = req.cookies.userIdentifier;
-        let check = await Otp_service.CreateOtp(id);
-        if (check) {
-            res.cookie('userIdentifier', `${check.DT}`, {
-                maxAge: 900000,
-                httpOnly: true,
-            });
-            return res.status(200).json({
-                EM: check.EM,
-                EC: check.EC,
-                DT: {},
-            });
-        }
-    } catch (error) {
-        console.log('error: >>>>', error);
-
-        return res.status(200).json({
-            EM: 'error from server',
-            EC: '-1',
-            DT: '',
-        });
-    }
-};
-
 export const handleVerifyOtp = async (req, res) => {
     try {
         if (!req.body.otp) {
@@ -260,6 +202,21 @@ export const handleVerifyOtp = async (req, res) => {
             EM: 'error from server',
             EC: '-1',
             DT: '',
+        });
+    }
+};
+
+export const seachMail = async (req, res) => {
+    try {
+        const email = await req.body.email;
+
+        const result = await services.searchMail(email);
+
+        return res.status(200).json(result);
+    } catch (error) {
+        return res.status(200).json({
+            EM: 'CONTROLLER | SEARCH MAIL | ERROR | ' + error,
+            EC: '500',
         });
     }
 };

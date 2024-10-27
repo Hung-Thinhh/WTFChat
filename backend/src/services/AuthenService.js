@@ -350,6 +350,51 @@ const handleCheckAccount = async (email) => {
     }
 };
 
+const searchMail = async (email) => {
+    if (email === '')
+        return {
+            EM: 'SEARCH MAIL | ERROR | Tài khoản không tồn tại',
+            EC: '400',
+        };
+    try {
+        await pool.query('START TRANSACTION');
+        // find current user
+        const currUser = await pool.query(
+            `SELECT email, firstname, lastname, avatar
+                FROM nguoidung
+                WHERE email = ?`,
+            [email],
+        );
+
+        await pool.query('COMMIT');
+
+        if (!currUser[0][0])
+            return {
+                EM: 'SEARCH MAIL | ERROR | Tài khoản không tồn tại',
+                EC: '400',
+            };
+
+        const { firstname, lastname, avatar } = currUser[0][0];
+        return {
+            EM: 'SEARCH MAIL | INFO | Tài khoản đã được tìm thấy',
+            EC: '200',
+            DT: {
+                email,
+                firstname,
+                lastname,
+                avatar,
+            },
+        };
+    } catch (error) {
+        console.log('SERVICE |SEARCH MAIL | ERROR | ' + error);
+
+        return {
+            EM: 'SEARCH MAIL | ERROR | ' + error,
+            EC: '500',
+        };
+    }
+};
+
 export const services = {
     handleRegister,
     handleLogin,
@@ -359,4 +404,5 @@ export const services = {
     checkPassword,
     hashPassword,
     handleCheckAccount,
+    searchMail,
 };

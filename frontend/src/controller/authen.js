@@ -13,6 +13,10 @@ export const sendOTP = (data) => {
     return postData(`/api/sendOTP`, data);
 };
 
+export const searchMail = (data) => {
+    return postData(`/api/searchMail`, data);
+};
+
 export const logout = (data) => {
     return axios.get(`/api/logout`, data);
 };

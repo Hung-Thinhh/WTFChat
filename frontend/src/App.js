@@ -14,6 +14,7 @@ import ChatDataProvider from './lib/provider/ChatDataProvider';
 import { Fragment, useContext, useEffect, useState } from 'react';
 import { checkaccount, logout } from 'controller/authen';
 import ChatDataContext from 'lib/Context/ChatContext';
+import { socket } from 'socket';
 
 function App(props) {
     // const location = useLocation();
@@ -48,11 +49,9 @@ function App(props) {
         // check account whenever go to page
         const checkAccount = async () => {
             const res = await checkaccount();
-
-            console.log(res);
-
             if (res.EC === '200') {
                 setCurrUser(res.DT);
+                socket.emit('authenticate', res.DT.id);
                 // setCurrUser(res.DT)
             } else if (res.EC === '400') {
                 alert('Tài khoản đang bị khoá');

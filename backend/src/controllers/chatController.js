@@ -33,8 +33,8 @@ const chatController = async (req, res) => {
 
 const getChatController = async (req, res) => {
     try {
-        const id = req.body.id;
-        const data = await getChat(id);
+        const { userId, friendId } = req.body;
+        const data = await getChat(userId, friendId);
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,
@@ -66,9 +66,28 @@ const deletaChatController = async (req, res) => {
         });
     }
 }
+const createRoomController = async (req, res) => {
+    try {
+      const { userOneId, userTwoId } = req.body;
+      const data = await createRoom(userOneId, userTwoId);
+      return res.status(200).json({
+        EM: data.EM,
+        EC: data.EC,
+        DT: data.DT,
+      });
+    } catch (error) {
+      console.log('CONTROLLER | CREATE ROOM CONTROLLER | ERROR | ', error);
+      return res.status(500).json({
+        EM: 'Internal server error',
+        EC: -1,
+        DT: [],
+      });
+    }
+  };
 
 export {
     chatController,
     getChatController,
-    deletaChatController
+    deletaChatController,
+    createRoomController
 };
