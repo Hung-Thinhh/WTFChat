@@ -1,12 +1,20 @@
 import mysql from 'mysql2/promise';
 require('dotenv').config();
 
+// const pool = mysql.createPool({
+//     host: process.env.SQL_HOST,
+//     user: process.env.SQL_USER,
+//     password: process.env.SQL_PASS,
+//     database: process.env.SQL_DBNAME,
+//     port: process.env.SQL_PORT,
+//     connectionLimit: 10,
+// });
 const pool = mysql.createPool({
-    host: process.env.SQL_HOST,
-    user: process.env.SQL_USER,
-    password: process.env.SQL_PASS,
-    database: process.env.SQL_DBNAME,
-    port: process.env.SQL_PORT,
+    host: 'localhost', // Địa chỉ host của MySQL
+    user: 'root', // Tên người dùng MySQL
+    password: '', // Mật khẩu của MySQL
+    database: 'wtfchat_thinkwing', // Tên database muốn kết nối
+    port: '3306',
     connectionLimit: 10,
 });
 

@@ -2,6 +2,7 @@ import {adminHome} from '../services/AdminHomeService';
 const HomeController = async () => {
     try {
         const result = await adminHome.HomeService();
+        
         return {
             ...result,
         };
