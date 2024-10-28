@@ -7,10 +7,16 @@ const pool = mysql.createPool({
     password: process.env.SQL_PASS,
     database: process.env.SQL_DBNAME,
     port: process.env.SQL_PORT,
-
-    // waitForConnections: true,
-    // connectionLimit: 100,
+    connectionLimit: 10,
 });
+// const pool = mysql.createPool({
+//     host: 'localhost', // Địa chỉ host của MySQL
+//     user: 'root', // Tên người dùng MySQL
+//     password: '', // Mật khẩu của MySQL
+//     database: 'wtfchat_thinkwing', // Tên database muốn kết nối
+//     port: '3306',
+//     connectionLimit: 10,
+// });
 
 pool.getConnection()
     .then((connection) => {

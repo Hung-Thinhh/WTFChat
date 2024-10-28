@@ -7,9 +7,7 @@ import {
     deletaChatController,
 } from '../controllers/chatController';
 
-import {
-    getRoomController
-} from '../controllers/getChatRoomCtrl.js';
+import { getRoomController } from '../controllers/getChatRoomCtrl.js';
 import {
     checkAccount,
     getPublicKey,
@@ -20,7 +18,7 @@ import {
     sendOTP,
 } from '../controllers/AuthenController.js';
 // const { getRating } = require("../controller/RatingController.js");
-import {getUserById,editUser,getListUserAPI} from "../controllers/AdminUserController.js"
+import { getUserById, editUser, getListUserAPI ,banUserById,unbanUserById} from '../controllers/AdminUserController.js';
 
 const router = express.Router();
 
@@ -42,10 +40,15 @@ const initApiRouter = (app) => {
     router.post("/getchatroom", getRoomController);// api xoa tin nhắn
     router.post("/createroom", getRoomController);// api xoa tin nhắn
 
-//admin
-router.get("/getUserById/:id", getUserById);
-router.get("/getUser/:page", getListUserAPI);
-router.post("/edit-user", editUser);
+    //admin
+    router.get('/getUserById/:id', getUserById);
+    router.get('/banUserById/:id', banUserById);
+    router.get('/unbanUserById/:id', unbanUserById);
+    router.get('/getUser/:page', getListUserAPI);
+    router.post('/edit-user', editUser);
+
+
+
     return app.use('/api', router);
 };
 

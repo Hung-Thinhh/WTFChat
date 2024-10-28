@@ -49,6 +49,7 @@ var myLineChart = new Chart(ctx, {
       data: [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000],
     }],
   },
+  // lấy 7 ngày gần nhất về số lượng tin nhắn, số user đăng ký, số nhóm được tạo
   options: {
     maintainAspectRatio: false,
     layout: {

@@ -100,12 +100,22 @@
                                                     >
                                                         <i class="fas fa-cog"></i>
                                                     </button>
+                                                    <% if (users.user[i].status ==1) {%>
                                                     <button
-                                                        data-toggle="tooltip"
-                                                        data-original-title="Delete"
+                                                        class="BanUserButton"
+                                                        id="<%= users.user[i].id %>"
                                                     >
                                                         <i class="fas fa-times-circle"></i>
                                                     </button>
+                                                    <% } else {%>
+                                                    <button
+                                                        class="UnBanUserButton"
+                                                        id="<%= users.user[i].id %>"
+                                                    >
+                                                        <i class="fa fa-unlock" aria-hidden="true"></i>
+                                                    </button>
+
+                                                    <% } %>
                                                 </td>
                                             </tr>
                                             <% }; %>
@@ -302,17 +312,17 @@
             </div>
         </div>
 
-        <div class="position-fixed bottom-0 right-0 p-3" style="z-index: 1050; right: 0; top: 0">
+        <div aria-live="polite" aria-atomic="true" style="position: fixed;z-index: 1050; right: 20px; top: 20px ;">
             <div
                 id="liveToast"
                 class="toast"
                 role="alert"
                 aria-live="assertive"
                 aria-atomic="true"
-                data-delay="300000"
+                data-delay="3000"
             >
                 <div class="toast-header">
-                    <img src="..." class="rounded mr-2" alt="..." />
+                    <img src="https://phongvu.vn/cong-nghe/wp-content/uploads/2024/09/Meme-meo-bieu-cam-3-1024x1024.jpg" style="width: 30px;" class="rounded mr-2" alt="..." />
                     <strong class="mr-auto">Notify</strong>
                     <button
                         type="button"
