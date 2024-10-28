@@ -17,6 +17,8 @@ function ForgetPass() {
     // const [countDown, setCountDown] = useState(30);
 
     const handleSendOTP = async (event) => {
+        console.log(state.searchUser);
+
         if (!state.searchUser.email) dispatch(setError('Chưa tìm kiếm tài khoản'));
         event.preventDefault();
         dispatch(setLoading(true));
@@ -24,7 +26,7 @@ function ForgetPass() {
 
         if (res.EC === '200') {
             alert('Kiểm tra hộp thư email của bạn');
-            setPage(false);
+            setPage(true);
             dispatch(setError(''));
         } else if (res.EC === '400') {
             dispatch(setError('Email không thể để trống'));

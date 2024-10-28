@@ -77,7 +77,7 @@ function Register() {
 
         if (res.EC === '200') {
             alert('Kiểm tra hộp thư email của bạn');
-            setPage(false);
+            setPage(true);
             dispatch(setError(''));
         } else if (res.EC === '400') {
             dispatch(setError('Email không thể để trống'));

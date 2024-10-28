@@ -58,7 +58,7 @@ function FindEmailForm({ state, dispatch }) {
                     <FontAwesomeIcon icon={faSearch} />
                 </Button>
             </div>
-            {state.searchUser ? (
+            {state.searchUser.email ? (
                 <>
                     <p className={cx('sub-heading')}>Đây có phải là tài khoản của bạn?</p>
                     <div className={cx('input-group', 'userinfo_group')}>
