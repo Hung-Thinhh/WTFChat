@@ -252,6 +252,66 @@ const handleLogin = async (data) => {
     }
 };
 
+const handleChangePass = async (data) => {
+    if (!data)
+        return {
+            EM: 'CHANGE PASS | ERROR | Không có dữ liệu',
+            EC: '401',
+        };
+
+    const { email, password, otp } = data;
+    
+    // first check
+    if (!email)
+        return {
+            EM: 'CHANGE PASS | ERROR | Email không thể để trống',
+            EC: '400',
+        };
+    else if (password.length < 8 || password.length > 50)
+        return {
+            EM: 'CHANGE PASS | ERROR | Mật khẩu nhập lại không trùng khớp',
+            EC: '400',
+        };
+
+    const authOTP = await redisClient.get(email + 'OTP');
+    console.log(authOTP);
+    
+    if (otp !== authOTP) {
+        return {
+            EM: 'CHANGE PASS | ERROR | Mã xác thực không chính xác',
+            EC: '400',
+        };
+    }
+
+    try {
+        await pool.query('START TRANSACTION');
+        const hashPass = hashPassword(data.password);
+
+        // insert user information
+        const updatedPass = await pool.query(
+            `UPDATE xacthuc
+            SET password = ?
+            WHERE email = ?`,
+            [hashPass, email],
+        );
+        console.log(updatedPass);
+
+        await pool.query('COMMIT');
+        return {
+            EM: 'CHANGE PASS | INFO | Thay đổi mật khẩu thành công thành công',
+            EC: '200',
+        };
+    } catch (error) {
+        await pool.query('ROLLBACK');
+
+        console.log('SERVICE | CHANGE PASS | ERROR | ', error);
+        return {
+            EM: 'CHANGE PASS | ERROR | ' + error,
+            EC: '500',
+        };
+    }
+};
+
 // const handleAuthGG = async (token) => {
 //     try {
 //         const user = await User.findOne({
@@ -405,4 +465,5 @@ export const services = {
     hashPassword,
     handleCheckAccount,
     searchMail,
+    handleChangePass,
 };

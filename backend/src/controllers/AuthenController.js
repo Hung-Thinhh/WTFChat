@@ -156,7 +156,7 @@ export const sendOTP = async (req, res) => {
         return res.status(200).json(result);
     } catch (error) {
         return res.status(200).json({
-            EM: 'CONTROLLER | SEND_MAIL | ERROR | ' + error,
+            EM: 'CONTROLLER | SEND_OTP | ERROR | ' + error,
             EC: '500',
         });
     }
@@ -202,6 +202,21 @@ export const handleVerifyOtp = async (req, res) => {
             EM: 'error from server',
             EC: '-1',
             DT: '',
+        });
+    }
+};
+
+export const handleChangePass = async (req, res) => {
+    try {
+        const data = await req.body;
+
+        const result = await services.handleChangePass(data);
+
+        return res.status(200).json(result);
+    } catch (error) {
+        return res.status(200).json({
+            EM: 'CONTROLLER | CHANGE PASS | ERROR | ' + error,
+            EC: '500',
         });
     }
 };

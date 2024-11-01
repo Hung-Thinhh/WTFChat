@@ -77,8 +77,9 @@ function Register() {
 
         if (res.EC === '200') {
             alert('Kiểm tra hộp thư email của bạn');
-            setPage(true);
             dispatch(setError(''));
+            setPage(false);
+            setCountDown(30);
         } else if (res.EC === '400') {
             dispatch(setError('Email không thể để trống'));
         } else if (res.EC === '401') {
@@ -109,7 +110,7 @@ function Register() {
                                 type="rounded"
                                 size="medium"
                                 disabled={!!state.err || state.loading}
-                                onClick={setPage(true)}
+                                onClick={() => setPage(true)}
                             >
                                 Trở lại
                             </Button>
