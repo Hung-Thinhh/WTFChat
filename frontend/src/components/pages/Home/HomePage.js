@@ -10,7 +10,7 @@ const cx = classNames.bind(styles);
 
 function Home() {
     return (
-        <div className={cx('wraper')}>
+        <div className={cx('wrapper')}>
             <img
                 className={cx('logo')}
                 src={process.env.PUBLIC_URL + 'logo512.png'}
