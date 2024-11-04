@@ -91,7 +91,7 @@ function Register() {
     };
 
     return (
-        <div className={cx('wraper')}>
+        <div className={cx('wrapper')}>
             <div className={cx('form-container')}>
                 <div className={cx('image-box')}>
                     <p className={cx('title')}>{page ? 'THAM GIA ChatTime' : 'Nhập mã OTP'}</p>

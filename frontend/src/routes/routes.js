@@ -10,6 +10,7 @@ import Login from '../components/pages/Login';
 import Register from 'components/pages/Register';
 import ForgetPass from 'components/pages/ForgerPass';
 import ChatHome from 'components/pages/ChatHome';
+import Profile from 'components/pages/Profile';
 
 // Public routes (nhưng đường dẫn có thể được truy cập bởi người dùng)
 const publicRoutes = [
@@ -45,6 +46,12 @@ const publicRoutes = [
 
 // Private routes (nhưng đường dẫn chỉ có thể truy cập từ phía server hoặc người có thẩm quyền)
 const privateRoutes = [
+    {
+        path: config.routes.profile,
+        component: Profile,
+        name: 'Profile',
+        layout: HomeLayout,
+    },
     {
         path: config.routes.forgetpassword,
         component: ForgetPass,
