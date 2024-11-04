@@ -7,7 +7,8 @@ import { Routes, Route } from 'react-router-dom';
 // import CheckAdminRoutes from './router/checkAdminRoutes';
 
 // routes
-import { publicRoutes } from 'routes';
+import { publicRoutes, privateRoutes } from 'routes';
+import {PrivateRoutes} from 'router/privateRoutes'
 
 import ChatDataProvider from './lib/provider/ChatDataProvider';
 
@@ -20,15 +21,9 @@ function App(props) {
     // const location = useLocation();
     // const prevPath = localStorage.getItem('prevPath') || '/';
     const { currUser, setCurrUser } = useContext(ChatDataContext);
+    const [checkAcc, setCheckAcc] = useState(false);
     const [pageProps, setPageProps] = useState({}); // những props muốn chuyền vào pages để sữ dụng
-    //   const isAuthentication = useSelector(
-    //     (state) => state.Authentication.defaultUser
-    //   );
-    //   const Mainn = () => (
-    //     <div className="main_content">
-    //       <AppRoutes />
-    //     </div>
-    //   );
+ 
 
     // Thêm những giá trị muốn thêm vào page đặc biệt nếu có
     // setPageProps(prev => {...prev, newProps: value})
@@ -64,6 +59,7 @@ function App(props) {
                     'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
                 );
             }
+            setCheckAcc(true);
         };
         checkAccount();
     }, []);
@@ -80,7 +76,7 @@ function App(props) {
     // }, []);
 
     return (
-        <Router>
+        checkAcc && <Router>
             <Routes>
                 {publicRoutes.map((route, index) => {
                     const Page = route.component;
@@ -104,6 +100,28 @@ function App(props) {
                                 <Layout>
                                     <Page {...pageProps} />
                                 </Layout>
+                            }
+                        />
+                    );
+                })}
+                {privateRoutes.map((route, index) => {
+                    const Page = route.component;
+                    let Layout = Fragment; // layout mặc đinh sẽ được đặt là không có thiết lập trong routes
+                    if (route.layout) {
+                        Layout = route.layout;
+                    }
+                    return (
+                        <Route
+                            key={index}
+                            path={route.path}
+                            element={
+                                <PrivateRoutes
+                                    component={
+                                        <Layout>
+                                            <Page {...pageProps} />
+                                        </Layout>
+                                    }
+                                />
                             }
                         />
                     );

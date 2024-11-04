@@ -1,16 +1,20 @@
-import {  Navigate } from 'react-router-dom';
-import { useSelector } from "react-redux";
+import { useContext } from 'react';
+import { Navigate } from 'react-router-dom';
+import ChatDataContext from 'lib/Context/ChatContext';
 
-const PrivateRoutes = ({ component: Component},props) => {
-  const isAuthentication = useSelector((state) => state.Authentication.defaultUser);
+const PrivateRoutes = ({ component}, props) => {
+    const { currUser } = useContext(ChatDataContext); // get current user data from global state
+console.log(currUser);
 
-  if (isAuthentication && isAuthentication.isLoading === false && isAuthentication.isAuthenticated) {
-    return (
-      <Component/>
-    );
-  } else if(isAuthentication && isAuthentication.isLoading === false && !isAuthentication.isAuthenticated) {
-    return <Navigate to="/login" />;
-  }
+    if (currUser) {
+        console.log('đã check ');
+
+        return component;
+    } else {
+        console.log('lol check ');
+
+        return <Navigate to="/login" />;
+    }
 };
 
-export default PrivateRoutes;
+export  {PrivateRoutes};

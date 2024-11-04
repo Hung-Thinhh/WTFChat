@@ -16,7 +16,12 @@ const cx = classNames.bind(styles);
 function HomeHeader() {
     const location = useLocation(); // to get current route
     const { currUser } = useContext(ChatDataContext); // get current user data from global state
-    const [data, setData] = useState({});
+    const defaultData = {
+        to: '',
+        icon: '',
+        content: '',
+    };
+    const [data, setData] = useState(defaultData);
 
     useEffect(() => {
         if (
@@ -42,7 +47,7 @@ function HomeHeader() {
         <div className={cx('wrapper')}>
             {currUser ? (
                 <AvatarMenu>
-                    <Avatar src={currUser.avt} size="small" />
+                    <Avatar src={currUser.avt || ''} size="small" />
                     <p>{currUser.username}</p>
                 </AvatarMenu>
             ) : (
