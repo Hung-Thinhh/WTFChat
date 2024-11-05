@@ -119,7 +119,7 @@ export const checkAccount = async (req, res) => {
                 EC: '403',
             });
         }
-
+        
         if (account.DT.status === 0)
             return res.status(200).json({
                 EM: 'CHECKACCOUNT | INFO | Tài khoản đang bị khoá',

@@ -24,14 +24,14 @@ export const verifyToken = (token) => {
     return decode;
 };
 
-const SecurePaths = ['/checkaccount'];
-
 const extractToken = (req) => {
     if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
         return req.headers.authorization.split(' ')[1];
     }
     return null;
 };
+
+const SecurePaths = ['/checkaccount', '/getUserInfo'];
 
 export const checkUserJWT = (req, res, next) => {
     if (!SecurePaths.includes(req.path)) return next();
@@ -49,8 +49,6 @@ export const checkUserJWT = (req, res, next) => {
             });
         }
 
-        
-        
         req.user = decoded;
         req.token = token;
         next();
@@ -63,14 +61,7 @@ export const checkUserJWT = (req, res, next) => {
 };
 
 export const checkUserPermission = async (req, res, next) => {
-    // if (!SecurePaths.includes(req.path) || req.path === '/account') return next();
-    const user = await req.user;
-
-    console.log(user);
-    
-    
     if (req.user) {
-        console.log("user permittion: " + req.user);
         next();
 
         // const email = req.user.email;

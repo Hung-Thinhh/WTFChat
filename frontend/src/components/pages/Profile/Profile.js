@@ -18,6 +18,7 @@ function Profile() {
         username: '',
         birthdate: '',
         gender: 0,
+        avatar: '',
     });
     const [err, setErr] = useState('');
     const [loading, setLoading] = useState(false);
@@ -37,7 +38,14 @@ function Profile() {
         const getCurrUserInfo = async () => {
             const res = await getUserInfo();
             if (res.EC === '200') {
-                console.log(res.DT);
+                const { avatar, birthdate, email, firstname, lastname, gender } = res.DT;
+                setInput({
+                    email,
+                    avatar,
+                    username: firstname + ' ' + lastname,
+                    birthdate,
+                    gender,
+                });
             } else if (res.EC === '400') {
                 alert('Tài khoản đang bị khoá');
                 await logout();
@@ -125,7 +133,7 @@ function Profile() {
                         {!!err && <div className={cx('err-tag')}>* {err}</div>}
                     </form>
                     <div className={cx('avatar-form')}>
-                        <Avatar alt="avatar" src="" size="ultra-lg" />
+                        <Avatar alt="avatar" src={input.avatar} size="ultra-lg" />
                         <button className={cx('upload-img-btn')}>
                             <FontAwesomeIcon icon={faCamera} />
                         </button>

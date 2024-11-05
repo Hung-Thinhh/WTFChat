@@ -44,7 +44,7 @@ const initApiRouter = (app) => {
     router.post('/changePass', handleChangePass);
 
     // profile
-    router.get('/getUserInfo', checkUserPermission, getUserInfo);
+    router.get('/getUserInfo', getUserInfo);
 
     // chat
     router.post('/chat', chatController); // api gửi tin nhắn
