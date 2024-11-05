@@ -39,9 +39,6 @@ const publicRoutes = [
         name: 'Register',
         layout: HomeLayout,
     },
-    
-   
-    
 ];
 
 // Private routes (nhưng đường dẫn chỉ có thể truy cập từ phía server hoặc người có thẩm quyền)
@@ -58,7 +55,7 @@ const privateRoutes = [
         name: 'ForgetPass',
         layout: HomeLayout,
     },
-     {
+    {
         path: config.routes.chatpage,
         component: ChatPage,
         name: 'ChatPage',

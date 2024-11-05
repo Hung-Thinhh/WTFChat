@@ -26,12 +26,14 @@ import {
     banUserById,
     unbanUserById,
 } from '../controllers/AdminUserController.js';
+import { getUserInfo } from '../controllers/ProfileController.js';
 
 const router = express.Router();
 
 const initApiRouter = (app) => {
     router.all('*', checkUserJWT);
 
+    // authen
     router.get('/checkaccount', checkAccount);
     router.get('/getPublicKey', getPublicKey);
     router.get('/logout', handleLogout);
@@ -41,6 +43,10 @@ const initApiRouter = (app) => {
     router.post('/searchMail', seachMail);
     router.post('/changePass', handleChangePass);
 
+    // profile
+    router.get('/getUserInfo', checkUserPermission, getUserInfo);
+
+    // chat
     router.post('/chat', chatController); // api gửi tin nhắn
     router.post('/getchat', getChatController); // api lấy tin nhắn
     router.get('/deletechat', deletaChatController); // api xoa tin nhắn

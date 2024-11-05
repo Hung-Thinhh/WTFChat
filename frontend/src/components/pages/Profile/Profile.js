@@ -1,13 +1,12 @@
 import classNames from 'classnames/bind';
 
 import styles from './Profile.module.scss';
-import config from 'config';
 import Button from 'components/Button';
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Avatar from 'components/Avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
+import { getUserInfo } from 'controller/profile';
 
 const cx = classNames.bind(styles);
 
@@ -22,6 +21,37 @@ function Profile() {
     });
     const [err, setErr] = useState('');
     const [loading, setLoading] = useState(false);
+
+    const logout = async () => {
+        // logout
+        const logoutRes = await logout();
+
+        if (logoutRes.EC === '200') {
+            window.location.reload();
+        } else if (logoutRes.EC === '500') {
+            alert('Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com');
+        }
+    };
+
+    useEffect(() => {
+        const getCurrUserInfo = async () => {
+            const res = await getUserInfo();
+            if (res.EC === '200') {
+                console.log(res.DT);
+            } else if (res.EC === '400') {
+                alert('Tài khoản đang bị khoá');
+                await logout();
+            } else if (res.EC === '403') {
+                alert('Xác thực thất bại');
+                await logout();
+            } else if (res.EC === '500') {
+                alert(
+                    'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
+                );
+            }
+        };
+        getCurrUserInfo();
+    }, []);
 
     const handleChange = (event) => {
         setInput((prev) => ({ ...prev, [event.target.name]: event.target.value }));

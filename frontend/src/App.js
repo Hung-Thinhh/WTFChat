@@ -27,19 +27,18 @@ function App(props) {
     // Thêm những giá trị muốn thêm vào page đặc biệt nếu có
     // setPageProps(prev => {...prev, newProps: value})
 
-    useEffect(() => {
-        const logout = async () => {
-            // logout
-            const logoutRes = await logout();
+    const logout = async () => {
+        // logout
+        const logoutRes = await logout();
 
-            if (logoutRes.EC === '200') {
-                window.location.reload();
-            } else if (logoutRes.EC === '500') {
-                alert(
-                    'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
-                );
-            }
-        };
+        if (logoutRes.EC === '200') {
+            window.location.reload();
+        } else if (logoutRes.EC === '500') {
+            alert('Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com');
+        }
+    };
+
+    useEffect(() => {
         // check account whenever go to page
         const checkAccount = async () => {
             const res = await checkaccount();
