@@ -6,6 +6,7 @@ import styles from "./Footer.scss";
 import { faMagnifyingGlass, faUserGroup, faBoxArchive, faPlus } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames";
 import Button from "components/Button";
+import ChatRoom from "../chatRoom"
 const cx = classNames.bind(styles);
 
 const Footer = () => {
@@ -16,6 +17,33 @@ const Footer = () => {
                 <NavLink to="/chatpage?search=" className={cx('nav-link')}>
                     <FontAwesomeIcon icon={faMagnifyingGlass} />
                 </NavLink>
+                <div className="find_popup">
+                    <div className="find_popup__content">
+                        <input type="text" placeholder="Find a friend" />
+                        <div className="find_popup__content__result">
+                           <ChatRoom
+                            key="hhh" 
+                            id="hhh" 
+                            name="dragonccm"
+                            avt="/"
+                           
+                           />
+                           <ChatRoom
+                            key="hhh" 
+                            id="hhh" 
+                            name="dragonccm"
+                            avt="/"
+                           
+                           />
+                           <ChatRoom
+                           key="hhh" 
+                           id="hhh" 
+                           name="dragonccm"
+                           avt="/"
+                          />
+                        </div>
+                    </div>
+                </div>
                 <NavLink
                     to="/chatpage?friend=true"
                     className={cx('nav-link')}
