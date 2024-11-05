@@ -41,7 +41,7 @@ instance.interceptors.response.use(
                     window.location.pathname !== '/register' &&
                     window.location.pathname !== '/forgetpassword'
                 ) {
-                    alert('Not authenticated the user');
+                    console.log('Not authenticated the user');
                 }
                 return error.response.data;
             }

@@ -67,7 +67,7 @@ function Login() {
     };
 
     return (
-        <div className={cx('wraper')}>
+        <div className={cx('wrapper')}>
             <div className={cx('form-container')}>
                 <div className={cx('image-box')}>
                     <img

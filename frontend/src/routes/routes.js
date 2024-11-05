@@ -1,5 +1,4 @@
 import config from '../config';
-
 // Layouts (là những layout bọc bên ngoài của trang nhưng layout sẽ được đặt trong thư mục layouts)
 import HomeLayout from 'components/layout/HomeLayout';
 import ChatLayout from 'components/layout/ChatLayout';
@@ -11,6 +10,7 @@ import Login from '../components/pages/Login';
 import Register from 'components/pages/Register';
 import ForgetPass from 'components/pages/ForgerPass';
 import ChatHome from 'components/pages/ChatHome';
+import Profile from 'components/pages/Profile';
 
 // Public routes (nhưng đường dẫn có thể được truy cập bởi người dùng)
 const publicRoutes = [
@@ -39,13 +39,26 @@ const publicRoutes = [
         name: 'Register',
         layout: HomeLayout,
     },
+    
+   
+    
+];
+
+// Private routes (nhưng đường dẫn chỉ có thể truy cập từ phía server hoặc người có thẩm quyền)
+const privateRoutes = [
+    {
+        path: config.routes.profile,
+        component: Profile,
+        name: 'Profile',
+        layout: HomeLayout,
+    },
     {
         path: config.routes.forgetpassword,
         component: ForgetPass,
         name: 'ForgetPass',
         layout: HomeLayout,
     },
-    {
+     {
         path: config.routes.chatpage,
         component: ChatPage,
         name: 'ChatPage',
@@ -58,8 +71,5 @@ const publicRoutes = [
         layout: ChatLayout,
     },
 ];
-
-// Private routes (nhưng đường dẫn chỉ có thể truy cập từ phía server hoặc người có thẩm quyền)
-const privateRoutes = [];
 
 export { publicRoutes, privateRoutes };

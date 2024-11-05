@@ -71,14 +71,15 @@ function Register() {
     };
 
     const handleOtpVerify = async (event) => {
-        dispatch(setLoading(true));
         event.preventDefault();
+        dispatch(setLoading(true));
         const res = await sendOTP({ email: state.input.email });
 
         if (res.EC === '200') {
             alert('Kiểm tra hộp thư email của bạn');
-            setPage(false);
             dispatch(setError(''));
+            setPage(false);
+            setCountDown(30);
         } else if (res.EC === '400') {
             dispatch(setError('Email không thể để trống'));
         } else if (res.EC === '401') {
@@ -90,7 +91,7 @@ function Register() {
     };
 
     return (
-        <div className={cx('wraper')}>
+        <div className={cx('wrapper')}>
             <div className={cx('form-container')}>
                 <div className={cx('image-box')}>
                     <p className={cx('title')}>{page ? 'THAM GIA ChatTime' : 'Nhập mã OTP'}</p>
@@ -109,7 +110,7 @@ function Register() {
                                 type="rounded"
                                 size="medium"
                                 disabled={!!state.err || state.loading}
-                                onClick={setPage(true)}
+                                onClick={() => setPage(true)}
                             >
                                 Trở lại
                             </Button>

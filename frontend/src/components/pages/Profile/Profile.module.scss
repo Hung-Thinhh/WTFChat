@@ -6,42 +6,33 @@
     flex-direction: column;
     align-items: center;
 
-    .image-box {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        .title {
-            text-align: center;
-            font-size: 2rem;
-            line-height: 2rem;
-            font-weight: 700;
-        }
-
-        .logo {
-            width: 100px;
-            height: 100px;
-        }
+    .title {
+        // text-align: center;
+        font-size: 3rem;
+        line-height: 2rem;
+        font-weight: 700;
     }
 
-    .form-container {
-        width: 360px;
+    .container {
+        width: 700px;
+        display: flex;
+        flex-direction: column;
         border-radius: 0.75rem;
         background-color: var(--white);
         padding: 3rem 4rem;
         color: var(--text-color);
     }
 
-    .form {
-        margin-top: 1.5rem;
-    }
-
-    .pass-container {
+    .profile-cont {
         display: flex;
         justify-content: center;
-        align-items: center;
-        gap: 12px;
+        align-items: flex-start;
+        gap: 30px;
+    }
+
+    .form {
+        width: 100%;
+        margin-top: 1.5rem;
     }
 
     .err-tag {
@@ -64,6 +55,10 @@
             background-color: var(--white);
             padding: 1.25rem 1rem;
             color: var(--text-color);
+
+            &:disabled {
+                background-color: #a4a4a9;
+            }
         }
 
         .label {
@@ -74,19 +69,6 @@
             padding: 0 5px;
             color: #a4a4a9;
             background-color: var(--white);
-        }
-
-        .pass-input {
-            position: relative;
-
-            .eye-btn {
-                position: absolute;
-                top: 50%;
-                right: 10px;
-                transform: translate(0, -50%);
-                font-size: 1.3rem;
-                background-color: transparent;
-            }
         }
 
         .gender-title {
@@ -119,41 +101,9 @@
         align-items: center;
     }
 
-    .remeber-box {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        gap: 5px;
-        font-size: 1.3rem;
-
-        input {
-            width: auto;
-        }
-    }
-
-    .forgot {
-        display: flex;
-        justify-content: flex-end;
-        font-size: 0.75rem;
-        line-height: 1rem;
-        color: var(--text-color);
-        margin: 8px 0 14px 0;
-    }
-
-    .forgot a,
-    .signup a {
-        color: var(--text-color);
-        text-decoration: none;
-        font-size: 1.4rem;
-    }
-
-    .forgot a:hover,
-    .signup a:hover {
-        text-decoration: underline black;
-    }
-
     .sign {
-        width: 100%;
+        align-self: flex-end;
+        width: 200px;
         background-color: var(--black);
         color: var(--white);
         font-size: 1.2rem;
@@ -168,8 +118,8 @@
             position: absolute;
             inset: 0;
             margin: auto;
-            width: 100px;
-            height: 100px;
+            width: 70px;
+            height: 70px;
             border-radius: inherit;
             scale: 0;
             z-index: -1;
@@ -192,31 +142,44 @@
         }
     }
 
-    // register form
-    .signup {
-        text-align: center;
-        font-size: 1rem;
-        line-height: 1rem;
-        color: var(--text-color);
-    }
+    .avatar-form {
+        position: relative;
 
-    .email-check-box {
-        display: flex;
-        justify-content: flex-end;
+        .upload-img-btn {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            padding: 10px;
+            border-radius: 50%;
+            transition: 0.3s linear all;
 
-        .sign {
-            width: 50%;
-            margin: 0;
+            &::before {
+                opacity: 0;
+                position: absolute;
+                content: 'Tải ảnh lên';
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 100px;
+                padding: 5px 2px;
+                border-radius: 5px;
+                color: white;
+                background-color: #212121;
+                transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            }
+
+            &:hover {
+                color: white;
+                background-color: #212121;
+
+                &::before {
+                    opacity: 1;
+                    top: -18px;
+                }
+            }
         }
-
-        .greenSign {
-            background-color: greenyellow;
-            color: black;
-        }
-    }
-
-    .btn-group {
-        display: flex;
-        gap: 10px;
     }
 }

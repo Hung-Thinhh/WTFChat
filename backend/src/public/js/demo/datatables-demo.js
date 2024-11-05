@@ -139,6 +139,7 @@ document.addEventListener('click', function (event) {
                     $(event.target).html('Save changes');
                     if (data.EC == 0) {
                         $('#editModal').modal('hide');
+                        $('.toast .toast-body').html('Save changes successfully');
                     } else {
                         $('.toast .toast-body').html('Update failed !');
                     }
@@ -151,6 +152,63 @@ document.addEventListener('click', function (event) {
                     $('.toast').toast('show');
                 });
         }
+    }
+    if (
+        event.target.classList.contains('BanUserButton') ||
+        (event.target.classList.contains('fas') &&
+            event.target.parentElement.classList.contains('BanUserButton'))
+    ) {
+        const userId = event.target.id || event.target.parentElement.id;
+        const button = event.target.closest('.BanUserButton');
+
+        // Fetch dữ liệu user theo ID
+        fetch(`/api/banUserById/${userId}`)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.EC == 0) {
+                    $(document).ready(function () {
+                        $('.toast .toast-body').html('Ban user success !');
+                        $('.toast').toast('show');
+                        button.classList.remove('BanUserButton');
+                        button.classList.add('UnBanUserButton');
+                        $(button).html('<i class="fa fa-unlock" aria-hidden="true"></i>');
+                    });
+                }
+
+                // ...
+            })
+            .catch((error) => {
+                console.error('Lỗi khi fetch dữ liệu:', error);
+            });
+    }
+    if (
+        event.target.classList.contains('UnBanUserButton') ||
+        (event.target.classList.contains('fa') &&
+            event.target.parentElement.classList.contains('UnBanUserButton'))
+    ) {
+        console.log('ahhaahh');
+        const button = event.target.closest('.UnBanUserButton');
+        const userId = event.target.id || event.target.parentElement.id;
+
+        // Fetch dữ liệu user theo ID
+        fetch(`/api/unbanUserById/${userId}`)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.EC == 0) {
+                    $(document).ready(function () {
+                        $('.toast .toast-body').html('Unban user success !');
+                        $('.toast').toast('show');
+                        button.classList.remove('UnBanUserButton');
+                        button.classList.add('BanUserButton');
+                        $(button).html('<i class="fas fa-times-circle"></i>');
+                    });
+                }
+
+                // ...
+            })
+            .catch((error) => {
+                console.error('Lỗi khi fetch dữ liệu:', error);
+            });
     }
 }); // Call the dataTables jQuery plugin
 // Hàm tạo pagination
@@ -213,9 +271,7 @@ $('#pagination').on('click', '.page-link', function (e) {
     const page = $(this).data('page');
     currentPage = page;
     const tableBody = document.querySelector('tbody');
-    tableBody.innerHTML =
-        
-                    `    <td colspan="6">
+    tableBody.innerHTML = `    <td colspan="6">
                     <div class="d-flex justify-content-center form-loading" style="width:100%">
                         <div class="spinner-border" role="status">
                             <span class="sr-only">Loading...</span>
@@ -283,9 +339,12 @@ function renderUsersTable(users) {
           }" class="editUserButton">
             <i class="fas fa-cog"></i>
           </button>
-          <button data-toggle="tooltip" data-original-title="Delete">
-            <i class="fas fa-times-circle"></i>
-          </button>
+          <button
+            class="${user.status== 1 ? "BanUserButton" : "UnBanUserButton"}"
+            id=${user.id}
+        >
+            ${user.status== 1 ? '<i class="fas fa-times-circle"></i>': '<i class="fa fa-unlock" aria-hidden="true"></i>'}
+        </button> 
         </td>
       `;
 

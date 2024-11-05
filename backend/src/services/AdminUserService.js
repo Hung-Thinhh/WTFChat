@@ -27,7 +27,6 @@ const getUserByID = async (id) => {
         const users = await pool.query(
             `SELECT u.*, a.status,a.role,a.time  FROM nguoidung u JOIN xacthuc a ON u.id=a.id WHERE u.id= ${id}`,
         );
-        console.log(users[0][0]);
         return {
             EM: 'Success',
             EC: 0,
@@ -44,7 +43,6 @@ const getUserByID = async (id) => {
     }
 };
 const editUserById = async (data) => {
-    console.log(data);
     try {
         const [users] = await pool.query(
             `UPDATE nguoidung SET firstname=?, lastname=?, birthdate=?, gender=? WHERE id=?`,
@@ -77,8 +75,74 @@ const editUserById = async (data) => {
         };
     }
 };
+const banUserById = async (id) => {
+    try {
+        const [users] = await pool.query(
+            `UPDATE xacthuc SET status=? WHERE id=?`,
+            [0,id],
+        );
+
+        // Sử dụng then() trên Promise được trả về bởi pool.query()
+        // Kiểm tra kết quả của câu lệnh UPDATE
+        if (users.affectedRows > 0) {
+            console.log('Cập nhật thành công!');
+            return {
+                EM: 'Success',
+                EC: 0,
+                DT: '',
+            };
+        } else {
+            console.log('Cập nhật thất bại!');
+            return {
+                EM: 'Cập nhật thất bại!',
+                EC: -1,
+                DT: '',
+            };
+        }
+    } catch (error) {
+        console.error('Lỗi khi cập nhật:', error);
+        return {
+            EM: error.message,
+            EC: 1,
+            DT: [],
+        };
+    }
+};
+const unbanUserById = async (id) => {
+    try {
+        const [users] = await pool.query(
+            `UPDATE xacthuc SET status=? WHERE id=?`,
+            [1,id],
+        );
+
+        // Sử dụng then() trên Promise được trả về bởi pool.query()
+        // Kiểm tra kết quả của câu lệnh UPDATE
+        if (users.affectedRows > 0) {
+            console.log('Cập nhật thành công!');
+            return {
+                EM: 'Success',
+                EC: 0,
+                DT: '',
+            };
+        } else {
+            console.log('Cập nhật thất bại!');
+            return {
+                EM: 'Cập nhật thất bại!',
+                EC: -1,
+                DT: '',
+            };
+        }
+    } catch (error) {
+        console.error('Lỗi khi cập nhật:', error);
+        return {
+            EM: error.message,
+            EC: 1,
+            DT: [],
+        };
+    }
+};
 export const adminUser = {
     getUsers,
     getUserByID,
-    editUserById,
+    editUserById,banUserById,unbanUserById
 };

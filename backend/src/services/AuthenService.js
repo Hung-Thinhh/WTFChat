@@ -252,6 +252,66 @@ const handleLogin = async (data) => {
     }
 };
 
+const handleChangePass = async (data) => {
+    if (!data)
+        return {
+            EM: 'CHANGE PASS | ERROR | Không có dữ liệu',
+            EC: '401',
+        };
+
+    const { email, password, otp } = data;
+    
+    // first check
+    if (!email)
+        return {
+            EM: 'CHANGE PASS | ERROR | Email không thể để trống',
+            EC: '400',
+        };
+    else if (password.length < 8 || password.length > 50)
+        return {
+            EM: 'CHANGE PASS | ERROR | Mật khẩu nhập lại không trùng khớp',
+            EC: '400',
+        };
+
+    const authOTP = await redisClient.get(email + 'OTP');
+    console.log(authOTP);
+    
+    if (otp !== authOTP) {
+        return {
+            EM: 'CHANGE PASS | ERROR | Mã xác thực không chính xác',
+            EC: '400',
+        };
+    }
+
+    try {
+        await pool.query('START TRANSACTION');
+        const hashPass = hashPassword(data.password);
+
+        // insert user information
+        const updatedPass = await pool.query(
+            `UPDATE xacthuc
+            SET password = ?
+            WHERE email = ?`,
+            [hashPass, email],
+        );
+        console.log(updatedPass);
+
+        await pool.query('COMMIT');
+        return {
+            EM: 'CHANGE PASS | INFO | Thay đổi mật khẩu thành công thành công',
+            EC: '200',
+        };
+    } catch (error) {
+        await pool.query('ROLLBACK');
+
+        console.log('SERVICE | CHANGE PASS | ERROR | ', error);
+        return {
+            EM: 'CHANGE PASS | ERROR | ' + error,
+            EC: '500',
+        };
+    }
+};
+
 // const handleAuthGG = async (token) => {
 //     try {
 //         const user = await User.findOne({
@@ -350,6 +410,51 @@ const handleCheckAccount = async (email) => {
     }
 };
 
+const searchMail = async (email) => {
+    if (email === '')
+        return {
+            EM: 'SEARCH MAIL | ERROR | Tài khoản không tồn tại',
+            EC: '400',
+        };
+    try {
+        await pool.query('START TRANSACTION');
+        // find current user
+        const currUser = await pool.query(
+            `SELECT email, firstname, lastname, avatar
+                FROM nguoidung
+                WHERE email = ?`,
+            [email],
+        );
+
+        await pool.query('COMMIT');
+
+        if (!currUser[0][0])
+            return {
+                EM: 'SEARCH MAIL | ERROR | Tài khoản không tồn tại',
+                EC: '400',
+            };
+
+        const { firstname, lastname, avatar } = currUser[0][0];
+        return {
+            EM: 'SEARCH MAIL | INFO | Tài khoản đã được tìm thấy',
+            EC: '200',
+            DT: {
+                email,
+                firstname,
+                lastname,
+                avatar,
+            },
+        };
+    } catch (error) {
+        console.log('SERVICE |SEARCH MAIL | ERROR | ' + error);
+
+        return {
+            EM: 'SEARCH MAIL | ERROR | ' + error,
+            EC: '500',
+        };
+    }
+};
+
 export const services = {
     handleRegister,
     handleLogin,
@@ -359,4 +464,6 @@ export const services = {
     checkPassword,
     hashPassword,
     handleCheckAccount,
+    searchMail,
+    handleChangePass,
 };
