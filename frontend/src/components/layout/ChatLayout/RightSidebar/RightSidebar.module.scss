@@ -19,10 +19,20 @@
 
   .list_nav {
     width: 100%;
-
+    overflow: scroll;
+    max-height: 100%;
     .sidebar_header {
       padding: 1.5rem;
       width: 100%;
+      color: aliceblue;
+      font-size: 1.5rem;
+    }
+    .search{
+      width: 90%;
+      padding: 1rem;
+      border-radius: 1rem;
+      margin: 1rem;
+      background: #3b3b3b;
       color: aliceblue;
       font-size: 1.5rem;
     }

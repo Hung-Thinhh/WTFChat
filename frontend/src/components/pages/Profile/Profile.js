@@ -1,27 +1,107 @@
 import classNames from 'classnames/bind';
 
 import styles from './Profile.module.scss';
-import config from 'config';
 import Button from 'components/Button';
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import Avatar from 'components/Avatar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRotateLeft, faCamera, faPen } from '@fortawesome/free-solid-svg-icons';
+import { getUserInfo } from 'controller/profile';
 
 const cx = classNames.bind(styles);
 
 const genderList = ['Nam', 'Nữ', 'Khác'];
 
 function Profile() {
+    const fileInput = useRef(null);
+
     const [input, setInput] = useState({
         email: '',
         username: '',
         birthdate: '',
         gender: 0,
+        avatar: '',
     });
+    const [file, setFile] = useState();
     const [err, setErr] = useState('');
     const [loading, setLoading] = useState(false);
+    const [currAvt, setCurrAvt] = useState('');
+
+    const logout = async () => {
+        // logout
+        const logoutRes = await logout();
+
+        if (logoutRes.EC === '200') {
+            window.location.reload();
+        } else if (logoutRes.EC === '500') {
+            alert('Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com');
+        }
+    };
+
+    useEffect(() => {
+        const getCurrUserInfo = async () => {
+            const res = await getUserInfo();
+            if (res.EC === '200') {
+                const { avatar, birthdate, email, firstname, lastname, gender } = res.DT;
+                const dateObject = new Date(birthdate);
+                const formatBirthdate = dateObject.toISOString().slice(0, 10);
+
+                setInput({
+                    email,
+                    avatar,
+                    username: firstname + ' ' + lastname,
+                    birthdate: formatBirthdate,
+                    gender,
+                });
+                setCurrAvt(avatar);
+            } else if (res.EC === '400') {
+                alert('Tài khoản đang bị khoá');
+                await logout();
+            } else if (res.EC === '403') {
+                alert('Xác thực thất bại');
+                await logout();
+            } else if (res.EC === '500') {
+                alert(
+                    'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
+                );
+            }
+        };
+        getCurrUserInfo();
+    }, []);
+
+    const handleFileChoose = () => {
+        fileInput.current.click();
+    };
+
+    const handleResetAvt = () => {
+        if (input.avatar) {
+            URL.revokeObjectURL(input.avatar); // clear prev url
+        }
+
+        setInput((prev) => ({ ...prev, avatar: currAvt }));
+    };
 
     const handleChange = (event) => {
         setInput((prev) => ({ ...prev, [event.target.name]: event.target.value }));
+        if (err) setErr('');
+    };
+
+    const handleChangeImage = (event) => {
+        const file = event.target.files[0];
+
+        if (!file) return;
+
+        const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+
+        if (!allowedTypes.includes(file.type)) {
+            setErr('Hãy chọn thư mục có đuổi .png, .jpg hoặc .jpeg.');
+        }
+
+        if (input.avatar) {
+            URL.revokeObjectURL(input.avatar); // clear prev url
+        }
+
+        setInput((prev) => ({ ...prev, avatar: URL.createObjectURL(file) }));
         if (err) setErr('');
     };
 
@@ -32,73 +112,97 @@ function Profile() {
 
     return (
         <div className={cx('wrapper')}>
-            <div className={cx('form-container')}>
+            <div className={cx('container')}>
                 <p className={cx('title')}>Thông tin cá nhân</p>
-                <form className={cx('form')}>
-                    <div className={cx('input-group')}>
-                        <input
-                            type="email"
-                            name="email"
-                            id="email"
-                            placeholder="Email"
-                            value={'binhminh19112003@gmail.com'}
-                            onChange={handleChange}
-                            disabled
-                        />
-                    </div>
-                    <div className={cx('input-group')}>
-                        <input
-                            type="text"
-                            name="username"
-                            id="username"
-                            placeholder="Họ và tên"
-                            value={input.username}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className={cx('input-group')}>
-                        <label className={cx('label')} htmlFor="birthdate">
-                            Ngày sinh
-                        </label>
-                        <input
-                            type="date"
-                            name="birthdate"
-                            id="birthdate"
-                            value={input.birthdate}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className={cx('input-group', 'ratio-group')}>
-                        <label className={cx('gender-title')} htmlFor="birthdate">
-                            Giới tính:
-                        </label>
-                        <div className={cx('ratio')}>
-                            {genderList.map((gender, index) => (
-                                <Button
-                                    key={index}
-                                    className={cx('gender', {
-                                        'gender-selected': index === input.gender,
-                                    })}
-                                    type="primary"
-                                    size="medium"
-                                    onClick={(event) => handleRatio(event, index)}
-                                >
-                                    {gender}
-                                </Button>
-                            ))}
+                <div className={cx('profile-cont')}>
+                    <form className={cx('form')}>
+                        <div className={cx('input-group')}>
+                            <input
+                                type="email"
+                                name="email"
+                                id="email"
+                                placeholder="Email"
+                                value={'binhminh19112003@gmail.com'}
+                                onChange={handleChange}
+                                disabled
+                            />
                         </div>
+                        <div className={cx('input-group')}>
+                            <input
+                                type="text"
+                                name="username"
+                                id="username"
+                                placeholder="Họ và tên"
+                                value={input.username}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className={cx('input-group')}>
+                            <label className={cx('label')} htmlFor="birthdate">
+                                Ngày sinh
+                            </label>
+                            <input
+                                type="date"
+                                name="birthdate"
+                                id="birthdate"
+                                value={input.birthdate}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className={cx('input-group', 'ratio-group')}>
+                            <label className={cx('gender-title')} htmlFor="birthdate">
+                                Giới tính:
+                            </label>
+                            <div className={cx('ratio')}>
+                                {genderList.map((gender, index) => (
+                                    <Button
+                                        key={index}
+                                        className={cx('gender', {
+                                            'gender-selected': index === input.gender,
+                                        })}
+                                        type="primary"
+                                        size="medium"
+                                        onClick={(event) => handleRatio(event, index)}
+                                    >
+                                        {gender}
+                                    </Button>
+                                ))}
+                            </div>
+                        </div>
+                        {!!err && <div className={cx('err-tag')}>* {err}</div>}
+                    </form>
+                    <div className={cx('avatar-form')}>
+                        <Avatar alt="avatar" src={input.avatar} size="ultra-lg" />
+                        <input
+                            className={cx('file-input')}
+                            ref={fileInput}
+                            type="file"
+                            value={file}
+                            accept="image/png, image/jpeg, image/jpg"
+                            onChange={handleChangeImage}
+                        />
+                        <button className={cx('upload-img-btn')} onClick={handleFileChoose}>
+                            <FontAwesomeIcon icon={faPen} />
+                        </button>
+                        {input.avatar !== currAvt && (
+                            <button
+                                className={cx('upload-img-btn', 'reload-avt-btn')}
+                                onClick={handleResetAvt}
+                            >
+                                <FontAwesomeIcon icon={faArrowRotateLeft} />
+                            </button>
+                        )}
                     </div>
-                    {!!err && <div className={cx('err-tag')}>* {err}</div>}
-                    <Button
-                        className={cx('sign')}
-                        type="rounded"
-                        size="medium"
-                        disabled={!!err || loading}
-                        // onClick={handleSubmit}
-                    >
-                        Lưu
-                    </Button>
-                </form>
+                </div>
+                <Button
+                    className={cx('sign')}
+                    type="rounded"
+                    size="medium"
+                    disabled={!!err || loading}
+                    // onClick={handleSubmit}
+                >
+                    Lưu
+                </Button>
             </div>
         </div>
     );

@@ -17,7 +17,7 @@ function Avatar({ src, size }) {
 
 Avatar.propTypes = {
     src: PropTypes.string.isRequired,
-    size: PropTypes.oneOf(['small', 'large', 'medium']),
+    size: PropTypes.oneOf(['small', 'large', 'medium', 'ultra-lg']),
 };
 
 export default Avatar;

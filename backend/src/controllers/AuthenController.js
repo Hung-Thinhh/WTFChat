@@ -34,14 +34,14 @@ export const handleLogin = async (req, res) => {
 
         if (result.DT) {
             if (data.remember) {
-                // Set session data
-                req.session.userId = result.DT.access_token;
-                // Set extended expiration time
-                req.session.store.client.expire(req.sessionID, 30 * 24 * 60 * 60);
+                // create cookies and store in user brower (30 days)
+                req.session.cookie.maxAge = 30 * 24 * 3600000;
+                res.cookie('jwt', result.DT.access_token);
             } else {
                 // Set session data without extended expiration
-                req.session.userId = result.DT.access_token;
+                req.session.cookie.expires = false;
             }
+            req.session.userId = result.DT.access_token;
         }
 
         return res.status(200).json(result);
@@ -84,7 +84,7 @@ export const handleLogin = async (req, res) => {
 export const handleLogout = async (req, res) => {
     try {
         // Destroy the session
-        res.clearCookie(req.sessionID);
+        res.clearCookie('jwt');
         req.session.destroy((err) => {
             if (err) {
                 console.error('LOGOUT | INFO | Lỗi xoá session ' + err);

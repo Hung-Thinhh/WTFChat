@@ -19,7 +19,7 @@ import {
     seachMail,
     sendOTP,
 } from '../controllers/AuthenController.js';
-// const { getRating } = require("../controller/RatingController.js");
+import findUserController from '../controllers/FindUserController.js';
 import {
     getUserById,
     editUser,
@@ -27,12 +27,14 @@ import {
     banUserById,
     unbanUserById,
 } from '../controllers/AdminUserController.js';
+import { getUserInfo } from '../controllers/ProfileController.js';
 
 const router = express.Router();
 
 const initApiRouter = (app) => {
     router.all('*', checkUserJWT);
 
+    // authen
     router.get('/checkaccount', checkAccount);
     router.get('/getPublicKey', getPublicKey);
     router.get('/logout', handleLogout);
@@ -42,13 +44,18 @@ const initApiRouter = (app) => {
     router.post('/searchMail', seachMail);
     router.post('/changePass', handleChangePass);
 
+    // profile
+    router.get('/getUserInfo', getUserInfo);
+
+    // chat
     router.post('/chat', chatController); // api gửi tin nhắn
     router.post('/getchat', getChatController); // api lấy tin nhắn
     router.post('/friendList', getFriendController); // api lấy tin nhắn
 
     router.get('/deletechat', deletaChatController); // api xoa tin nhắn
-    router.post('/getchatroom', getRoomController); // api xoa tin nhắn
-    router.post('/createroom', getRoomController); // api xoa tin nhắn
+    router.post('/getchatroom', getRoomController); // api lấy phòng chat
+    router.post('/createroom', getRoomController); // api tạo phòng chat
+    router.post('/finduser', findUserController); // api tìm người dùng
 
     //admin
     router.get('/getUserById/:id', getUserById);

@@ -1,5 +1,4 @@
 import config from '../config';
-
 // Layouts (là những layout bọc bên ngoài của trang nhưng layout sẽ được đặt trong thư mục layouts)
 import HomeLayout from 'components/layout/HomeLayout';
 import ChatLayout from 'components/layout/ChatLayout';
@@ -40,6 +39,10 @@ const publicRoutes = [
         name: 'Register',
         layout: HomeLayout,
     },
+];
+
+// Private routes (nhưng đường dẫn chỉ có thể truy cập từ phía server hoặc người có thẩm quyền)
+const privateRoutes = [
     {
         path: config.routes.profile,
         component: Profile,
@@ -65,8 +68,5 @@ const publicRoutes = [
         layout: ChatLayout,
     },
 ];
-
-// Private routes (nhưng đường dẫn chỉ có thể truy cập từ phía server hoặc người có thẩm quyền)
-const privateRoutes = [];
 
 export { publicRoutes, privateRoutes };

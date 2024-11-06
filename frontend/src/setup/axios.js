@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getCookie } from 'lib/function/function';
 import env from 'react-dotenv';
 
 const instance = axios.create({
@@ -8,7 +9,7 @@ const instance = axios.create({
 
 instance.defaults.withCredentials = true;
 // // Alter defaults after instance has been created
-instance.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('jwt')}`;
+instance.defaults.headers.common['Authorization'] = `Bearer ${getCookie('jwt')}`;
 
 // Add a request interceptor
 instance.interceptors.request.use(
@@ -41,7 +42,7 @@ instance.interceptors.response.use(
                     window.location.pathname !== '/register' &&
                     window.location.pathname !== '/forgetpassword'
                 ) {
-                    alert('Not authenticated the user');
+                    console.log('Not authenticated the user');
                 }
                 return error.response.data;
             }

@@ -4,9 +4,13 @@ import { useContext, useEffect } from 'react';
 import classNames from 'classnames';
 
 const ChatRoom = ({ id, avt, name, time, mess }) => {
+    console.log(id);
+    
     const { ChatData, setChatData } = useContext(ChatDataContext);
     const { setRoomInfo } = useContext(ChatDataContext);
     const handleClick = () => {
+        console.log('okkkkkkk');
+        
         setChatData(id);
         setRoomInfo({ id, avt, name });
     }
