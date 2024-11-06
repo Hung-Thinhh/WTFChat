@@ -1,5 +1,5 @@
 import styles from "./FriendItem.module.scss";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faUser } from "@fortawesome/free-solid-svg-icons";
 import className from "classnames/bind";
 import ChatDataContext from 'lib/Context/ChatContext';
 
@@ -21,7 +21,8 @@ export default function FriendItem({ id, avt, name, time, mess }) {
             onClick={handleClick}
         >
             <div className={cx("CR_avt")}>
-                <img src={avt} alt="avt" />
+                {avt === null ? <FontAwesomeIcon icon={faUser} /> :
+                    <img src={avt} alt="avt" />}
             </div>
             <div className={cx("CR_info")}>
                 <div className={cx("CR_left")}>

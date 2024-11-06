@@ -12,7 +12,7 @@ import FriendItem from "./FriendItem";
 import Search from "./Footer/Search";
 import getFriendList from "services/getFriendList";
 import findUser from "services/findUserService";
-
+import useDebounce from "hooks/useDebounce";
 
 const cx = classNames.bind(styles);
 
@@ -28,7 +28,10 @@ const RightSidebar = () => {
     const [pageState, setPageData] = useState('chat');
     const [friend, setFriend] = useState('chat');
     const [findData, setFindData] = useState([]);
+    const [searchData, setSearchData] = useState('');
 
+
+    // Fetch chat room
     const fetchChatRoom = useCallback(async () => {
         try {
             const response = await getChatRoom({ id: currUser.id });
@@ -38,6 +41,7 @@ const RightSidebar = () => {
         }
     }, [currUser]);
 
+    // Fetch friend list
     const fetchFriendList = useCallback(async () => {
         try {
             const response = await getFriendList({ id: currUser.id });
@@ -47,90 +51,106 @@ const RightSidebar = () => {
         }
     }, [currUser]);
 
+    // Handle search change
     const handleSearchChange = async (e) => {
         const data = {
             text: e.target.value
         }
         if (data.text === '' || data.text === null || data.text === undefined || !data.text) {
             setFindData([])
-            return
+            setSearchData(data.text);
         } else {
-            const res = await findUser(data);
-            setFindData(res.DT)
+            setSearchData(data.text);
         }
     }
 
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const res = await findUser({ text: searchData });
+            setFindData(res.DT);
+        };
+        fetchData();
+    }, [useDebounce(searchData, 500)]);
+    // Load chat room and friend list when component is mounted
     useEffect(() => {
         fetchChatRoom();
         fetchFriendList();
-    }, [fetchChatRoom, fetchFriendList]);
-
+    }, [fetchChatRoom, fetchFriendList, currUser]);
 
 
     if (!currUser) return null;
+
+
     return (
         <div className={cx('rightsidebar')}>
             <div className={cx('me-auto', 'list_nav')}>
                 <div className={cx('sidebar_header')}>
                     <FontAwesomeIcon icon={faUser} /> Wtf Chat
                 </div>
-                {(() => {
-                    switch (pageState) {
-                        case 'chat':
-                            return chatRoom && chatRoom.length > 0 ? (
-                                chatRoom.map((friend) => (
-                                    <ChatRoom
-                                        key={friend.id}
-                                        id={friend.id}
-                                        name={`${friend.first_name} ${friend.last_name}`}
-                                        avt={friend.avt}
-                                        time={timePassed(friend.last_message_time)}
-                                        mess={friend.last_message_content}
-                                    />
-                                ))
-                            ) : (
-                                <div>No new messages</div>
-                            );
-                        case 'friend':
-                            return friend && friend.length > 0 ? (
-                                friend.map((friend) => (
-                                    <FriendItem
-                                        key={friend.id}
-                                        id={friend.id}
-                                        name={`${friend.first_name} ${friend.last_name}`}
-                                        avt={friend.avt}
-                                        time={timePassed(friend.last_message_time)}
-                                    />
-                                ))
-                            ) : (
-                                <div>寂し犬</div>
-                            );
-                        case 'search':
-                            return <div>
-                                {findData && findData.map((item) => (
-                                    item.loai === 'Người dùng' ?
+
+                {
+                    // Render different content based on the current page state
+                    (() => {
+                        switch (pageState) {
+                            case 'chat':
+                                return chatRoom && chatRoom.length > 0 ? (
+                                    chatRoom.map((friend) => (
                                         <ChatRoom
-                                            key={item.id}
-                                            id={item.id}
-                                            name={item.firstname + ' ' + item.lastname}
-                                            avt={item.avatar}
+                                            key={friend.id}
+                                            id={friend.id}
+                                            name={`${friend.first_name} ${friend.last_name}`}
+                                            avt={friend.avt}
+                                            time={timePassed(friend.last_message_time)}
+                                            mess={friend.last_message_content}
                                         />
-                                        :
-                                        <ChatRoom
-                                            key={item.id}
-                                            id={item.id}
-                                            name={item.groupname}
-                                            avt={item.avatar}
+                                    ))
+                                ) : (
+                                    <div>No new messages</div>
+                                );
+                            case 'friend':
+                                return friend && friend.length > 0 ? (
+                                    friend.map((friend) => (
+                                        <FriendItem
+                                            key={friend.id}
+                                            id={friend.id}
+                                            name={`${friend.first_name} ${friend.last_name}`}
+                                            avt={friend.avt}
+                                            time={timePassed(friend.last_message_time)}
                                         />
-                                ))}
-                                <Search onChange={handleSearchChange}></Search>;
-                            </div>
-                        case 'archive':
-                            return <div style={{ color: 'white' }}>Archive Page</div>;
-                        default:
-                            return null;
-                    }
-                })()}
+                                    ))
+                                ) : (
+                                    <div>寂し犬</div>
+                                );
+                            case 'search':
+                                return <div>
+                                    <div className={cx('searchData')}>
+                                        {findData && findData.map((item) => (
+                                            item.loai === 'nguoidung' ?
+                                                <FriendItem
+                                                    key={item.id}
+                                                    id={item.id}
+                                                    name={item.firstname + ' ' + item.lastname}
+                                                    avt={item.avatar}
+                                                />
+                                                :
+                                                <FriendItem
+                                                    key={item.id}
+                                                    id={item.id}
+                                                    name={item.groupname}
+                                                    avt={item.avatar}
+                                                />
+                                        ))}
+                                    </div>
+                                    <Search value={searchData} onChange={handleSearchChange}></Search>;
+                                </div>
+                            case 'archive':
+                                return <div style={{ color: 'white' }}>Archive Page</div>;
+                            default:
+                                return null;
+                        }
+                    })()}
             </div>
             <Footer key={pageState} pageState={pageState} setPageData={setPageData} />
         </div>

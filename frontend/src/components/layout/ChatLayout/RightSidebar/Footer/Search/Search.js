@@ -5,13 +5,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef } from "react";
 const cx = className.bind(styles);
 
-export default function Search({ onChange }) {
+export default function Search({ value, onChange }) {
     const refInput = useRef(null);
     useEffect(() => { refInput.current.focus() }, []);
     return (
         <div className={cx('container')}>
             <FontAwesomeIcon icon={faMagnifyingGlass} className={cx('icon')} />
-            <input onChange={onChange} ref={refInput} type="text" placeholder="Search" className={cx('search')} />
+            <input value={value} onChange={onChange} ref={refInput} type="text" placeholder="Search" className={cx('search')} />
         </div>
     );
 
