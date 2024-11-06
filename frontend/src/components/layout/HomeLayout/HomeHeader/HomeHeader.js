@@ -27,42 +27,43 @@ function HomeHeader() {
         if (
             location.pathname === config.routes.login ||
             location.pathname === config.routes.register ||
-            location.pathname === config.routes.forgetpassword
+            location.pathname === config.routes.forgetpassword ||
+            (currUser && location.pathname !== config.routes.home)
         ) {
             setData({
                 to: config.routes.home,
                 icon: <FontAwesomeIcon icon={faArrowLeft} />,
                 content: 'Trang chủ',
             });
-        } else if (location.pathname === '/') {
-            setData({
-                to: config.routes.login,
-                icon: <FontAwesomeIcon icon={faArrowRightToBracket} />,
-                content: 'Đăng nhập',
-            });
+        } else if (location.pathname === config.routes.home) {
+            if (!currUser)
+                setData({
+                    to: config.routes.login,
+                    icon: <FontAwesomeIcon icon={faArrowRightToBracket} />,
+                    content: 'Đăng nhập',
+                });
         }
     }, [location]);
 
     return (
         <div className={cx('wrapper')}>
-            {currUser ? (
-                <AvatarMenu>
-                    <Avatar src={currUser.avt || ''} size="small" />
-                    <p>{currUser.username}</p>
-                </AvatarMenu>
-            ) : (
-                <Button to={data.to} type="text" size="small" leftIcon={data.icon}>
-                    {data.content}
-                </Button>
-            )}
-            <Button
+            {/* <Button
                 href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                 type="text"
                 size="medium"
                 target="_blank"
             >
                 About Us
+            </Button> */}
+            <Button to={data.to} type="text" size="small" leftIcon={data.icon}>
+                {data.content}
             </Button>
+            {currUser && (
+                <AvatarMenu>
+                    <Avatar src={currUser.avt || ''} size="small" />
+                    <p>{currUser.username}</p>
+                </AvatarMenu>
+            )}
         </div>
     );
 }

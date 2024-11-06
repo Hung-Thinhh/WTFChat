@@ -37,9 +37,8 @@ export const checkUserJWT = (req, res, next) => {
     if (!SecurePaths.includes(req.path)) return next();
     let session = req.session;
     let tokenFromHeader = extractToken(req);
-    if (session && session.userId) {
-        const token = session && session.userId ? session.userId : tokenFromHeader;
-
+    const token = session && session.userId ? session.userId : tokenFromHeader;
+    if (token) {
         const decoded = verifyToken(token);
 
         if (!decoded) {

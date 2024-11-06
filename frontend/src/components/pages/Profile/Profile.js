@@ -2,10 +2,10 @@ import classNames from 'classnames/bind';
 
 import styles from './Profile.module.scss';
 import Button from 'components/Button';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Avatar from 'components/Avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCamera } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRotateLeft, faCamera, faPen } from '@fortawesome/free-solid-svg-icons';
 import { getUserInfo } from 'controller/profile';
 
 const cx = classNames.bind(styles);
@@ -13,6 +13,8 @@ const cx = classNames.bind(styles);
 const genderList = ['Nam', 'Nữ', 'Khác'];
 
 function Profile() {
+    const fileInput = useRef(null);
+
     const [input, setInput] = useState({
         email: '',
         username: '',
@@ -20,8 +22,10 @@ function Profile() {
         gender: 0,
         avatar: '',
     });
+    const [file, setFile] = useState();
     const [err, setErr] = useState('');
     const [loading, setLoading] = useState(false);
+    const [currAvt, setCurrAvt] = useState('');
 
     const logout = async () => {
         // logout
@@ -39,13 +43,17 @@ function Profile() {
             const res = await getUserInfo();
             if (res.EC === '200') {
                 const { avatar, birthdate, email, firstname, lastname, gender } = res.DT;
+                const dateObject = new Date(birthdate);
+                const formatBirthdate = dateObject.toISOString().slice(0, 10);
+
                 setInput({
                     email,
                     avatar,
                     username: firstname + ' ' + lastname,
-                    birthdate,
+                    birthdate: formatBirthdate,
                     gender,
                 });
+                setCurrAvt(avatar);
             } else if (res.EC === '400') {
                 alert('Tài khoản đang bị khoá');
                 await logout();
@@ -61,8 +69,39 @@ function Profile() {
         getCurrUserInfo();
     }, []);
 
+    const handleFileChoose = () => {
+        fileInput.current.click();
+    };
+
+    const handleResetAvt = () => {
+        if (input.avatar) {
+            URL.revokeObjectURL(input.avatar); // clear prev url
+        }
+
+        setInput((prev) => ({ ...prev, avatar: currAvt }));
+    };
+
     const handleChange = (event) => {
         setInput((prev) => ({ ...prev, [event.target.name]: event.target.value }));
+        if (err) setErr('');
+    };
+
+    const handleChangeImage = (event) => {
+        const file = event.target.files[0];
+
+        if (!file) return;
+
+        const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+
+        if (!allowedTypes.includes(file.type)) {
+            setErr('Hãy chọn thư mục có đuổi .png, .jpg hoặc .jpeg.');
+        }
+
+        if (input.avatar) {
+            URL.revokeObjectURL(input.avatar); // clear prev url
+        }
+
+        setInput((prev) => ({ ...prev, avatar: URL.createObjectURL(file) }));
         if (err) setErr('');
     };
 
@@ -134,9 +173,25 @@ function Profile() {
                     </form>
                     <div className={cx('avatar-form')}>
                         <Avatar alt="avatar" src={input.avatar} size="ultra-lg" />
-                        <button className={cx('upload-img-btn')}>
-                            <FontAwesomeIcon icon={faCamera} />
+                        <input
+                            className={cx('file-input')}
+                            ref={fileInput}
+                            type="file"
+                            value={file}
+                            accept="image/png, image/jpeg, image/jpg"
+                            onChange={handleChangeImage}
+                        />
+                        <button className={cx('upload-img-btn')} onClick={handleFileChoose}>
+                            <FontAwesomeIcon icon={faPen} />
                         </button>
+                        {input.avatar !== currAvt && (
+                            <button
+                                className={cx('upload-img-btn', 'reload-avt-btn')}
+                                onClick={handleResetAvt}
+                            >
+                                <FontAwesomeIcon icon={faArrowRotateLeft} />
+                            </button>
+                        )}
                     </div>
                 </div>
                 <Button
