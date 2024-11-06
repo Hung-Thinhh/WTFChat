@@ -35,6 +35,7 @@
       background: #3b3b3b;
       color: aliceblue;
       font-size: 1.5rem;
+      animation: slideInFromLeft 0.2s ease-in-out;
     }
   }
 
@@ -360,5 +361,17 @@
       }
     }
 
+  }
+}
+
+
+@keyframes slideInFromLeft {
+  from {
+      transform: translateX(-100%);
+      opacity: 0;
+  }
+  to {
+      transform: translateX(0);
+      opacity: 1;
   }
 }
