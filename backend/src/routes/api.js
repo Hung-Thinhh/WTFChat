@@ -18,7 +18,7 @@ import {
     seachMail,
     sendOTP,
 } from '../controllers/AuthenController.js';
-// const { getRating } = require("../controller/RatingController.js");
+import findUserController from '../controllers/FindUserController.js';
 import {
     getUserById,
     editUser,
@@ -44,8 +44,9 @@ const initApiRouter = (app) => {
     router.post('/chat', chatController); // api gửi tin nhắn
     router.post('/getchat', getChatController); // api lấy tin nhắn
     router.get('/deletechat', deletaChatController); // api xoa tin nhắn
-    router.post('/getchatroom', getRoomController); // api xoa tin nhắn
-    router.post('/createroom', getRoomController); // api xoa tin nhắn
+    router.post('/getchatroom', getRoomController); // api lấy phòng chat
+    router.post('/createroom', getRoomController); // api tạo phòng chat
+    router.post('/finduser', findUserController); // api tìm người dùng
 
     //admin
     router.get('/getUserById/:id', getUserById);

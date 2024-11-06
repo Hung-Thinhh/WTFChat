@@ -56,11 +56,13 @@ const getChat = async (userId, friendId) => {
        ORDER BY time ASC`,
       [userId, friendId, friendId, userId]
     );
+
     return {
       EM: 'Success',
       EC: 0,
-      DT: {rows, roomId},
+      DT: { rows, roomId },
     };
+
   } catch (error) {
     console.log('SERVICE | GET CHAT SERVICE | ERROR | ', error);
     return {

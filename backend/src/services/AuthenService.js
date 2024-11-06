@@ -368,23 +368,6 @@ const handleCheckAccount = async (email) => {
             WHERE xacthuc.email = ?`,
             [email],
         );
-        const friends = await pool.query(
-            `SELECT 
-                nguoidung.firstname AS first_name,
-                nguoidung.lastname AS last_name,
-                nguoidung.avatar AS avt,
-                nguoidung.id AS id
-            FROM 
-                banbe
-            JOIN 
-                nguoidung ON banbe.usertwoid = nguoidung.id OR banbe.useroneid = nguoidung.id
-            WHERE 
-                (banbe.useroneid = ? OR banbe.usertwoid = ?)
-                AND nguoidung.id != ?`,
-            [currUser[0][0].id, currUser[0][0].id, currUser[0][0].id],
-        );
-
-        currUser[0][0].friends = friends[0];
 
         await pool.query('COMMIT');
 
