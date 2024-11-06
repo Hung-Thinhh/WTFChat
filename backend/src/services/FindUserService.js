@@ -5,19 +5,20 @@ const findUser = async (text) => {
         const [result] = await pool.query(
             `SELECT 'Nhom' AS loai, n.id, n.groupname, n.avatar, n.membernum
             FROM nhom n
-            WHERE N.groupname LIKE ?`, ['%' + text + '%']);
+            WHERE n.groupname LIKE ?
+            LIMIT 15`, ['%' + text + '%']);
 
         const [result2] = await pool.query(
-            `SELECT 'Người dùng' AS loai,id,firstname , lastname,avatar
+            `SELECT 'Người dùng' AS loai, id, firstname, lastname, avatar
             FROM nguoidung 
-            WHERE firstname || ' ' || lastname LIKE ?`, ['%' + text + '%']);
+            WHERE firstname || ' ' || lastname LIKE ?
+            LIMIT 15`, ['%' + text + '%']);
 
-        if (result.length > 0) {
+        if (result.length > 0 || result2.length > 0) {
             return {
                 EM: 'SERVICE | FIND USER SERVICE | SUCCESS | ',
                 EC: 0,
                 DT: [...result, ...result2]
-            
             };
         } else {
             return {
@@ -35,6 +36,7 @@ const findUser = async (text) => {
         };
     }
 };
+
 module.exports = {
     findUser,
 };
