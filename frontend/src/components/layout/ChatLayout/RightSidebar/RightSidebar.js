@@ -1,14 +1,16 @@
+import { timePassed } from "lib/function/formatTime";
 import React, { useContext, useEffect, useState, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import "./RightSidebar.scss";
+import styles from "./RightSidebar.module.scss";
+import classNames from "classnames/bind";
 import Footer from "./Footer";
-import ChatRoom from "./chatRoom";
+import ChatRoom from "./ChatRoom";
 import ChatDataContext from 'lib/Context/ChatContext';
 import getChatRoom from "services/getchatroom";
-import { timePassed } from "lib/function/formatTime";
+import FriendItem from "./FriendItem";
 import Search from "./Footer/Search";
-
+const cx = classNames.bind(styles);
 const RightSidebar = () => {
     const { currUser } = useContext(ChatDataContext);
     const [chatRoom, setRoomData] = useState([]);
@@ -23,16 +25,16 @@ const RightSidebar = () => {
         }
     }, [currUser]);
 
-    // useEffect(() => {
-    //     fetchChatRoom();
-    // }, [fetchChatRoom]);
-    // Sample chat room data
-    const sampleChatRoomData = [
+    useEffect(() => {
+        fetchChatRoom();
+    }, [fetchChatRoom]);
+
+    const sampleFriend = [
         {
             id: 1,
             first_name: "John",
             last_name: "Doe",
-            avt: "path/to/avatar1.jpg",
+            avt: "https://media.decentralized-content.com/-/rs:fit:1920:1920/aHR0cHM6Ly9tYWdpYy5kZWNlbnRyYWxpemVkLWNvbnRlbnQuY29tL2lwZnMvYmFmeWJlaWJ5bGRqZ2pydWFraGZjNXlybHRibjVzYmx6Y2UzdzNneXlxd3JkcW5zbzdxb3V0eXhlZXE",
             last_message_time: new Date().toISOString(),
             last_message_content: "Hello, how are you?"
         },
@@ -40,20 +42,17 @@ const RightSidebar = () => {
             id: 2,
             first_name: "Jane",
             last_name: "Smith",
-            avt: "path/to/avatar2.jpg",
+            avt: "https://media.decentralized-content.com/-/rs:fit:1920:1920/aHR0cHM6Ly9tYWdpYy5kZWNlbnRyYWxpemVkLWNvbnRlbnQuY29tL2lwZnMvYmFmeWJlaWJ5bGRqZ2pydWFraGZjNXlybHRibjVzYmx6Y2UzdzNneXlxd3JkcW5zbzdxb3V0eXhlZXE",
             last_message_time: new Date().toISOString(),
             last_message_content: "Are we still on for tomorrow?"
         }
     ];
 
-    useEffect(() => {
-        setRoomData(sampleChatRoomData);
-    }, []);
     if (!currUser) return null;
     return (
-        <div className="rightsidebar">
-            <div className="me-auto list_nav">
-                <div className="sidebar_header">
+        <div className={cx('rightsidebar')}>
+            <div className={cx('me-auto', 'list_nav')}>
+                <div className={cx('sidebar_header')}>
                     <FontAwesomeIcon icon={faUser} /> Wtf Chat
                 </div>
                 {(() => {
@@ -74,7 +73,20 @@ const RightSidebar = () => {
                                 <div>No new messages</div>
                             );
                         case 'friend':
-                            return <div style={{ color: 'white' }}>Friend Page</div>;
+                            return sampleFriend && sampleFriend.length > 0 ? (
+                                sampleFriend.map((friend) => (
+                                    <FriendItem
+                                        key={friend.id}
+                                        id={friend.id}
+                                        name={`${friend.first_name} ${friend.last_name}`}
+                                        avt={friend.avt}
+                                        time={timePassed(friend.last_message_time)}
+                                        mess={friend.last_message_content}
+                                    />
+                                ))
+                            ) : (
+                                <div>寂し犬</div>
+                            );
                         case 'search':
                             return <Search></Search>;
                         case 'archive':

@@ -24,9 +24,9 @@ const ChatRoom = ({ id, avt, name, time, mess }) => {
                     <div className="CR_romname">
                         <h3>{name}</h3>
                     </div>
-                    <div className="CR_mess">
+                    {mess && <div className="CR_mess">
                         <p>{mess}</p>
-                    </div>
+                    </div>}
                 </div>
                 <div className="CR_right">
                     {time}

@@ -114,7 +114,7 @@ const ChatPage = () => {
                     </div>
 
                     <div className="ChatWindow" ref={chatWindowRef}>
-                        {curChatData.length >0 ? curChatData.map((item, index) => (
+                        {curChatData && curChatData.length > 0 ? curChatData.map((item, index) => (
                             <MessageBubble key={index} data={{
                                 img: item.avt,
                                 avt: item.avt,
@@ -128,7 +128,7 @@ const ChatPage = () => {
                     <MessageInput value={handleSetData} />
 
                 </div>
-            ): <h1>CHỌN MỘT CUỘC TRÒ TRUYỆN ĐỂ BĂT ĐẦU</h1>}
+            ) : <h1>CHỌN MỘT CUỘC TRÒ TRUYỆN ĐỂ BĂT ĐẦU</h1>}
         </>
     );
 }
