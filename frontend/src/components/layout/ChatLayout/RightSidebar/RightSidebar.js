@@ -15,6 +15,7 @@ const RightSidebar = () => {
     const fetchChatRoom = useCallback(async () => {
         try {
             const response = await getChatRoom({ id: currUser.id });
+            
             setRoomData(response.DT); // API trả về danh sách phòng chat và tin nhắn mới nhất
         } catch (error) {
             console.error('Error fetching new messages:', error);
@@ -34,14 +35,16 @@ const RightSidebar = () => {
                     <FontAwesomeIcon icon={faUser} /> Wtf Chat
                 </div>
                 {chatRoom && chatRoom.length > 0 ? (
-                    chatRoom.map((friend) => (
+                    chatRoom.map((room) => (
                         <ChatRoom 
-                            key={friend.id} 
-                            id={friend.id} 
-                            name={`${friend.first_name} ${friend.last_name}`} 
-                            avt={friend.avt} 
-                            time={timePassed(friend.last_message_time)} 
-                            mess={friend.last_message_content} 
+                            key={room.id} 
+                            id={room.id} 
+                            sender={JSON.parse(room.last_message).idUser !== currUser.id
+                                ? JSON.parse(room.last_message).sender : 'You'} 
+                            name={room.groupName}
+                            avt={room.avt} 
+                            time={timePassed(room.update_time)} 
+                            mess={JSON.parse(room.last_message).content} 
                         />
                     ))
                 ) : (

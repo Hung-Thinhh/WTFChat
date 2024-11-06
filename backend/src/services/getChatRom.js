@@ -3,64 +3,62 @@ import pool from '../connectDB.js';
 const getChatRoom = async (id) => {
     try {
         const [rows] = await pool.query(
-            `SELECT 
-                nguoidung.firstname AS first_name,
-                nguoidung.lastname AS last_name,
-                nguoidung.avatar AS avt,
-                nguoidung.id AS id,
-                tinnhan.time AS last_message_time,
-                tinnhan.content AS last_message_content,
-                tinnhan.groupid AS last_message_groupid,
-                tinnhan.friendid AS last_message_friendid,
-                tinnhan.senderid AS last_message_senderid,
-                tinnhan.id AS last_message_id
-            FROM 
-                banbe
-            JOIN 
-                nguoidung ON banbe.usertwoid = nguoidung.id OR banbe.useroneid = nguoidung.id
-            LEFT JOIN 
-                tinnhan ON (
-                    (tinnhan.senderid = banbe.useroneid AND tinnhan.friendid = banbe.usertwoid) OR 
-                    (tinnhan.senderid = banbe.usertwoid AND tinnhan.friendid = banbe.useroneid)
-                ) AND tinnhan.time = (
-                    SELECT MAX(time) 
-                    FROM tinnhan 
-                    WHERE 
-                        (tinnhan.senderid = banbe.useroneid AND tinnhan.friendid = banbe.usertwoid) OR 
-                        (tinnhan.senderid = banbe.usertwoid AND tinnhan.friendid = banbe.useroneid)
-                )
-            WHERE 
-                (banbe.useroneid = ? OR banbe.usertwoid = ?)
-            AND nguoidung.id != ?;`,
-            [id, id, id]
+            `SELECT
+                p.id,
+                CASE
+                    WHEN p.type = 0 THEN otherUser.name
+                    ELSE p.groupName
+                END AS groupName,
+                CASE
+                    WHEN p.type = 0 THEN otherUser.avatar
+                    ELSE p.avt
+                END AS avt,
+                p.update_time,
+                (
+                    SELECT 
+                        JSON_OBJECT(
+                            'content', t.content,
+                            'idUser', u.id,
+                            'sender', CONCAT(u2.firstname, ' ', u2.lastname)
+                        )
+                    FROM tinnhan t
+                    JOIN thanhvien tv2 ON t.idThanhvien = tv2.id
+                    JOIN nguoidung u ON tv2.userid = u.id
+                    JOIN nguoidung u2 ON tv2.userid = u2.id
+                    WHERE t.idRoom = p.id
+                    ORDER BY t.time DESC
+                    LIMIT 1
+                ) AS last_message
+                    FROM phongchat p
+                    JOIN thanhvien tv ON p.id = tv.idRoom
+                    LEFT JOIN (
+                        SELECT tv.idRoom, CONCAT(u.firstname, ' ', u.lastname) AS name, u.avatar AS avatar
+                        FROM thanhvien tv
+                        JOIN nguoidung u ON tv.userid = u.id
+                        WHERE tv.userid != ?
+                    ) AS otherUser ON p.id = otherUser.idRoom
+                    WHERE tv.userid = ?
+                    GROUP BY p.id, p.groupName, p.avt, p.update_time
+                    ORDER BY p.update_time DESC;
+            `,
+            [id,id],
         );
-        for (const row of rows) {
-            const [room] = await pool.query(`SELECT * FROM phongchat WHERE (useroneid = ? AND usertwoid = ?) OR (useroneid = ? AND usertwoid = ?)`, [id, row.id, row.id, id]);
-            let roomId;
-            if (room.length > 0) {
-                // Phòng chat đã tồn tại
-                roomId = room[0].id;
-            } else {
-                // Tạo phòng chat mới
-                const [newRoom] = await pool.query(`INSERT INTO phongchat(useroneid, usertwoid) VALUES (?, ?)`, [id, row.id]);
-                roomId = newRoom.insertId;
-            }
-        }
+
 
         return {
             EM: 'Success',
             EC: 1,
-            DT: rows
+            DT: rows,
         };
     } catch (error) {
         console.log('SERVICE | CHAT SERVICE | ERROR | ', error); // dAev only
         return {
             EM: 'Database query error',
             EC: -1,
-            DT: []
+            DT: [],
         };
     }
 };
 module.exports = {
-    getChatRoom
+    getChatRoom,
 };

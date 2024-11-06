@@ -28,40 +28,30 @@ const createChat = async (senderid, friendid, groupid, content, time, numlike) =
 };
 
 
-const getChat = async (userId, friendId) => {
+const getChat = async (userId, roomId) => {
   try {
-    console.log(userId,friendId);
+    console.log(userId,roomId);
     
-    // Lấy ID phòng chat giữa hai người dùng
-    const [roomRows] = await pool.query(
-      `SELECT id FROM phongchat WHERE (useroneid = ? AND usertwoid = ?) OR (useroneid = ? AND usertwoid = ?)`,
-      [userId, friendId, friendId, userId]
-    );
-
-    let roomId;
-    if (roomRows.length > 0) {
-      roomId = roomRows[0].id;
-    } else {
-      // Nếu phòng chưa tồn tại, tạo phòng mới
-      const [result] = await pool.query(
-        `INSERT INTO phongchat(useroneid, usertwoid) VALUES (?, ?)`,
-        [userId, friendId]
-      );
-      roomId = result.insertId;
-    }
+    
 
     // Lấy tin nhắn giữa hai người dùng
     const [rows] = await pool.query(
-      `SELECT id, senderid, friendid, groupid, content, time, numlike 
-       FROM tinnhan 
-       WHERE (senderid = ? AND friendid = ?) OR (senderid = ? AND friendid = ?)
-       ORDER BY time ASC`,
-      [userId, friendId, friendId, userId]
+      `SELECT
+        t.id,
+        t.content,
+        t.time,
+        CONCAT(u.firstname, ' ', u.lastname) AS senderName,u.id AS senderid,
+        u.avatar AS avt
+        FROM tinnhan t
+        JOIN thanhvien tv ON t.idThanhvien = tv.id
+        JOIN nguoidung u ON tv.userid = u.id
+        WHERE t.idRoom = ?`,
+      [roomId]
     );
     return {
       EM: 'Success',
       EC: 0,
-      DT: {rows, roomId},
+      DT: rows,
     };
   } catch (error) {
     console.log('SERVICE | GET CHAT SERVICE | ERROR | ', error);

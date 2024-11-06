@@ -19,7 +19,10 @@
     width: 100%;
     border-top: #474747 0.5px solid;
     padding: 10px;
-
+     &:hover{
+        background-color: #2b2a2a;
+        cursor: pointer;
+     }
     .CR_avt {
         display: flex;
         justify-content: center;
@@ -41,13 +44,26 @@
         display: flex;
         justify-content: space-between;
         margin-left: 10px;
-        color: #e3e3e3;
+        color: #f8f8f8;
         width: 100%;
         margin: 0 10px;
 
         .CR_left {
             display: flex;
             flex-direction: column;
+            .CR_room_name{
+                h3{
+                    font-size: 16px;
+                }
+            }
+            .CR_mess{
+                .Sender{
+                    margin-right: 10px;
+                }
+                .content{
+                    color: #aaaaaa;
+                }
+            }
         }
 
         .CR_right {
@@ -55,6 +71,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            font-size: 12px;
+            color: #aaaaaa;
         }
     }
 }
