@@ -1,6 +1,6 @@
 import pool from '../connectDB.js';
 
-const getChatRoom = async (id) => {
+const getChatRoom = async (userId) => {
     try {
         const [rows] = await pool.query(
             `SELECT
@@ -51,7 +51,7 @@ const getChatRoom = async (id) => {
             DT: rows,
         };
     } catch (error) {
-        console.log('SERVICE | CHAT SERVICE | ERROR | ', error); // dAev only
+        console.log('SERVICE | GET CHAT ROOM SERVICE | ERROR | ', error);
         return {
             EM: 'Database query error',
             EC: -1,

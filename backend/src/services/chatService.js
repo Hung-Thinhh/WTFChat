@@ -53,6 +53,7 @@ const getChat = async (userId, roomId) => {
       EC: 0,
       DT: rows,
     };
+
   } catch (error) {
     console.log('SERVICE | GET CHAT SERVICE | ERROR | ', error);
     return {

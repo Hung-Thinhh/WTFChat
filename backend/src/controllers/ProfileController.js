@@ -36,3 +36,19 @@ export const getUserInfo = async (req, res) => {
     }
 };
 
+export const updateUserInfo = async (req, res) => {
+    try {
+        const data = await req.body;
+
+        const result = await services.handleLogin(data);
+
+        return res.status(200).json(result);
+    } catch (error) {
+        console.log('CONTROLLER | UPDATE_USER_INFO | ERROR | ', error);
+
+        return res.status(200).json({
+            EM: 'UPDATE_USER_INFO | ERROR | ' + error,
+            EC: '500',
+        });
+    }
+};
