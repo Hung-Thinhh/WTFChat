@@ -2,6 +2,7 @@ window.env = {
   "ALLUSERSPROFILE": "C:\\ProgramData",
   "APPDATA": "C:\\Users\\rurim\\AppData\\Roaming",
   "COLOR": "1",
+  "COLORTERM": "truecolor",
   "CommonProgramFiles": "C:\\Program Files\\Common Files",
   "CommonProgramFiles(x86)": "C:\\Program Files (x86)\\Common Files",
   "CommonProgramW6432": "C:\\Program Files\\Common Files",

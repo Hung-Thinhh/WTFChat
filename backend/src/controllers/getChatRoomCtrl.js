@@ -1,4 +1,4 @@
-import getChatRoom from "../services/getChatRom.js";
+import {getChatRoom} from "../services/getChatRom.js";
 
 const getRoomController = async (req, res) => {
     try {

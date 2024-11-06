@@ -3,7 +3,7 @@ import ChatDataContext from 'lib/Context/ChatContext';
 import { useContext, useEffect } from 'react';
 import classNames from 'classnames';
 
-const ChatRoom = ({ id, avt, name, time, mess }) => {
+const ChatRoom = ({ id, avt, name, time, mess,sender }) => {
     console.log(id);
     
     const { ChatData, setChatData } = useContext(ChatDataContext);
@@ -25,12 +25,13 @@ const ChatRoom = ({ id, avt, name, time, mess }) => {
             </div>
             <div className="CR_info">
                 <div className="CR_left">
-                    <div className="CR_romname">
+                    <div className="CR_room_name">
                         <h3>{name}</h3>
                     </div>
-                    {mess && <div className="CR_mess">
-                        <p>{mess}</p>
-                    </div>}
+                    <div className="CR_mess">
+                        <span className="Sender">{ sender}:</span>
+                        <span className="content">{mess}</span>
+                    </div>
                 </div>
                 <div className="CR_right">
                     {time}

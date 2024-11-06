@@ -22,12 +22,12 @@ const ChatPage = () => {
         try {
             console.log('chattttttt',ChatData);
             
-            const response = await getChat({ userId: currUser.id, friendId: ChatData });
+            const response = await getChat({ userId: currUser.id, roomId: ChatData });
             if (response && response.EC === 0) {
                 
                 socket.emit('join_room', response.DT.roomId);
                 setRoom(response.DT.roomId); // Lấy ra roomId để gửi tin nhắn
-                setCurChatData(response.DT.rows); // Giả sử API trả về danh sách tin nhắn trong response.DT
+                setCurChatData(response.DT); // Giả sử API trả về danh sách tin nhắn trong response.DT
             } else {
                 return <h1>Chưa có gì cả</h1>
             }
