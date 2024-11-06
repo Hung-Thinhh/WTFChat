@@ -1,6 +1,6 @@
 import pool from '../connectDB.js';
 
-const getChatRoom = async (userId) => {
+const getChatRoom = async (id) => {
     try {
         const [rows] = await pool.query(
             `SELECT
