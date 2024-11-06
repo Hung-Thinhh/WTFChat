@@ -21,7 +21,7 @@ const ChatRoom = ({ id, avt, name, time, mess }) => {
             onClick={handleClick}
         >
             <div className="CR_avt">
-                <img src={avt} alt="avt" />
+                <img src={avt && avt !== "/" ? avt : "https://static3.bigstockphoto.com/9/1/3/large1500/31903202.jpg"} alt="avt" />
             </div>
             <div className="CR_info">
                 <div className="CR_left">

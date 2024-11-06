@@ -30,8 +30,6 @@ const createChat = async (senderid, friendid, groupid, content, time, numlike) =
 
 const getChat = async (userId, friendId) => {
   try {
-    console.log(userId,friendId);
-    
     // Lấy ID phòng chat giữa hai người dùng
     const [roomRows] = await pool.query(
       `SELECT id FROM phongchat WHERE (useroneid = ? AND usertwoid = ?) OR (useroneid = ? AND usertwoid = ?)`,
@@ -58,7 +56,7 @@ const getChat = async (userId, friendId) => {
        ORDER BY time ASC`,
       [userId, friendId, friendId, userId]
     );
-
+    console.log('room new', roomId);
     return {
       EM: 'Success',
       EC: 0,

@@ -1,8 +1,27 @@
 import pool from '../connectDB.js';
 
-const getChatRoom = async (id) => {
+const getChatRoom = async (userId) => {
     try {
-        const [rows] = await pool.query(
+        // Lấy thông tin từ bảng phongchat
+        const [chatRooms] = await pool.query(
+            `SELECT id, useroneid, usertwoid 
+             FROM phongchat 
+             WHERE useroneid = ? OR usertwoid = ?
+             LIMIT 10`,
+            [userId, userId]
+        );
+
+        if (chatRooms.length === 0) {
+            return {
+                EM: 'No chat rooms found',
+                EC: 0,
+                DT: []
+            };
+        }
+
+        // Lấy thông tin người dùng từ bảng nguoidung
+        const userIds = chatRooms.map(room => room.useroneid === userId ? room.usertwoid : room.useroneid);
+        const [users] = await pool.query(
             `SELECT 
                 nguoidung.firstname AS first_name,
                 nguoidung.lastname AS last_name,
@@ -14,46 +33,31 @@ const getChatRoom = async (id) => {
                 tinnhan.friendid AS last_message_friendid,
                 tinnhan.senderid AS last_message_senderid,
                 tinnhan.id AS last_message_id
-            FROM 
-                banbe
-            JOIN 
-                nguoidung ON banbe.usertwoid = nguoidung.id OR banbe.useroneid = nguoidung.id
-            LEFT JOIN 
+             FROM 
+                nguoidung
+             LEFT JOIN 
                 tinnhan ON (
-                    (tinnhan.senderid = banbe.useroneid AND tinnhan.friendid = banbe.usertwoid) OR 
-                    (tinnhan.senderid = banbe.usertwoid AND tinnhan.friendid = banbe.useroneid)
+                    (tinnhan.senderid = nguoidung.id AND tinnhan.friendid = ?) OR 
+                    (tinnhan.senderid = ? AND tinnhan.friendid = nguoidung.id)
                 ) AND tinnhan.time = (
                     SELECT MAX(time) 
                     FROM tinnhan 
                     WHERE 
-                        (tinnhan.senderid = banbe.useroneid AND tinnhan.friendid = banbe.usertwoid) OR 
-                        (tinnhan.senderid = banbe.usertwoid AND tinnhan.friendid = banbe.useroneid)
+                        (tinnhan.senderid = nguoidung.id AND tinnhan.friendid = ?) OR 
+                        (tinnhan.senderid = ? AND tinnhan.friendid = nguoidung.id)
                 )
-            WHERE 
-                (banbe.useroneid = ? OR banbe.usertwoid = ?)
-            AND nguoidung.id != ?;`,
-            [id, id, id]
+             WHERE 
+                nguoidung.id IN (?)
+             LIMIT 10`,
+            [userId, userId, userId, userId, userIds]
         );
-        for (const row of rows) {
-            const [room] = await pool.query(`SELECT * FROM phongchat WHERE (useroneid = ? AND usertwoid = ?) OR (useroneid = ? AND usertwoid = ?)`, [id, row.id, row.id, id]);
-            let roomId;
-            if (room.length > 0) {
-                // Phòng chat đã tồn tại
-                roomId = room[0].id;
-            } else {
-                // Tạo phòng chat mới
-                const [newRoom] = await pool.query(`INSERT INTO phongchat(useroneid, usertwoid) VALUES (?, ?)`, [id, row.id]);
-                roomId = newRoom.insertId;
-            }
-        }
-
         return {
             EM: 'Success',
-            EC: 1,
-            DT: rows
+            EC: 0,
+            DT: users
         };
     } catch (error) {
-        console.log('SERVICE | CHAT SERVICE | ERROR | ', error); // dAev only
+        console.log('SERVICE | GET CHAT ROOM SERVICE | ERROR | ', error);
         return {
             EM: 'Database query error',
             EC: -1,
@@ -61,6 +65,5 @@ const getChatRoom = async (id) => {
         };
     }
 };
-module.exports = {
-    getChatRoom
-};
+
+export default getChatRoom;
