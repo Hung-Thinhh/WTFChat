@@ -145,10 +145,16 @@
     .avatar-form {
         position: relative;
 
+        .file-input {
+            display: none;
+        }
+
         .upload-img-btn {
             position: absolute;
-            right: 0;
-            bottom: 0;
+            // right: 0;
+            // bottom: 0;
+            left: 80%;
+            top: 95%;
             transform: translate(-50%, -50%);
             width: 40px;
             height: 40px;
@@ -159,11 +165,11 @@
             &::before {
                 opacity: 0;
                 position: absolute;
-                content: 'Tải ảnh lên';
+                content: 'Chọn ảnh';
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                width: 100px;
+                width: 40px;
                 padding: 5px 2px;
                 border-radius: 5px;
                 color: white;
@@ -177,8 +183,18 @@
 
                 &::before {
                     opacity: 1;
-                    top: -18px;
+                    top: 150%;
+                    width: 80px;
                 }
+            }
+        }
+
+        .reload-avt-btn {
+            right: auto;
+            left: 20%;
+
+            &::before {
+                content: 'Trở lại';
             }
         }
     }
