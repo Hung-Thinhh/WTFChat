@@ -10,11 +10,13 @@ import ChatDataContext from 'lib/Context/ChatContext';
 import getChatRoom from "services/getchatroom";
 import FriendItem from "./FriendItem";
 import Search from "./Footer/Search";
+import getFriendList from "services/getFriendList";
 const cx = classNames.bind(styles);
 const RightSidebar = () => {
     const { currUser } = useContext(ChatDataContext);
     const [chatRoom, setRoomData] = useState([]);
     const [pageState, setPageData] = useState('chat');
+    const [friend, setFriend] = useState('chat');
 
     const fetchChatRoom = useCallback(async () => {
         try {
@@ -24,29 +26,21 @@ const RightSidebar = () => {
             console.error('Error fetching new messages:', error);
         }
     }, [currUser]);
+    const fetchFriendList = useCallback(async () => {
+        try {
+            const response = await getFriendList({ id: currUser.id });
+            setFriend(response.DT); // API trả về danh sách bạn bè
+        } catch (error) {
+            console.error('Error fetching new messages:', error);
+        }
+    }, [currUser]);
 
     useEffect(() => {
         fetchChatRoom();
-    }, [fetchChatRoom]);
+        fetchFriendList();
+    }, [fetchChatRoom, fetchFriendList]);
 
-    const sampleFriend = [
-        {
-            id: 1,
-            first_name: "John",
-            last_name: "Doe",
-            avt: "https://media.decentralized-content.com/-/rs:fit:1920:1920/aHR0cHM6Ly9tYWdpYy5kZWNlbnRyYWxpemVkLWNvbnRlbnQuY29tL2lwZnMvYmFmeWJlaWJ5bGRqZ2pydWFraGZjNXlybHRibjVzYmx6Y2UzdzNneXlxd3JkcW5zbzdxb3V0eXhlZXE",
-            last_message_time: new Date().toISOString(),
-            last_message_content: "Hello, how are you?"
-        },
-        {
-            id: 2,
-            first_name: "Jane",
-            last_name: "Smith",
-            avt: "https://media.decentralized-content.com/-/rs:fit:1920:1920/aHR0cHM6Ly9tYWdpYy5kZWNlbnRyYWxpemVkLWNvbnRlbnQuY29tL2lwZnMvYmFmeWJlaWJ5bGRqZ2pydWFraGZjNXlybHRibjVzYmx6Y2UzdzNneXlxd3JkcW5zbzdxb3V0eXhlZXE",
-            last_message_time: new Date().toISOString(),
-            last_message_content: "Are we still on for tomorrow?"
-        }
-    ];
+ 
 
     if (!currUser) return null;
     return (
@@ -73,15 +67,14 @@ const RightSidebar = () => {
                                 <div>No new messages</div>
                             );
                         case 'friend':
-                            return sampleFriend && sampleFriend.length > 0 ? (
-                                sampleFriend.map((friend) => (
+                            return friend && friend.length > 0 ? (
+                                friend.map((friend) => (
                                     <FriendItem
                                         key={friend.id}
                                         id={friend.id}
                                         name={`${friend.first_name} ${friend.last_name}`}
                                         avt={friend.avt}
                                         time={timePassed(friend.last_message_time)}
-                                        mess={friend.last_message_content}
                                     />
                                 ))
                             ) : (

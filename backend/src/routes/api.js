@@ -6,6 +6,7 @@ import {
     getChatController,
     deletaChatController,
 } from '../controllers/chatController';
+import { getFriendController } from '../controllers/getFriendController.js';
 
 import { getRoomController } from '../controllers/getChatRoomCtrl.js';
 import {
@@ -43,6 +44,8 @@ const initApiRouter = (app) => {
 
     router.post('/chat', chatController); // api gửi tin nhắn
     router.post('/getchat', getChatController); // api lấy tin nhắn
+    router.post('/friendList', getFriendController); // api lấy tin nhắn
+
     router.get('/deletechat', deletaChatController); // api xoa tin nhắn
     router.post('/getchatroom', getRoomController); // api xoa tin nhắn
     router.post('/createroom', getRoomController); // api xoa tin nhắn
