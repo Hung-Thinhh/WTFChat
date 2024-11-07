@@ -15,16 +15,42 @@
   display: flex;
   align-items: center;
   flex-direction: row;
-  margin: 2rem 1rem;
+  padding: 0.5rem 1rem;
 
   animation: fadeIn 0.5s ease-out;
 
-  &.me {
+  &.other {
     justify-content: flex-start;
+    .messageContent {
+      flex-direction: row;
+      float: right;
+      .messageBox{
+        background-color: #212121;
+        color: white;
+        .messageTime_container{
+          color: #fff;
+          .messageTime{
+            color:#bcbcbc;
+          }
+
+        }
+      }
+    }
   }
 
-  &.other {
+  &.me {
     justify-content: flex-end;
+    .messageContent {
+      flex-direction: row-reverse;
+      .messageBox{
+        background-color: rgb(208, 188, 255);
+        color: black;
+        .messageTime_container{
+          color: #50388c;
+
+        }
+      }
+    }
   }
 
   .messageContent {
@@ -34,15 +60,6 @@
     justify-content: space-between;
     gap: 1rem;
     align-items: flex-end;
-
-    &.me {
-      flex-direction: row;
-    }
-
-    &.other {
-      flex-direction: row-reverse;
-      float: right;
-    }
 
     .userAvatar {
       margin: 1rem 0;
@@ -59,20 +76,13 @@
 
     .messageBox {
       display: flex;
-      min-width: 15rem;
+      min-width: 8rem;
       flex-direction: column;
       align-items: center;
       border: 1px solid #ccc;
       border-radius: 8px;
       overflow: hidden;
-      background-color: #626262;
-      color: white;
       border: none;
-
-      &.other {
-        background-color: rgb(208, 188, 255);
-        color: black;
-      }
 
       img {
         max-width: 50%;
@@ -84,14 +94,13 @@
         flex-direction: column;
         width: 100%;
         justify-content: flex-end;
-        padding-right: 1rem;
 
         p {
           margin: 0;
-          font-size: 1.8rem;
+          font-size: 1.6rem;
           font-weight: 500;
-          padding: 1rem;
-          text-align: justify;
+          padding: 0.5rem 1rem;
+          // text-align: justify;
         }
 
         .messageTime_container {
@@ -99,8 +108,8 @@
           justify-content: space-between;
           .load_icon {
             font-size: 1rem;
+            padding-right: 1rem;
           }
-          color: #50388c;
           .messageTime {
             display: flex;
             width: 100%;

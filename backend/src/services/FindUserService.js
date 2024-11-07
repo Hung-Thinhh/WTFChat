@@ -2,23 +2,25 @@ import pool from '../connectDB.js';
 
 const findUser = async (text) => {
     try {
-        const [result] = await pool.query(
-            `SELECT 'Nhom' AS loai, n.id, n.groupname, n.avatar, n.membernum
-            FROM nhom n
-            WHERE n.groupname LIKE ?
-            LIMIT 15`, ['%' + text + '%']);
+        //search tin nhắn và gr chat
+        // const [result] = await pool.query(
+        //     `SELECT 'Nhom' AS loai, n.id, n.groupname, n.avatar, n.membernum
+        //     FROM nhom 
+        //     WHERE n.groupname LIKE ?
+        //     LIMIT 15`, ['%' + text + '%']);
 
+        //search người dùng
         const [result2] = await pool.query(
-            `SELECT 'Người dùng' AS loai, id, firstname, lastname, avatar
+            `SELECT DISTINCT 'nguoidung' AS loai, id, firstname, lastname, avatar
             FROM nguoidung 
-            WHERE firstname || ' ' || lastname LIKE ?
-            LIMIT 15`, ['%' + text + '%']);
+            WHERE firstname LIKE ? OR lastname LIKE ? OR id LIKE ?
+            LIMIT 15`, ['%' + text + '%', '%' + text + '%', '%' + text + '%']);
 
-        if (result.length > 0 || result2.length > 0) {
+        if (result2.length > 0) {
             return {
                 EM: 'SERVICE | FIND USER SERVICE | SUCCESS | ',
                 EC: 0,
-                DT: [...result, ...result2]
+                DT: [...result2]
             };
         } else {
             return {

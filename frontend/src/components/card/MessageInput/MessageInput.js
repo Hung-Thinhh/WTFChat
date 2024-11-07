@@ -27,6 +27,7 @@ const MessageInput = ({
                     name="mess" 
                     type="text" 
                     ref={inputRef} 
+                    placeholder="Message" 
                     onKeyPress={handleKeyPress} 
                 />
             </div>
