@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import './MessageBubble.scss';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faCheckDouble, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
-
+import OpengraphReactComponent from 'opengraph-react';
 
 const MessageBubble = (data) => {
     const [status, setStatus] = useState('sending');
@@ -36,6 +36,9 @@ const MessageBubble = (data) => {
             return `${diffYears} năm trước`;
         }
     };
+
+    const website = 'https://youtu.be/MPp8hbuZwW0?si=g7WU5rztQZPUQbbv';
+    const appId = '63490939-675d-4703-a891-9d30c454a46d'; //You're OpenGraph.io API Key goes here
     useEffect(() => {
         if (data.data.status === 'sending') {
             setStatus('sending');
@@ -49,7 +52,7 @@ const MessageBubble = (data) => {
     return (
         <div className={`messageBubble ${userClass}`}>
             <div className={`messageContent ${userClass}`}>
-                <div className="userAvatar">    
+                <div className="userAvatar">
                     <img
                         alt="User Avatar"
                         src={
@@ -58,6 +61,13 @@ const MessageBubble = (data) => {
                         }
                     />
                 </div>
+                <>
+                <h1>OpenGraph React Component</h1>
+                <OpengraphReactComponent
+                    site={website}
+                    appId={appId}
+                />
+                </>
                 <div className={`messageBox ${userClass}`}>
                     {data.data.img && <img src={data.data.img} alt="Attached image" />}
                     <div className="messageText">
