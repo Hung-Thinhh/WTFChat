@@ -10,7 +10,6 @@ import { Routes, Route } from 'react-router-dom';
 import { publicRoutes, privateRoutes } from 'routes';
 import { PrivateRoutes } from 'router/privateRoutes';
 
-import ChatDataProvider from './lib/provider/ChatDataProvider';
 
 import { Fragment, useContext, useEffect, useState } from 'react';
 import { checkaccount, logout } from 'controller/authen';
