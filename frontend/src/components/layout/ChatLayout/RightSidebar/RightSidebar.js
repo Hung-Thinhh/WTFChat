@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import "./RightSidebar.scss";
 import Footer from "./Footer";
-import ChatRoom from "./chatRoom";
+import ChatRoom from "./ChatRoomCop";
 import ChatDataContext from 'lib/Context/ChatContext';
 import getChatRoom from "services/getchatroom";
 import { timePassed } from "lib/function/formatTime";

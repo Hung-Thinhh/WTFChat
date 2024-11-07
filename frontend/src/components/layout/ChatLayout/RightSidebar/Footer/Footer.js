@@ -5,7 +5,6 @@ import styles from "./Footer.scss";
 import { faMagnifyingGlass, faUserGroup, faBoxArchive, faPlus } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames";
 import Button from "components/Button";
-import ChatRoom from "../chatRoom"
 const cx = classNames.bind(styles);
 
 const Footer = ({ sidebar }) => {
