@@ -1,19 +1,28 @@
 window.env = {
   "ALLUSERSPROFILE": "C:\\ProgramData",
+<<<<<<< HEAD
   "APPDATA": "C:\\Users\\N-H-T\\AppData\\Roaming",
   "CHROME_CRASHPAD_PIPE_NAME": "\\\\.\\pipe\\crashpad_10724_KXEKABPTNGPJXXQH",
+=======
+  "APPDATA": "C:\\Users\\nguye\\AppData\\Roaming",
+>>>>>>> 172a8eb5b159271f75605cb6bd0a31b7fd54a69b
   "COLOR": "1",
   "COLORTERM": "truecolor",
   "CommonProgramFiles": "C:\\Program Files\\Common Files",
   "CommonProgramFiles(x86)": "C:\\Program Files (x86)\\Common Files",
   "CommonProgramW6432": "C:\\Program Files\\Common Files",
+<<<<<<< HEAD
   "COMPUTERNAME": "DESKTOP-5BNTIB5",
+=======
+  "COMPUTERNAME": "LONG",
+>>>>>>> 172a8eb5b159271f75605cb6bd0a31b7fd54a69b
   "ComSpec": "C:\\Windows\\system32\\cmd.exe",
   "DokanLibrary1": "C:\\Program Files\\Dokan\\Dokan Library-1.5.1\\",
   "DokanLibrary1_LibraryPath_x64": "C:\\Program Files\\Dokan\\Dokan Library-1.5.1\\lib\\",
   "DokanLibrary1_LibraryPath_x86": "C:\\Program Files\\Dokan\\Dokan Library-1.5.1\\x86\\lib\\",
   "DriverData": "C:\\Windows\\System32\\Drivers\\DriverData",
   "EDITOR": "C:\\Windows\\notepad.exe",
+<<<<<<< HEAD
   "FPS_BROWSER_APP_PROFILE_STRING": "Internet Explorer",
   "FPS_BROWSER_USER_PROFILE_STRING": "Default",
   "GIT_ASKPASS": "c:\\Users\\N-H-T\\AppData\\Local\\Programs\\Microsoft VS Code\\resources\\app\\extensions\\git\\dist\\askpass.sh",
@@ -24,16 +33,35 @@ window.env = {
   "LANG": "en_US.UTF-8",
   "LOCALAPPDATA": "C:\\Users\\N-H-T\\AppData\\Local",
   "LOGONSERVER": "\\\\DESKTOP-5BNTIB5",
+=======
+  "EFC_11588": "1",
+  "GIT_LFS_PATH": "C:\\Program Files\\Git LFS",
+  "HOME": "C:\\Users\\nguye",
+  "HOMEDRIVE": "C:",
+  "HOMEPATH": "\\Users\\nguye",
+  "INIT_CWD": "D:\\github\\WTFChat\\frontend",
+  "LOCALAPPDATA": "C:\\Users\\nguye\\AppData\\Local",
+  "LOGONSERVER": "\\\\LONG",
+>>>>>>> 172a8eb5b159271f75605cb6bd0a31b7fd54a69b
   "NODE": "C:\\Program Files\\nodejs\\node.exe",
   "NODE_EXE": "C:\\Program Files\\nodejs\\\\node.exe",
   "NPM_CLI_JS": "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
   "npm_command": "start",
+<<<<<<< HEAD
   "npm_config_cache": "C:\\Users\\N-H-T\\AppData\\Local\\npm-cache",
   "npm_config_globalconfig": "C:\\Program Files\\nodejs\\etc\\npmrc",
   "npm_config_global_prefix": "C:\\Program Files\\nodejs",
   "npm_config_init_module": "C:\\Users\\N-H-T\\.npm-init.js",
   "npm_config_local_prefix": "D:\\project\\web\\WTFChat_BE\\frontend",
   "npm_config_node_gyp": "C:\\Users\\N-H-T\\AppData\\Roaming\\nvm\\v20.18.0\\node_modules\\npm\\node_modules\\node-gyp\\bin\\node-gyp.js",
+=======
+  "npm_config_cache": "C:\\Users\\nguye\\AppData\\Local\\npm-cache",
+  "npm_config_globalconfig": "C:\\Users\\nguye\\AppData\\Roaming\\npm\\etc\\npmrc",
+  "npm_config_global_prefix": "C:\\Users\\nguye\\AppData\\Roaming\\npm",
+  "npm_config_init_module": "C:\\Users\\nguye\\.npm-init.js",
+  "npm_config_local_prefix": "D:\\github\\WTFChat\\frontend",
+  "npm_config_node_gyp": "C:\\Program Files\\nodejs\\node_modules\\npm\\node_modules\\node-gyp\\bin\\node-gyp.js",
+>>>>>>> 172a8eb5b159271f75605cb6bd0a31b7fd54a69b
   "npm_config_noproxy": "",
   "npm_config_npm_version": "10.8.2",
   "npm_config_prefix": "C:\\Program Files\\nodejs",
@@ -43,7 +71,11 @@ window.env = {
   "npm_lifecycle_event": "start",
   "npm_lifecycle_script": "react-dotenv && react-scripts start",
   "npm_node_execpath": "C:\\Program Files\\nodejs\\node.exe",
+<<<<<<< HEAD
   "npm_package_json": "D:\\project\\web\\WTFChat_BE\\frontend\\package.json",
+=======
+  "npm_package_json": "D:\\github\\WTFChat\\frontend\\package.json",
+>>>>>>> 172a8eb5b159271f75605cb6bd0a31b7fd54a69b
   "npm_package_name": "my-app",
   "npm_package_version": "0.1.0",
   "NPM_PREFIX_JS": "C:\\Program Files\\nodejs\\\\node_modules\\npm\\bin\\npm-prefix.js",
@@ -65,14 +97,19 @@ window.env = {
   "ProgramFiles(x86)": "C:\\Program Files (x86)",
   "ProgramW6432": "C:\\Program Files",
   "PROMPT": "$P$G",
+<<<<<<< HEAD
   "PSModulePath": "C:\\Users\\N-H-T\\Documents\\WindowsPowerShell\\Modules;C:\\Program Files\\WindowsPowerShell\\Modules;C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules",
   "PT8HOME": "C:\\Program Files\\Cisco Packet Tracer 8.2.1",
+=======
+  "PSModulePath": "C:\\Program Files\\WindowsPowerShell\\Modules;C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules",
+>>>>>>> 172a8eb5b159271f75605cb6bd0a31b7fd54a69b
   "PUBLIC": "C:\\Users\\Public",
   "PUBLIC_KEY": "mze19GnKfeWd1LqUbAcuBehy13c6bdd+4V1Xy3TwvQY=",
   "SERVER": "http://localhost:8000",
   "SESSIONNAME": "Console",
   "SystemDrive": "C:",
   "SystemRoot": "C:\\Windows",
+<<<<<<< HEAD
   "TEMP": "C:\\Users\\N-H-T\\AppData\\Local\\Temp",
   "TERM_PROGRAM": "vscode",
   "TERM_PROGRAM_VERSION": "1.95.1",
@@ -89,4 +126,14 @@ window.env = {
   "VSCODE_NONCE": "5427ad75-462b-4a81-9bca-e5eed46ff54e",
   "VSCODE_STABLE": "1",
   "windir": "C:\\Windows"
+=======
+  "TEMP": "C:\\Users\\nguye\\AppData\\Local\\Temp",
+  "TMP": "C:\\Users\\nguye\\AppData\\Local\\Temp",
+  "USERDOMAIN": "LONG",
+  "USERDOMAIN_ROAMINGPROFILE": "LONG",
+  "USERNAME": "nguye",
+  "USERPROFILE": "C:\\Users\\nguye",
+  "windir": "C:\\Windows",
+  "ZES_ENABLE_SYSMAN": "1"
+>>>>>>> 172a8eb5b159271f75605cb6bd0a31b7fd54a69b
 };
