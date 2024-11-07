@@ -96,14 +96,16 @@ const RightSidebar = () => {
                         switch (pageState) {
                             case 'chat':
                                 return chatRoom && chatRoom.length > 0 ? (
-                                    chatRoom.map((friend) => (
+                                    chatRoom.map((room) => (
                                         <ChatRoom
-                                            key={friend.id}
-                                            id={friend.id}
-                                            name={`${friend.first_name} ${friend.last_name}`}
-                                            avt={friend.avt}
-                                            time={timePassed(friend.last_message_time)}
-                                            mess={friend.last_message_content}
+                                        key={room.id} 
+                                        id={room.id} 
+                                        sender={JSON.parse(room.last_message).idUser !== currUser.id
+                                            ? JSON.parse(room.last_message).sender : 'You'} 
+                                        name={room.groupName}
+                                        avt={room.avt} 
+                                        time={timePassed(room.update_time)} 
+                                        mess={JSON.parse(room.last_message).content} 
                                         />
                                     ))
                                 ) : (
