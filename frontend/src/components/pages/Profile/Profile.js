@@ -33,7 +33,6 @@ function Profile() {
     const [file, setFile] = useState();
     const [err, setErr] = useState('');
     const [loading, setLoading] = useState(false);
-    const [currAvt, setCurrAvt] = useState('');
 
     const logout = async () => {
         // logout
@@ -52,7 +51,7 @@ function Profile() {
             if (res.EC === '200') {
                 const { avatar, birthdate, email, firstname, lastname, gender } = res.DT;
                 const dateObject = new Date(birthdate);
-                const formatBirthdate = dateObject.toISOString().slice(0, 10);
+                const formatBirthdate = dateObject.toLocaleDateString('en-CA');
 
                 const newInput = {
                     email,
@@ -96,13 +95,12 @@ function Profile() {
     };
 
     const handleChangeImage = (event) => {
-        const file = event.target.files[0];
-
-        if (!file) return;
+        const newFile = event.target.files[0];
+        if (!newFile) return;
 
         const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
 
-        if (!allowedTypes.includes(file.type)) {
+        if (!allowedTypes.includes(newFile.type)) {
             setErr('Hãy chọn thư mục có đuổi .png, .jpg hoặc .jpeg.');
         }
 
@@ -110,7 +108,7 @@ function Profile() {
             URL.revokeObjectURL(input.avatar); // clear prev url
         }
 
-        setInput((prev) => ({ ...prev, avatar: URL.createObjectURL(file) }));
+        setInput((prev) => ({ ...prev, avatar: URL.createObjectURL(newFile) }));
         if (err) setErr('');
     };
 
@@ -135,12 +133,17 @@ function Profile() {
         else {
             const formData = new FormData();
             // Add image data
-            formData.append('avatar', file, file.name);
+            const avatar = fileInput.current.files[0];
+            if (avatar) formData.append('avatar', avatar, avatar.name);
 
             // Add user data
             formData.append('username', input.username);
             formData.append('birthdate', input.birthdate);
             formData.append('gender', input.gender);
+            for (const [key, value] of formData.entries()) {
+                console.log(`${key}: ${value}`);
+            }
+
             const res = await updateUserInfo(formData);
             if (res.EC === '200') {
                 // set mặc định thành input
@@ -171,7 +174,7 @@ function Profile() {
                                 name="email"
                                 id="email"
                                 placeholder="Email"
-                                value={'binhminh19112003@gmail.com'}
+                                value={input.email}
                                 onChange={handleChange}
                                 disabled
                             />

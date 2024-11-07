@@ -38,12 +38,10 @@ export const getUserInfo = async (req, res) => {
 
 export const updateUserInfo = async (req, res) => {
     try {
-        const file = req.files.myFile;
-
-        const driveUpload = await profileService.uploadImage(file);
+        const driveUpload = req.file && (await profileService.uploadImage(req.file));
 
         const data = await req.body;
-        const email = await req.user.email
+        const email = await req.user.email;
 
         const result = await profileService.updateUserInfo(email, data, driveUpload);
 

@@ -37,7 +37,7 @@ const upload = multer({
             cb(null, 'uploads/');
         },
         filename: (req, file, cb) => {
-            cb(null, file.originalname);
+            cb(null, Date.now() + '-' + file.originalname)
         },
     }),
     limits: { fileSize: 1024 * 1024 * 5 },

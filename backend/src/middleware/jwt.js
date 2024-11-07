@@ -31,7 +31,7 @@ const extractToken = (req) => {
     return null;
 };
 
-const SecurePaths = ['/checkaccount', '/getUserInfo'];
+const SecurePaths = ['/checkaccount', '/getUserInfo', '/updateUserInfo'];
 
 export const checkUserJWT = (req, res, next) => {
     if (!SecurePaths.includes(req.path)) return next();
