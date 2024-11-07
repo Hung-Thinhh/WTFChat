@@ -6,8 +6,10 @@ import { faCheck, faCheckDouble, faCircleXmark } from '@fortawesome/free-solid-s
 
 
 const MessageBubble = (data) => {
+    console.log(data);
+    
     const [status, setStatus] = useState('sending');
-    const userClass = data.data.user === 'me' ? 'me' : 'other';
+    const userClass = data.data.user
     const formatTime = (datestring) => {
         const date = new Date(datestring);
         const now = new Date();
@@ -49,7 +51,7 @@ const MessageBubble = (data) => {
     return (
         <div className={`messageBubble ${userClass}`}>
             <div className={`messageContent ${userClass}`}>
-                <div className="userAvatar">    
+                {userClass ==='other' && <div className="userAvatar">
                     <img
                         alt="User Avatar"
                         src={
@@ -57,20 +59,20 @@ const MessageBubble = (data) => {
                             'https://meliawedding.com.vn/wp-content/uploads/2022/03/avatar-gai-xinh-1.jpg'
                         }
                     />
-                </div>
+                </div>}
                 <div className={`messageBox ${userClass}`}>
                     {data.data.img && <img src={data.data.img} alt="Attached image" />}
                     <div className="messageText">
                         <p>{data.data.content}</p>
                         <div className="messageTime_container">
                             <div className="messageTime">{formatTime(data.data.time)}</div>
-                            {status === 'sending' ? (
+                            {userClass ==='me' && (status === 'sending' ? (
                                 <FontAwesomeIcon icon={faCheck} className="load_icon" />
                             ) : status === 'done' ? (
                                 <FontAwesomeIcon icon={faCheckDouble} className="load_icon" />
                             ) : (
                                 <FontAwesomeIcon icon={faCircleXmark} className="load_icon" />
-                            )}
+                            ))}
                         </div>
                     </div>
                 </div>

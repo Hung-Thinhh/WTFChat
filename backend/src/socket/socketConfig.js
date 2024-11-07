@@ -43,7 +43,7 @@ const setupWebSocket = (server) => {
     // Xử lý sự kiện gửi tin nhắn
     socket.on('send_mess', async (data) => {
       try {
-        const chat = await createChat(data.senderid, data.friendid, data.groupid, data.content, data.time, data.numlike);
+        const chat = await createChat(data.senderid, data.roomid, data.content, data.time);
         io.to(data.room).emit('new_chat', chat.DT[0]); // Phát sự kiện tới phòng cụ thể
       } catch (error) {
         console.error('Error creating chat:', error);

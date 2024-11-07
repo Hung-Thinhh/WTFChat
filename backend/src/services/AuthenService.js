@@ -175,7 +175,7 @@ const handleLogin = async (data) => {
         await pool.query('START TRANSACTION');
         // find current user
         const currUser = await pool.query(
-            `SELECT xacthuc.email, xacthuc.password, xacthuc.status, xacthuc.role, nguoidung.lastname, nguoidung.avatar
+            `SELECT xacthuc.email, xacthuc.password, xacthuc.status, xacthuc.role, nguoidung.lastname, nguoidung.id, nguoidung.avatar
             FROM xacthuc 
             INNER JOIN nguoidung ON xacthuc.email=nguoidung.email
             WHERE xacthuc.email = ?`,
@@ -191,7 +191,7 @@ const handleLogin = async (data) => {
                 DT: '',
             };
 
-        const { email, password, status, role, lastname, avatar } = currUser[0][0];
+        const { email, password, status, role, lastname, avatar ,id} = currUser[0][0];
 
         // check status
         if (!status)
@@ -227,6 +227,7 @@ const handleLogin = async (data) => {
                     access_token: token,
                     avt: avatar,
                     username: lastname,
+                    id:id
                 },
             };
 
@@ -239,6 +240,7 @@ const handleLogin = async (data) => {
                 access_token: token,
                 avt: avatar,
                 username: lastname,
+                id:id
             },
         };
     } catch (error) {
