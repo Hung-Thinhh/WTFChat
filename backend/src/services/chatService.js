@@ -1,10 +1,19 @@
 import pool from '../connectDB.js';
 
-const createChat = async (senderid, friendid, groupid, content, time, numlike) => {
+const createChat = async (senderid, roomid, content, time) => {
   try {
-    const [result] = await pool.query(`INSERT INTO tinnhan(senderid, friendid, groupid, content, time, numlike) VALUES (?,?,?,?,CURRENT_TIMESTAMP,?)`, [senderid, friendid, groupid, content, numlike]); // thêm một tin nhắn mới
+    const [result] = await pool.query(`
+      INSERT INTO tinnhan (content, idThanhvien, idRoom, time) 
+      SELECT 
+          ?,tv.id, ?,?
+      FROM thanhvien tv
+      JOIN nguoidung u ON tv.userid = u.id
+      WHERE u.id = ? AND tv.idRoom = ?;
+      `,
+      [content, roomid, time, senderid, roomid]); // thêm một tin nhắn mới
+      await pool.query(`UPDATE phongchat SET update_time = ? WHERE id = ?`, [time, roomid]);
     if (result.affectedRows > 0) {
-      const [newMessage] = await pool.query(`SELECT id, senderid, friendid, groupid, content, time, numlike FROM tinnhan WHERE id = ?`, [result.insertId]);
+      const [newMessage] = await pool.query(`SELECT tinnhan.*, thanhvien.userid FROM tinnhan,thanhvien WHERE tinnhan.id = ? AND tinnhan.idThanhvien=thanhvien.id`, [result.id]);
       return {
         EM: 'Success',
         EC: 0,
