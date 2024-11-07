@@ -36,7 +36,16 @@ const MessageBubble = (data) => {
             return `${diffYears} năm trước`;
         }
     };
-
+useEffect(() => { 
+    try {
+        const response = fetch('http://noembed.com/embed?url=http%3A//www.youtube.com/watch%3Fv%3DbDOYN-6gdRE&callback=my_embed_function');
+        const data = response.json();
+        // Xử lý dữ liệu (có thể cần extract title, description, image...)
+       console.log(data);
+    } catch (error) {
+       console.log('Error fetching new messages:', error);
+    }
+  }, []);
     const website = 'https://youtu.be/MPp8hbuZwW0?si=g7WU5rztQZPUQbbv';
     const appId = '63490939-675d-4703-a891-9d30c454a46d'; //You're OpenGraph.io API Key goes here
     useEffect(() => {
@@ -61,13 +70,6 @@ const MessageBubble = (data) => {
                         }
                     />
                 </div>
-                <>
-                <h1>OpenGraph React Component</h1>
-                <OpengraphReactComponent
-                    site={website}
-                    appId={appId}
-                />
-                </>
                 <div className={`messageBox ${userClass}`}>
                     {data.data.img && <img src={data.data.img} alt="Attached image" />}
                     <div className="messageText">
