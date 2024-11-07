@@ -1,4 +1,4 @@
-import { profileService } from "../services/ProfileService";
+import { profileService } from '../services/ProfileService';
 
 export const getUserInfo = async (req, res) => {
     try {
@@ -24,7 +24,7 @@ export const getUserInfo = async (req, res) => {
             EC: '200',
             DT: {
                 email: req.user.email,
-                ...account.DT
+                ...account.DT,
             },
         });
     } catch (error) {
@@ -38,9 +38,14 @@ export const getUserInfo = async (req, res) => {
 
 export const updateUserInfo = async (req, res) => {
     try {
-        const data = await req.body;
+        const file = req.files.myFile;
 
-        const result = await services.handleLogin(data);
+        const driveUpload = await profileService.uploadImage(file);
+
+        const data = await req.body;
+        const email = await req.user.email
+
+        const result = await profileService.updateUserInfo(email, data, driveUpload);
 
         return res.status(200).json(result);
     } catch (error) {
