@@ -72,6 +72,8 @@ const initApiRouter = (app) => {
     // chat
     router.post('/chat', chatController); // api gửi tin nhắn
     router.post('/getchat', getChatController); // api lấy tin nhắn
+
+    // friend
     router.post('/friendList', getFriendController); // api lấy tin nhắn
 
     router.get('/deletechat', deletaChatController); // api xoa tin nhắn
