@@ -13,11 +13,13 @@ const createChat = async (senderid, roomid, content, time) => {
       [content, roomid, time, senderid, roomid]); // thêm một tin nhắn mới
       await pool.query(`UPDATE phongchat SET update_time = ? WHERE id = ?`, [time, roomid]);
     if (result.affectedRows > 0) {
-      const [newMessage] = await pool.query(`SELECT tinnhan.*, thanhvien.userid FROM tinnhan,thanhvien WHERE tinnhan.id = ? AND tinnhan.idThanhvien=thanhvien.id`, [result.id]);
+      
+      const [newMessage] = await pool.query(`SELECT tinnhan.*, thanhvien.userid FROM tinnhan,thanhvien WHERE tinnhan.id = ? AND tinnhan.idThanhvien=thanhvien.id`, [result.insertId]);
+      
       return {
         EM: 'Success',
         EC: 0,
-        DT: newMessage
+        DT: newMessage[0]
       };
     } else {
       return {
@@ -39,7 +41,6 @@ const createChat = async (senderid, roomid, content, time) => {
 
 const getChat = async (userId, roomId) => {
   try {
-    console.log(userId,roomId);
     
     
 
