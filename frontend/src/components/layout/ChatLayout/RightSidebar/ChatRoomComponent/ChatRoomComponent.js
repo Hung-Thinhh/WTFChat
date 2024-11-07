@@ -1,8 +1,8 @@
-import "./ChatRoomComponent.scss";
+import styles from "./ChatRoomComponent.module.scss";
 import ChatDataContext from 'lib/Context/ChatContext';
 import { useContext, useEffect } from 'react';
-import classNames from 'classnames';
-
+import classNames from 'classnames/bind';
+const cx = classNames.bind(styles);
 export default function ChatRoom({ id, avt, name, time, mess, sender }) {
     console.log(id);
 
@@ -16,24 +16,26 @@ export default function ChatRoom({ id, avt, name, time, mess, sender }) {
     }
     return (
         <div
-            className={classNames("main_container", { "active": ChatData === id })}
+            className={cx("main_container", { "active": ChatData === id })}
             key={id}
             onClick={handleClick}
         >
-            <div className="CR_avt">
+            <div className={cx("CR_avt")}>
                 <img src={avt && avt !== "/" ? avt : "https://static3.bigstockphoto.com/9/1/3/large1500/31903202.jpg"} alt="avt" />
             </div>
-            <div className="CR_info">
-                <div className="CR_left">
-                    <div className="CR_room_name">
+            <div className={cx("CR_info")}>
+                <div className={cx("CR_left")}>
+                    <div className={cx("CR_room_name")}>
                         <h3>{name}</h3>
                     </div>
-                    <div className="CR_mess">
-                        <span className="Sender">{sender}:</span>
-                        <span className="content">{mess}</span>
-                    </div>
+                    {mess && (
+                        <div className={cx("CR_mess")}>
+                            <span className={cx("Sender")}>{sender}:</span>
+                            <span className={cx("content")}>{mess}</span>
+                        </div>
+                    )}
                 </div>
-                <div className="CR_right">
+                <div className={cx("CR_right")}>
                     {time}
                 </div>
             </div>

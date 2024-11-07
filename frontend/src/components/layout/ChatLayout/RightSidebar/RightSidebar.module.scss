@@ -10,7 +10,7 @@
     align-items: center;
     background-color: #1c1b1c;
     z-index: 1;
-    border-radius: 15px;
+    border-radius: 1rem;
     box-shadow: 9px 9px 1px 1px #3b3b3b;
 
     .page {
@@ -94,7 +94,7 @@
         text-decoration: none;
         color: white;
         text-align: justify;
-        /* margin      : 15px; */
+        /* margin      : 1rem; */
         text-align: center;
     }
 
@@ -291,7 +291,7 @@
                 }
 
                 .content_cate {
-                    font-size: 15px;
+                    font-size: 1rem;
                 }
             }
         }

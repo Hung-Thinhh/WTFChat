@@ -6,7 +6,7 @@ import classNames from "classnames/bind";
 import Button from "components/Button";
 const cx = classNames.bind(styles);
 
-const Footer = ({ pageState, setPageData }) => {
+const Footer = ({ pageState, setPageData, onClickNewChat }) => {
     const handlePageClick = (data) => {
         setPageData(data);
     }
@@ -38,7 +38,7 @@ const Footer = ({ pageState, setPageData }) => {
                     <FontAwesomeIcon icon={faBoxArchive} />
                 </div>
             </div>
-            <Button className={cx('btnAddChat')} rightIcon={<FontAwesomeIcon icon={faPlus} />} onlyIcon={true} />
+            <Button onClick={onClickNewChat} className={cx('btnAddChat')} rightIcon={<FontAwesomeIcon icon={faPlus} />} onlyIcon={true} />
         </div>
 
 
