@@ -5,7 +5,7 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import styles from "./RightSidebar.module.scss";
 import classNames from "classnames/bind";
 import Footer from "./Footer";
-import ChatRoom from "./ChatRoom";
+import ChatRoom from "./ChatRoomComponent";
 import ChatDataContext from 'lib/Context/ChatContext';
 import getChatRoom from "services/getchatroom";
 import FriendItem from "./FriendItem";
