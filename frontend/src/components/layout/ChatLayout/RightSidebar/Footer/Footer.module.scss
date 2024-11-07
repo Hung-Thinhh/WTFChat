@@ -37,7 +37,6 @@
     }
     .threebtn {
         display: flex;
-
         align-items: center;
         gap: 10px;
         justify-content: start;
@@ -50,14 +49,23 @@
             height: 3rem;
             border-radius: 100%;
             color: #fff;
+            transition: all 0.3s ease;
+            &:hover {
+                background: #858585;
+                color: #fff;
+            }
             &:active {
-                background: #786a9d;
+                background: #9684c5;
                 color: #fff;
             }
         }
     }
 }
 
+.activebtn {
+    background: #786a9d;
+    color: #fff;
+}
 .btnAddChat {
     .title {
         display: none;
