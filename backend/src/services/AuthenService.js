@@ -22,10 +22,11 @@ const checkEmail = async (email) => {
         if (!mailVerifier) return false;
 
         await pool.query('START TRANSACTION');
-        const user = await pool.query(`SELECT email FROM xacthuc WHERE email = ?`, [email]);
+        const user = await pool.query(`SELECT email, status FROM xacthuc WHERE email = ?`, [email]);
 
         await pool.query('COMMIT');
-        return user[0].length > 0;
+
+        return user[0].length > 0 && !!user[0][0].status;  // test minhdz
     } catch (err) {
         await pool.query('ROLLBACK');
 
@@ -386,6 +387,7 @@ const handleCheckAccount = async (email) => {
             DT: currUser[0][0],
         };
     } catch (error) {
+        
         console.log('SERVICE | CHECKACCOUNT | ERROR |', error);
         return {
             EM: 'CHECKACCOUNT | ERROR |',

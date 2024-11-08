@@ -211,6 +211,7 @@ const updateUserInfo = async (email, data, imageID) => {
             };
         }
     } catch (error) {
+        await pool.query('ROLLBACK');
         console.log('SERVICE | UPDATE_USER_INFO | ERROR |', error);
         return {
             EM: 'UPDATE_USER_INFO | ERROR |' + error,

@@ -33,30 +33,50 @@ const extractToken = (req) => {
 
 const SecurePaths = ['/checkaccount', '/getUserInfo', '/updateUserInfo'];
 
-export const checkUserJWT = (req, res, next) => {
+export const checkUserJWT = async (req, res, next) => {
     if (!SecurePaths.includes(req.path)) return next();
     let session = req.session;
     let tokenFromHeader = extractToken(req);
     const token = session && session.userId ? session.userId : tokenFromHeader;
-    if (token) {
-        const decoded = verifyToken(token);
 
-        if (!decoded) {
-            return res.status(401).json({
-                EM: 'JWT | ERROR | Xác thực thất bại',
-                EC: '401',
-            });
-        }
-
-        req.user = decoded;
-        req.token = token;
-        next();
-    } else {
+    if (!token)
         return res.status(401).json({
             EM: 'JWT | ERROR | Xác thực thất bại',
             EC: '-1',
         });
+
+    const decoded = verifyToken(token);
+
+    if (!decoded)
+        return res.status(401).json({
+            EM: 'JWT | ERROR | Xác thực thất bại',
+            EC: '401',
+        });
+
+    try {
+        await pool.query('START TRANSACTION');
+        const user = await pool.query(`SELECT status FROM xacthuc WHERE email = ?`, [
+            decoded.email,
+        ]);
+
+        await pool.query('COMMIT');
+
+        if (!user[0][0].status)
+            return res.status(403).json({
+                EM: 'JWT | ERROR | Tài khoản đã bị cấm',
+                EC: '403',
+            });
+    } catch (error) {
+        await pool.query('ROLLBACK');
+        return res.status(500).json({
+            EM: 'JWT | ERROR | ' + error,
+            EC: '500',
+        });
     }
+
+    req.user = decoded;
+    req.token = token;
+    next();
 };
 
 export const checkUserPermission = async (req, res, next) => {
