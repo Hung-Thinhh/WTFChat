@@ -1,26 +1,20 @@
-import { timePassed } from "lib/function/formatTime";
-import React, { useContext, useEffect, useState, useCallback } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import styles from "./RightSidebar.module.scss";
-import classNames from "classnames/bind";
-import Footer from "./Footer";
-import ChatRoom from "./ChatRoomComponent";
+import { timePassed } from 'lib/function/formatTime';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import styles from './RightSidebar.module.scss';
+import classNames from 'classnames/bind';
+import Footer from './Footer';
+import ChatRoom from './ChatRoomComponent';
 import ChatDataContext from 'lib/Context/ChatContext';
-import getChatRoom from "services/getchatroom";
-import FriendItem from "./FriendItem";
-import Search from "./Footer/Search";
-import getFriendList from "services/getFriendList";
-import findUser from "services/findUserService";
-import useDebounce from "hooks/useDebounce";
+import getChatRoom from 'services/getchatroom';
+import FriendItem from './FriendItem';
+import Search from './Footer/Search';
+import getFriendList from 'services/getFriendList';
+import findUser from 'services/findUserService';
+import useDebounce from 'hooks/useDebounce';
 
 const cx = classNames.bind(styles);
-
-
-
-
-
-
 
 const RightSidebar = () => {
     const { currUser } = useContext(ChatDataContext);
@@ -29,7 +23,6 @@ const RightSidebar = () => {
     const [friend, setFriend] = useState('chat');
     const [findData, setFindData] = useState([]);
     const [searchData, setSearchData] = useState('');
-
 
     // Fetch chat room
     const fetchChatRoom = useCallback(async () => {
@@ -54,17 +47,15 @@ const RightSidebar = () => {
     // Handle search change
     const handleSearchChange = async (e) => {
         const data = {
-            text: e.target.value
-        }
+            text: e.target.value,
+        };
         if (data.text === '' || data.text === null || data.text === undefined || !data.text) {
-            setFindData([])
+            setFindData([]);
             setSearchData(data.text);
         } else {
             setSearchData(data.text);
         }
-    }
-
-
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -79,9 +70,7 @@ const RightSidebar = () => {
         fetchFriendList();
     }, [fetchChatRoom, fetchFriendList, currUser]);
 
-
     if (!currUser) return null;
-
 
     return (
         <div className={cx('rightsidebar')}>
@@ -98,14 +87,22 @@ const RightSidebar = () => {
                                 return chatRoom && chatRoom.length > 0 ? (
                                     chatRoom.map((room) => (
                                         <ChatRoom
-                                        key={room.id} 
-                                        id={room.id} 
-                                        sender={JSON.parse(room.last_message).idUser !== currUser.id
-                                            ? JSON.parse(room.last_message).sender : 'You'} 
-                                        name={room.groupName}
-                                        avt={room.avt} 
-                                        time={timePassed(room.update_time)} 
-                                        mess={JSON.parse(room.last_message).content} 
+                                            key={room.id}
+                                            id={room.id}
+                                            sender={
+                                                JSON.parse(room.last_message) ?
+                                                JSON.parse(room.last_message).idUser !== currUser.id
+                                                    ? JSON.parse(room.last_message).sender
+                                                    : 'You':null
+                                            }
+                                            name={room.groupName}
+                                            avt={room.avt}
+                                            time={timePassed(room.update_time)}
+                                            mess={
+                                                JSON.parse(room.last_message) &&
+                                                JSON.parse(room.last_message).content
+                                            }
+                                            friendId={room.otherUserId}
                                         />
                                     ))
                                 ) : (
@@ -126,39 +123,49 @@ const RightSidebar = () => {
                                     <div>寂し犬</div>
                                 );
                             case 'search':
-                                return <div>
-                                    <div className={cx('searchData')}>
-                                        {findData && findData.map((item) => (
-                                            item.loai === 'nguoidung' ?
-                                                <FriendItem
-                                                    key={item.id}
-                                                    id={item.id}
-                                                    name={item.firstname + ' ' + item.lastname}
-                                                    avt={item.avatar}
-                                                />
-                                                :
-                                                <FriendItem
-                                                    key={item.id}
-                                                    id={item.id}
-                                                    name={item.groupname}
-                                                    avt={item.avatar}
-                                                />
-                                        ))}
+                                return (
+                                    <div>
+                                        <div className={cx('searchData')}>
+                                            {findData &&
+                                                findData.map((item) =>
+                                                    item.loai === 'nguoidung' ? (
+                                                        <FriendItem
+                                                            key={item.id}
+                                                            id={item.id}
+                                                            name={
+                                                                item.firstname + ' ' + item.lastname
+                                                            }
+                                                            avt={item.avatar}
+                                                        />
+                                                    ) : (
+                                                        <FriendItem
+                                                            key={item.id}
+                                                            id={item.id}
+                                                            name={item.groupname}
+                                                            avt={item.avatar}
+                                                        />
+                                                    ),
+                                                )}
+                                        </div>
+                                        <Search
+                                            value={searchData}
+                                            onChange={handleSearchChange}
+                                        ></Search>
+                                        ;
                                     </div>
-                                    <Search value={searchData} onChange={handleSearchChange}></Search>;
-                                </div>
+                                );
                             case 'archive':
                                 return <div style={{ color: 'white' }}>Archive Page</div>;
                             default:
                                 return null;
                         }
-                    })()}
+                    })()
+                }
             </div>
             <Footer key={pageState} pageState={pageState} setPageData={setPageData} />
         </div>
     );
 };
-
 
 // const RightSidebar = () => {
 //     const { currUser } = useContext(ChatDataContext);

@@ -1,6 +1,5 @@
 import './ChatPage.scss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircle } from '@fortawesome/free-solid-svg-icons';
+import HeaderChatPage from './HeaderChatPage';
 import MessageBubble from '../../card/MessageBubble';
 import MessageInput from '../../card/MessageInput';
 import { useContext, useEffect, useState, useRef } from 'react';
@@ -20,7 +19,6 @@ const ChatPage = () => {
 
     const fetchNewMessages = async () => {
         try {
-
             const response = await getChat({ userId: currUser.id, roomId: ChatData });
             if (response && response.EC === 0) {
                 socket.emit('join_room', ChatData);
@@ -35,7 +33,6 @@ const ChatPage = () => {
     };
 
     const handleSetData = async (message) => {
-        
         if (isSending) return; // Kiểm tra xem đang gửi hay không
         setIsSending(true); // Đánh dấu là đang gửi
 
@@ -54,7 +51,7 @@ const ChatPage = () => {
 
         try {
             socket.emit('send_mess', messageData); // Gửi tin nhắn qua socket trực tiếp không qua API
-            
+
             setIsSending(false); // Gửi thành công thì đánh dấu là đã gửi
         } catch (error) {
             console.error('Error sending message:', error);
@@ -68,13 +65,12 @@ const ChatPage = () => {
         }
     }, [RoomInfo]);
     useEffect(() => {
-        
         const handleNewChat = (data) => {
             setCurChatData((prevMessages) => {
                 const index = prevMessages.findIndex((msg) => msg.id === tempId);
                 if (index !== -1) {
                     // Cập nhật tin nhắn nếu đã tồn tại
-                    
+
                     const updatedMessages = [...prevMessages];
                     updatedMessages[index] = { ...updatedMessages[index], ...data, status: 'done' };
                     setTempId(null);
@@ -112,25 +108,7 @@ const ChatPage = () => {
         <>
             {RoomInfo ? (
                 <div className="chatPage_container">
-                    <div className="chatpage_header">
-                        <div className="chatPage_chat_avt">
-                            <img
-                                src={
-                                    RoomInfo.avt
-                                        ? RoomInfo.avt
-                                        : 'https://meliawedding.com.vn/wp-content/uploads/2022/03/avatar-gai-xinh-1.jpg'
-                                }
-                                alt="user-avt"
-                            />
-                        </div>
-                        <div className="chatPage_chat_name">
-                            <h3>{RoomInfo.name}</h3>
-                            <p>
-                                <FontAwesomeIcon icon={faCircle} />
-                            </p>
-                        </div>
-                    </div>
-
+                    <HeaderChatPage RoomInfo={RoomInfo} />
                     <div className="ChatWindow" ref={chatWindowRef}>
                         {curChatData ? (
                             curChatData.map((item, index) => (
