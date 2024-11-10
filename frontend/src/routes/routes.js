@@ -39,6 +39,12 @@ const publicRoutes = [
         name: 'Register',
         layout: HomeLayout,
     },
+    {
+        path: config.routes.forgetpassword,
+        component: ForgetPass,
+        name: 'ForgetPass',
+        layout: HomeLayout,
+    },
 ];
 
 // Private routes (nhưng đường dẫn chỉ có thể truy cập từ phía server hoặc người có thẩm quyền)
@@ -47,12 +53,6 @@ const privateRoutes = [
         path: config.routes.profile,
         component: Profile,
         name: 'Profile',
-        layout: HomeLayout,
-    },
-    {
-        path: config.routes.forgetpassword,
-        component: ForgetPass,
-        name: 'ForgetPass',
         layout: HomeLayout,
     },
     {

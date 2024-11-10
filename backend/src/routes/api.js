@@ -1,6 +1,5 @@
 import express from 'express';
 import { checkUserJWT, checkUserPermission } from '../middleware/jwt.js';
-
 import {
     chatController,
     getChatController,
@@ -27,9 +26,31 @@ import {
     banUserById,
     unbanUserById,
 } from '../controllers/AdminUserController.js';
-import { getUserInfo } from '../controllers/ProfileController.js';
+import { getUserInfo, updateUserInfo } from '../controllers/ProfileController.js';
+import multer from 'multer';
 
 const router = express.Router();
+
+// Configure Multer for file uploads
+const upload = multer({
+    storage: multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, 'uploads/');
+        },
+        filename: (req, file, cb) => {
+            cb(null, Date.now() + '-' + file.originalname)
+        },
+    }),
+    limits: { fileSize: 1024 * 1024 * 5 },
+    fileFilter: (req, file, cb) => {
+        const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+        if (allowedTypes.includes(file.mimetype)) {
+            cb(null, true); // Accept the file
+        } else {
+            cb(new Error('Invalid file type. Only PNG, JPG, and JPEG files are allowed.'));
+        }
+    },
+});
 
 const initApiRouter = (app) => {
     router.all('*', checkUserJWT);
@@ -46,10 +67,13 @@ const initApiRouter = (app) => {
 
     // profile
     router.get('/getUserInfo', getUserInfo);
+    router.post('/updateUserInfo', upload.single('avatar'), updateUserInfo);
 
     // chat
     router.post('/chat', chatController); // api gửi tin nhắn
     router.post('/getchat', getChatController); // api lấy tin nhắn
+
+    // friend
     router.post('/friendList', getFriendController); // api lấy tin nhắn
 
     router.get('/deletechat', deletaChatController); // api xoa tin nhắn
