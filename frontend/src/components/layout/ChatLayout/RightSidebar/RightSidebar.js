@@ -114,8 +114,8 @@ const RightSidebar = () => {
                                         <FriendItem
                                             key={friend.id}
                                             id={friend.id}
-                                            name={`${friend.first_name} ${friend.last_name}`}
-                                            avt={friend.avt}
+                                            name={`${friend.firstname} ${friend.lastname}`}
+                                            avt={friend.avatar}
                                             time={timePassed(friend.last_message_time)}
                                         />
                                     ))
