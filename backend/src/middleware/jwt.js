@@ -1,6 +1,6 @@
 require('dotenv').config();
 import jwt from 'jsonwebtoken';
-
+import pool from '../connectDB.js';
 export const createToken = (payload) => {
     let key = process.env.JWT_SECRET_KEY;
     let token = null;
