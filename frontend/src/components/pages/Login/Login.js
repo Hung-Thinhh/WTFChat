@@ -9,7 +9,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { login } from 'controller/authen';
 import ChatDataContext from 'lib/Context/ChatContext';
 import config from 'config';
-
+import { socket } from 'socket';
 const cx = classNames.bind(styles);
 
 function Login() {
@@ -49,6 +49,7 @@ function Login() {
                 // dang nhap thanh cong
                 setCurrUser(res.DT);
                 localStorage.setItem('jwt', res.DT);
+                socket.emit('authenticate', res.DT.id);
                 nav(config.routes.home);
             }
             if (res.EC === '201') {

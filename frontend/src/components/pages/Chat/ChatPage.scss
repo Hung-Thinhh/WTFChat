@@ -59,15 +59,18 @@ h1 {
                     font-size: 1.5rem;
                     color: #FFFFFF;
                     text-align: justify;
-                    h3{
+
+                    h3 {
                         margin: 0;
                     }
+
                     .status {
                         display: flex;
                         align-items: center;
 
                         span {
                             color: #aaa;
+
                             svg {
                                 text-align: left;
                                 font-size: 5px;
@@ -76,6 +79,39 @@ h1 {
                         }
                     }
                 }
+            }
+
+            .more {
+                .btn_more {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    background-color: transparent;
+                    color: #fff;
+
+                    &.szh-menu-button--open {
+                        background-color: #2b2b2b;
+                    }
+
+                    &:hover {
+                        background-color: #2b2b2b;
+                    }
+
+                    svg {
+                        font-size: 15px;
+                    }
+
+
+                }
+
+                .my-menu {
+                    ul {
+                        top: 10px !important;
+                        left: -100px !important;
+                    }
+                }
+
             }
         }
     }
@@ -124,6 +160,41 @@ h1 {
             &:hover {
                 background-color: #aa57d2;
                 cursor: pointer;
+            }
+        }
+    }
+}
+
+.my-menu {
+    ul {
+        background-color: rgb(33 33 33 / 75%);
+        border-radius: 10px;
+        padding: 10px 5px;
+        backdrop-filter: blur(50px);
+        min-width: 150px;
+    }
+
+    .menu_item {
+        color: #fff;
+        gap: 2rem;
+        border-radius: 6px;
+        font-size: 15px;
+        padding: 5px 10px;
+
+        svg {
+            width: 15px;
+
+        }
+
+        &.szh-menu__item--hover {
+            background-color: rgb(170 170 170 / 8%);
+        }
+
+        &.delete-chat {
+            color: #d24f50;
+
+            &:hover {
+                background-color: #3a302e;
             }
         }
     }
