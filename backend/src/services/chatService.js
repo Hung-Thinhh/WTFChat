@@ -13,11 +13,14 @@ const createChat = async (senderid, roomid, content, time) => {
       [content, roomid, time, senderid, roomid]); // thêm một tin nhắn mới
       await pool.query(`UPDATE phongchat SET update_time = ? WHERE id = ?`, [time, roomid]);
     if (result.affectedRows > 0) {
-      const [newMessage] = await pool.query(`SELECT tinnhan.*, thanhvien.userid FROM tinnhan,thanhvien WHERE tinnhan.id = ? AND tinnhan.idThanhvien=thanhvien.id`, [result.id]);
+      
+      const [newMessage] = await pool.query(`SELECT tinnhan.*, thanhvien.userid FROM tinnhan,thanhvien WHERE tinnhan.id = ? AND tinnhan.idThanhvien=thanhvien.id`, [result.insertId]);
+      console.log(newMessage[0]);
+      
       return {
         EM: 'Success',
         EC: 0,
-        DT: newMessage
+        DT: newMessage[0]
       };
     } else {
       return {
@@ -39,22 +42,19 @@ const createChat = async (senderid, roomid, content, time) => {
 
 const getChat = async (userId, roomId) => {
   try {
-    console.log(userId,roomId);
-    
-    
-
     // Lấy tin nhắn giữa hai người dùng
     const [rows] = await pool.query(
       `SELECT
-        t.id,
-        t.content,
-        t.time,
-        CONCAT(u.firstname, ' ', u.lastname) AS senderName,u.id AS senderid,
-        u.avatar AS avt
-        FROM tinnhan t
-        JOIN thanhvien tv ON t.idThanhvien = tv.id
-        JOIN nguoidung u ON tv.userid = u.id
-        WHERE t.idRoom = ?`,
+      t.id,
+      t.content,
+      t.time,
+      CONCAT(u.firstname, ' ', u.lastname) AS senderName,u.id AS senderid,
+      u.avatar AS avt
+      FROM tinnhan t
+      JOIN thanhvien tv ON t.idThanhvien = tv.id
+      JOIN nguoidung u ON tv.userid = u.id
+      WHERE t.idRoom = ?
+      ORDER BY t.time ASC`,
       [roomId]
     );
     return {

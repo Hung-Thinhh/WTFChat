@@ -6,7 +6,8 @@ import { useEffect, useRef, useState } from 'react';
 import Avatar from 'components/Avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRotateLeft, faCamera, faPen } from '@fortawesome/free-solid-svg-icons';
-import { getUserInfo } from 'controller/profile';
+import { getUserInfo, updateUserInfo } from 'controller/profile';
+import { getAge } from 'lib/function/function';
 
 const cx = classNames.bind(styles);
 
@@ -15,6 +16,13 @@ const genderList = ['Nam', 'Nữ', 'Khác'];
 function Profile() {
     const fileInput = useRef(null);
 
+    const [initInput, setInitInput] = useState({
+        email: '',
+        username: '',
+        birthdate: '',
+        gender: 0,
+        avatar: '',
+    });
     const [input, setInput] = useState({
         email: '',
         username: '',
@@ -25,7 +33,6 @@ function Profile() {
     const [file, setFile] = useState();
     const [err, setErr] = useState('');
     const [loading, setLoading] = useState(false);
-    const [currAvt, setCurrAvt] = useState('');
 
     const logout = async () => {
         // logout
@@ -44,16 +51,17 @@ function Profile() {
             if (res.EC === '200') {
                 const { avatar, birthdate, email, firstname, lastname, gender } = res.DT;
                 const dateObject = new Date(birthdate);
-                const formatBirthdate = dateObject.toISOString().slice(0, 10);
+                const formatBirthdate = dateObject.toLocaleDateString('en-CA');
 
-                setInput({
+                const newInput = {
                     email,
-                    avatar,
                     username: firstname + ' ' + lastname,
                     birthdate: formatBirthdate,
                     gender,
-                });
-                setCurrAvt(avatar);
+                    avatar,
+                };
+                setInput(newInput);
+                setInitInput(newInput);
             } else if (res.EC === '400') {
                 alert('Tài khoản đang bị khoá');
                 await logout();
@@ -73,12 +81,12 @@ function Profile() {
         fileInput.current.click();
     };
 
-    const handleResetAvt = () => {
+    const handleBack = () => {
         if (input.avatar) {
             URL.revokeObjectURL(input.avatar); // clear prev url
         }
 
-        setInput((prev) => ({ ...prev, avatar: currAvt }));
+        setInput(initInput);
     };
 
     const handleChange = (event) => {
@@ -87,13 +95,12 @@ function Profile() {
     };
 
     const handleChangeImage = (event) => {
-        const file = event.target.files[0];
-
-        if (!file) return;
+        const newFile = event.target.files[0];
+        if (!newFile) return;
 
         const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
 
-        if (!allowedTypes.includes(file.type)) {
+        if (!allowedTypes.includes(newFile.type)) {
             setErr('Hãy chọn thư mục có đuổi .png, .jpg hoặc .jpeg.');
         }
 
@@ -101,13 +108,58 @@ function Profile() {
             URL.revokeObjectURL(input.avatar); // clear prev url
         }
 
-        setInput((prev) => ({ ...prev, avatar: URL.createObjectURL(file) }));
+        setInput((prev) => ({ ...prev, avatar: URL.createObjectURL(newFile) }));
         if (err) setErr('');
     };
 
     const handleRatio = (event, value) => {
         event.preventDefault();
         setInput((prev) => ({ ...prev, gender: value }));
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        setLoading(true);
+
+        // for avaiable input
+        if (JSON.stringify(input) === JSON.stringify(initInput))
+            setErr('Không có thay đổi được thực hiện');
+        else if (!input.email) setErr('Email không thể để trống');
+        else if (!input.username) setErr('Họ và tên không thể để trống');
+        else if (input.username.length > 100) setErr('Tên của bạn quá dài');
+        else if (!input.birthdate) setErr('Ngày sinh không thể để trống');
+        else if (getAge(input.birthdate) <= 13) setErr('Độ tuổi tối thiểu là 13');
+        else if (input.gender < 0 || input.gender > 3) setErr('Giới tính không tồn tại');
+        else {
+            const formData = new FormData();
+            // Add image data
+            const avatar = fileInput.current.files[0];
+            if (avatar) formData.append('avatar', avatar, avatar.name);
+
+            // Add user data
+            formData.append('username', input.username);
+            formData.append('birthdate', input.birthdate);
+            formData.append('gender', input.gender);
+            for (const [key, value] of formData.entries()) {
+                console.log(`${key}: ${value}`);
+            }
+
+            const res = await updateUserInfo(formData);
+            if (res.EC === '200') {
+                // set mặc định thành input
+                setInitInput(input);
+            } else if (res.EC === '400') {
+                setErr(res.EM);
+                setInput(initInput);
+            } else if (res.EC === '500') {
+                alert(
+                    'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
+                );
+                setErr('');
+                setInput(initInput);
+            }
+        }
+        setLoading(false);
     };
 
     return (
@@ -122,7 +174,7 @@ function Profile() {
                                 name="email"
                                 id="email"
                                 placeholder="Email"
-                                value={'binhminh19112003@gmail.com'}
+                                value={input.email}
                                 onChange={handleChange}
                                 disabled
                             />
@@ -184,25 +236,32 @@ function Profile() {
                         <button className={cx('upload-img-btn')} onClick={handleFileChoose}>
                             <FontAwesomeIcon icon={faPen} />
                         </button>
-                        {input.avatar !== currAvt && (
-                            <button
-                                className={cx('upload-img-btn', 'reload-avt-btn')}
-                                onClick={handleResetAvt}
-                            >
-                                <FontAwesomeIcon icon={faArrowRotateLeft} />
-                            </button>
-                        )}
                     </div>
                 </div>
-                <Button
-                    className={cx('sign')}
-                    type="rounded"
-                    size="medium"
-                    disabled={!!err || loading}
-                    // onClick={handleSubmit}
-                >
-                    Lưu
-                </Button>
+                <div className={cx('button-group')}>
+                    {JSON.stringify(input) !== JSON.stringify(initInput) && (
+                        <Button
+                            className={cx('sign')}
+                            type="rounded"
+                            size="medium"
+                            disabled={!!err || loading}
+                            onClick={handleBack}
+                        >
+                            Trở lại
+                        </Button>
+                    )}
+                    <Button
+                        className={cx('sign')}
+                        type="rounded"
+                        size="medium"
+                        disabled={
+                            !!err || loading || JSON.stringify(input) === JSON.stringify(initInput)
+                        }
+                        onClick={handleSubmit}
+                    >
+                        Lưu
+                    </Button>
+                </div>
             </div>
         </div>
     );

@@ -1,0 +1,76 @@
+Nguyễn Bình Minh
+frontend
+- Giao diện trang đăng nhập đăng ký.
+- Giao diện trang quản lý thông tin cá nhân, cài đặt
+
+backend
+- Xác thực: 
+	+ Đăng nhập/ Đăng xuất. (đăng nhập bằng third party)
+	+ Đăng ký tài khoản.
+	+ Lấy lại mật khẩu.
+	+ Thay đổi mật khẩu.
+- Quản lý thông tin cá nhân (avatar, tên, ngày sinh):
+	+ Hiễn thị thông tin cá nhân.
+	+ Cập nhật thông tin cá nhân.
+	+ Bổ sung thông tin cá nhân.
+- Cài đặt
+
+Nguyễn Ngọc Long
+fontend
+- Giao diện trang nhắn tin.
+	+ Khung chat.
+		Top bar (tên nhóm, tìm kiếm tin nhắn, tao tác nhanh)
+		Thanh chat.
+		Tin nhăn.
+		Tin nhắn mới nhất (nút).
+		Phần tin nhắn ghim.
+		Menu quản lý chat (tổng hợp thông tin nhóm, ảnh, file, link)
+	+ Danh sách bạn bè và nhóm.
+	+ Danh sách cài đặt. (bật tắt)
+	+ Mục quản lý liên hệ. (bật tắt)
+
+backend
+- Nhắn tin: 
+	+ Hiễn thị tin nhắn.
+	+ Gửi tin nhắn. (nâng cấp gửi file, ảnh, sticker, gif, link, ...)
+	+ Thu hồi tin nhắn.
+	+ Yêu thích/Không yêu thich tin nhắn. (nâng cấp thành thả biểu cảm)
+	+ Trả lời tin nhắn.
+	+ Báo cáo tin nhắn.
+	+ Xoá tin nhắn cả 2 phía.
+	+ Sao chép, chia sẽ tin nhắn.
+	+ Ghim tin nhắn.
+	+ Lưu tin nhắn (cloud).
+	+ Chia sẽ tin nhăn. (Nâng cấp)
+- Websocket cho giao tiếp trực tuyến. (Hỗ trợ TCP trong th dung 4g nâng cấp)
+
+
+Nguyễn Trần Hoàng Long
+backend
+- Liên hệ (nhóm/bạn bè):
+	+ Hiễn thị danh sách liên hệ.
+	+ Chặn liên hệ.
+	+ Tắt thông báo liên hệ. (nâng cấp thành tắt thông báo trong khoảng tg)
+	+ Tìm kiếm liên hệ.
+	+ Ghim liên hệ.
+	+ Kết bạn/ huỷ kết bạn.
+	+ Thay đổi biệt danh.
+	+ Tạo nhóm/ xoá nhóm.
+	+ Vào nhóm/ rời nhóm.
+	+ Thay đổi thông tin nhóm.
+	+ Báo cáo nhóm.
+
+Nguyễn Hưng Thịnh
+fontend
+- Giao diện trang quản lý.
+	+ Dashboard thống kê (số tin nhắn gửi, số người đăng ký mới, số nhóm tạo, tần suất nhắn tin, sô nhóm ban, ...)
+	+ Trang quản lý người dùng.
+	+ Trang quản lý kênh chat.
+	+ Trang quản lý báo cáo.
+- Giao diện sáng/tối. (Giao diện nhiều màu)
+
+backend
+- Quản lý:
+	+ Hiễn thị danh sách người dùng, nhóm.
+	+ Cấm người dùng (nâng cấp cấm theo thời gian).
+	+ Cấm nhóm (nâng cấp cấm theo thời gian).

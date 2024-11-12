@@ -9,8 +9,8 @@ export default function ChatRoom({ id, avt, name, time, mess, sender }) {
     const { setRoomInfo } = useContext(ChatDataContext);
     const handleClick = () => {
         setChatData(id);
-        setRoomInfo({ id, avt, name });
-    }
+        setRoomInfo({ id, avt, name, friendId });
+    };
     return (
         <div
             className={cx("main_container", { "active": ChatData === id })}
@@ -41,4 +41,3 @@ export default function ChatRoom({ id, avt, name, time, mess, sender }) {
         </div>
     );
 }
-

@@ -101,9 +101,15 @@
         align-items: center;
     }
 
+    .button-group {
+        align-self: flex-end;
+        display: flex;
+        gap: 10px;
+    }
+
     .sign {
         align-self: flex-end;
-        width: 200px;
+        width: fit-content;
         background-color: var(--black);
         color: var(--white);
         font-size: 1.2rem;
@@ -118,8 +124,8 @@
             position: absolute;
             inset: 0;
             margin: auto;
-            width: 70px;
-            height: 70px;
+            width: 50px;
+            height: 50px;
             border-radius: inherit;
             scale: 0;
             z-index: -1;
