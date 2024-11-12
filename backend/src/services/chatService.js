@@ -42,21 +42,19 @@ const createChat = async (senderid, roomid, content, time) => {
 
 const getChat = async (userId, roomId) => {
   try {
-    
-    
-
     // Lấy tin nhắn giữa hai người dùng
     const [rows] = await pool.query(
       `SELECT
-        t.id,
-        t.content,
-        t.time,
-        CONCAT(u.firstname, ' ', u.lastname) AS senderName,u.id AS senderid,
-        u.avatar AS avt
-        FROM tinnhan t
-        JOIN thanhvien tv ON t.idThanhvien = tv.id
-        JOIN nguoidung u ON tv.userid = u.id
-        WHERE t.idRoom = ?` ,
+      t.id,
+      t.content,
+      t.time,
+      CONCAT(u.firstname, ' ', u.lastname) AS senderName,u.id AS senderid,
+      u.avatar AS avt
+      FROM tinnhan t
+      JOIN thanhvien tv ON t.idThanhvien = tv.id
+      JOIN nguoidung u ON tv.userid = u.id
+      WHERE t.idRoom = ?
+      ORDER BY t.time ASC`,
       [roomId]
     );
     return {
