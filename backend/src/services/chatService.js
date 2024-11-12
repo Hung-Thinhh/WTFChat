@@ -56,7 +56,7 @@ const getChat = async (userId, roomId) => {
         FROM tinnhan t
         JOIN thanhvien tv ON t.idThanhvien = tv.id
         JOIN nguoidung u ON tv.userid = u.id
-        WHERE t.idRoom = ?`,
+        WHERE t.idRoom = ?` ,
       [roomId]
     );
     return {

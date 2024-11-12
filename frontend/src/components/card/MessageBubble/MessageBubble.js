@@ -96,7 +96,7 @@ const MessageBubble = (data) => {
                     </div>
                 )}
                 <div className={`messageBox ${userClass}`}>
-                    {data.data.img && <img src={data.data.img} alt="Attached image" />}
+                    {/* {data.data.img && <img src={data.data.img} alt="Attached image" />} */}
                     <div className="messageText">
                         <p>{data.data.content}</p>
                         <div className="messageTime_container">
