@@ -2,15 +2,12 @@ import styles from "./ChatRoomComponent.module.scss";
 import ChatDataContext from 'lib/Context/ChatContext';
 import { useContext, useEffect } from 'react';
 import classNames from 'classnames/bind';
+import DropDownMenu from "./DropDownMenu";
 const cx = classNames.bind(styles);
 export default function ChatRoom({ id, avt, name, time, mess, sender }) {
-    console.log(id);
-
     const { ChatData, setChatData } = useContext(ChatDataContext);
     const { setRoomInfo } = useContext(ChatDataContext);
     const handleClick = () => {
-        console.log('okkkkkkk');
-
         setChatData(id);
         setRoomInfo({ id, avt, name });
     }
@@ -38,7 +35,9 @@ export default function ChatRoom({ id, avt, name, time, mess, sender }) {
                 <div className={cx("CR_right")}>
                     {time}
                 </div>
+
             </div>
+            <DropDownMenu className={cx('CR_menu')}></DropDownMenu>
         </div>
     );
 }

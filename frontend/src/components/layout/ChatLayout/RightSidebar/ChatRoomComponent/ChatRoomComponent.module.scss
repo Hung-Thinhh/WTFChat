@@ -16,19 +16,22 @@
 
 .main_container {
     display: flex;
+    position: relative;
     width: 100%;
     border-top: #474747 0.5px solid;
     padding: 10px;
-     &:hover{
+    &:hover {
         background-color: #2b2a2a;
         cursor: pointer;
-     }
+    }
     .CR_avt {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 50px;
-        width: 70px;
+        min-height: 50px;
+        min-width: 50px;
+        max-height: 50px;
+        max-width: 50px;
         border-radius: 50%;
         overflow: hidden;
 
@@ -51,16 +54,16 @@
         .CR_left {
             display: flex;
             flex-direction: column;
-            .CR_room_name{
-                h3{
+            .CR_room_name {
+                h3 {
                     font-size: 16px;
                 }
             }
-            .CR_mess{
-                .Sender{
+            .CR_mess {
+                .Sender {
                     margin-right: 10px;
                 }
-                .content{
+                .content {
                     color: #aaaaaa;
                 }
             }
@@ -74,6 +77,11 @@
             font-size: 12px;
             color: #aaaaaa;
         }
+    }
+
+    .CR_menu {
+        position: absolute;
+        right: 10px;
     }
 }
 @keyframes slideInFromLeft {
