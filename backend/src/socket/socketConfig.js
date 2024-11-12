@@ -74,8 +74,9 @@ const setupWebSocket = (server) => {
         socket.on('send_mess', async (data) => {
             try {
                 const chat = await createChat(data.senderid, data.roomid, data.content, data.time);
-
-                io.to(data.roomid).emit('new_chat', chat.DT[0]); // Phát sự kiện tới phòng cụ thể
+                console.log(chat.DT);
+                
+                io.to(data.roomid).emit('new_chat', chat.DT); // Phát sự kiện tới phòng cụ thể
             } catch (error) {
                 console.error('Error creating chat:', error);
             }

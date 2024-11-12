@@ -15,6 +15,7 @@ const createChat = async (senderid, roomid, content, time) => {
     if (result.affectedRows > 0) {
       
       const [newMessage] = await pool.query(`SELECT tinnhan.*, thanhvien.userid FROM tinnhan,thanhvien WHERE tinnhan.id = ? AND tinnhan.idThanhvien=thanhvien.id`, [result.insertId]);
+      console.log(newMessage[0]);
       
       return {
         EM: 'Success',

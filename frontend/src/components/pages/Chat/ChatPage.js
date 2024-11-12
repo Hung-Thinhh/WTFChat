@@ -66,6 +66,8 @@ const ChatPage = () => {
     }, [RoomInfo]);
     useEffect(() => {
         const handleNewChat = (data) => {
+            console.log(data);
+            
             setCurChatData((prevMessages) => {
                 const index = prevMessages.findIndex((msg) => msg.id === tempId);
                 if (index !== -1) {

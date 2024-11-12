@@ -1,6 +1,7 @@
 require('dotenv').config();
+import e from 'cors';
 import jwt from 'jsonwebtoken';
-import pool from '../connectDB.js';
+import pool from '../connectDB';
 export const createToken = (payload) => {
     let key = process.env.JWT_SECRET_KEY;
     let token = null;
@@ -61,22 +62,26 @@ export const checkUserJWT = async (req, res, next) => {
 
         await pool.query('COMMIT');
 
-        if (!user[0][0].status)
+        if (!user[0][0].status) {
+            console.log('lỗiiiiiiiiiiiiiiiiiiiiii');
             return res.status(403).json({
                 EM: 'JWT | ERROR | Tài khoản đã bị cấm',
                 EC: '403',
             });
+        } else {
+            req.user = decoded;
+            req.token = token;
+            next();
+        }
     } catch (error) {
         await pool.query('ROLLBACK');
+        console.log('lỗioooooooooooooooooooooooooooo', error);
+
         return res.status(500).json({
             EM: 'JWT | ERROR | ' + error,
             EC: '500',
         });
     }
-
-    req.user = decoded;
-    req.token = token;
-    next();
 };
 
 export const checkUserPermission = async (req, res, next) => {

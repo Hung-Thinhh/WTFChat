@@ -1,10 +1,12 @@
-import Dropdown from 'react-bootstrap/Dropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCircle,faLock,faTrash,faBellSlash,faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
+// import { faBell,faBellSlash } from '@fortawesome/free-regular-svg-icons';
 import React, { useContext, useEffect, useState } from 'react';
 import ChatDataContext from 'lib/Context/ChatContext';
 import { timePassed } from 'lib/function/formatTime';
-
+import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu';
+import '@szhsin/react-menu/dist/index.css';
+import '@szhsin/react-menu/dist/transitions/zoom.css';
 const HeaderChatPage = ({ RoomInfo }) => {
     const { listStatus } = useContext(ChatDataContext);
     const [status, setStatus] = useState('');
@@ -27,6 +29,7 @@ const HeaderChatPage = ({ RoomInfo }) => {
 
         return () => clearInterval(intervalId);
     }, []);
+
     return (
         <div className="chatpage_header">
             <div className="header_wrap">
@@ -53,17 +56,22 @@ const HeaderChatPage = ({ RoomInfo }) => {
                                             Online <FontAwesomeIcon icon={faCircle} />
                                         </>
                                     ) : (
-                                            <>
-                                                {status ?
-                                                    (<>Hoạt động  {status}</>)
-                                                    :
-                                                    (<>Hoạt động {timePassed(
+                                        <>
+                                            {status ? (
+                                                <>Hoạt động {status}</>
+                                            ) : (
+                                                <>
+                                                    Hoạt động{' '}
+                                                    {timePassed(
                                                         listStatus.find(
                                                             (userObj) =>
-                                                                userObj.userId === RoomInfo.friendId,
+                                                                userObj.userId ===
+                                                                RoomInfo.friendId,
                                                         ).time,
-                                                    )}</>)}
-                                            </>
+                                                    )}
+                                                </>
+                                            )}
+                                        </>
                                     )}
                                 </span>
                             )}
@@ -71,17 +79,11 @@ const HeaderChatPage = ({ RoomInfo }) => {
                     </div>
                 </div>
                 <div className="more">
-                    <Dropdown>
-                        <Dropdown.Toggle variant="success" id="dropdown-basic">
-                            Dropdown Button
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu>
-                            <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
+                    <Menu menuButton={<MenuButton className="btn_more"><FontAwesomeIcon icon={faEllipsisVertical} /></MenuButton>} transition className="my-menu">
+                        <MenuItem className="menu_item"><FontAwesomeIcon icon={faBellSlash} />Mute</MenuItem>
+                        <MenuItem className="menu_item"><FontAwesomeIcon icon={faLock} /> Block user</MenuItem>
+                        <MenuItem className="menu_item delete-chat"><FontAwesomeIcon icon={faTrash} /> Delete chat</MenuItem>
+                    </Menu>
                 </div>
             </div>
         </div>
