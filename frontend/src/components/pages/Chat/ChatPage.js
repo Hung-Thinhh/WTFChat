@@ -40,9 +40,10 @@ const ChatPage = () => {
         setTempId(temp);
         const messageData = {
             id: temp,
-            content: message,
+            content: message.content,
             senderid: currUser.id,
             roomid: ChatData,
+            image: message.image,
             time: new Date().toISOString(),
             status: 'sending',
         };
@@ -50,8 +51,8 @@ const ChatPage = () => {
         setCurChatData((prevMessages) => [...prevMessages, messageData]);
 
         try {
+            console.log('SOCKET | send_mess | data:', messageData);
             socket.emit('send_mess', messageData); // Gửi tin nhắn qua socket trực tiếp không qua API
-
             setIsSending(false); // Gửi thành công thì đánh dấu là đã gửi
         } catch (error) {
             console.error('Error sending message:', error);
@@ -66,8 +67,6 @@ const ChatPage = () => {
     }, [RoomInfo]);
     useEffect(() => {
         const handleNewChat = (data) => {
-            console.log(data);
-            
             setCurChatData((prevMessages) => {
                 const index = prevMessages.findIndex((msg) => msg.id === tempId);
                 if (index !== -1) {
@@ -117,7 +116,7 @@ const ChatPage = () => {
                                 <MessageBubble
                                     key={index}
                                     data={{
-                                        img: item.avt,
+                                        img: item.image ? item.image :"",  
                                         avt: item.avt,
                                         content: item.content,
                                         time: item.time,
