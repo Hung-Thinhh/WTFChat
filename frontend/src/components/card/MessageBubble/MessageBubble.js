@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import './MessageBubble.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -13,14 +13,16 @@ import {
     faFlag,
 } from '@fortawesome/free-solid-svg-icons';
 import OpengraphReactComponent from 'opengraph-react';
-import { ControlledMenu, MenuItem,SubMenu } from '@szhsin/react-menu';
+import { ControlledMenu, MenuItem, SubMenu, MenuHeader } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 import '@szhsin/react-menu/dist/transitions/zoom.css';
+import ChatDataContext from 'lib/Context/ChatContext';
 const MessageBubble = (data) => {
     // console.log(data);
-
+    const { reportType, setReportType } = useContext(ChatDataContext);
     const [status, setStatus] = useState('sending');
     const userClass = data.data.user;
+    
     const formatTime = (datestring) => {
         const date = new Date(datestring);
         const now = new Date();
@@ -72,9 +74,13 @@ const MessageBubble = (data) => {
     }, [data.data.status]);
     const [isOpen, setOpen] = useState(false);
     const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 });
+    const handleReport = (key) => {
+        console.log(key);
+    };
     return (
-        <div
+        <div id={`message${data.data.id}`}
             className={`messageBubble ${userClass}`}
+            
             onContextMenu={(e) => {
                 if (typeof document.hasFocus === 'function' && !document.hasFocus()) return;
 
@@ -83,6 +89,7 @@ const MessageBubble = (data) => {
                 setOpen(true);
             }}
         >
+            
             <div className={`messageContent ${userClass}`}>
                 {userClass === 'other' && (
                     <div className="userAvatar">
@@ -95,7 +102,7 @@ const MessageBubble = (data) => {
                         />
                     </div>
                 )}
-                <div className={`messageBox ${userClass}`}>
+                <div className={`messageBox ${userClass}`} style={{ maxWidth: '500px', width:'fit-content' }}>
                     {/* {data.data.img && <img src={data.data.img} alt="Attached image" />} */}
                     <div className="messageText">
                         <p>{data.data.content}</p>
@@ -129,18 +136,29 @@ const MessageBubble = (data) => {
                 <MenuItem className="menu_item">
                     <FontAwesomeIcon icon={faCopy} /> Copy
                 </MenuItem>
-                <MenuItem className="menu_item">
-                    <FontAwesomeIcon icon={faFlag} /> Report
-                </MenuItem>
-                <SubMenu label="<FontAwesomeIcon icon={faFlag} /> Report" className="menu_item">
-                    <MenuItem className="menu_item">Cut</MenuItem>
-                    <MenuItem className="menu_item">Copy</MenuItem>
-                    <MenuItem className="menu_item">Paste</MenuItem>
-                    <SubMenu label="Find">
-                        <MenuItem className="menu_item">Find...</MenuItem>
-                        <MenuItem className="menu_item">Find Next</MenuItem>
-                        <MenuItem className="menu_item">Find Previous</MenuItem>
-                    </SubMenu>
+
+                <SubMenu
+                    label={
+                        <>
+                            <FontAwesomeIcon icon={faFlag} /> Report
+                        </>
+                    }
+                    className="menu_item SubMenu"
+                >
+                    {/* <MenuDivider /> */}
+                    <MenuHeader>Report</MenuHeader>
+                    {reportType &&
+                        reportType.map((report) => {
+                            return (
+                                <MenuItem
+                                    key={report.id}
+                                    className="menu_item"
+                                    onClick={() => handleReport(report.id)}
+                                >
+                                    {report.content}
+                                </MenuItem>
+                            );
+                        })}
                 </SubMenu>
                 <MenuItem className="menu_item delete-chat">
                     <FontAwesomeIcon icon={faTrash} /> Delete

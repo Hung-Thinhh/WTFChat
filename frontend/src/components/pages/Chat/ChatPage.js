@@ -5,12 +5,14 @@ import MessageInput from '../../card/MessageInput';
 import { useContext, useEffect, useState, useRef } from 'react';
 import ChatDataContext from 'lib/Context/ChatContext';
 import getChat from 'services/getChat';
+import {getReportType} from 'controller/report';
 import { socket } from '../../../socket';
 
 const ChatPage = () => {
     const { currUser } = useContext(ChatDataContext);
     const { ChatData } = useContext(ChatDataContext);
     const { RoomInfo } = useContext(ChatDataContext);
+    const { reportType,setReportType } = useContext(ChatDataContext);
     const [curChatData, setCurChatData] = useState([]);
     const [isSending, setIsSending] = useState(false);
     const [room, setRoom] = useState('');
@@ -27,6 +29,17 @@ const ChatPage = () => {
             } else {
                 return <h1>Chưa có gì cả</h1>;
             }
+        } catch (error) {
+            console.error('Error fetching new messages:', error);
+        }
+    };
+    const fetchReportType = async () => {
+        try {
+            const response = await getReportType();
+            if (response && response.EC === 0) {        
+                setRoom(ChatData); // Lấy ra roomId để gửi tin nhắn
+                setReportType(response.DT); // Giả sử API trả về danh sách tin nhắn trong response.DT
+            } 
         } catch (error) {
             console.error('Error fetching new messages:', error);
         }
@@ -62,6 +75,7 @@ const ChatPage = () => {
     useEffect(() => {
         if (RoomInfo) {
             fetchNewMessages();
+            fetchReportType()
         }
     }, [RoomInfo]);
     useEffect(() => {
@@ -117,6 +131,7 @@ const ChatPage = () => {
                                 <MessageBubble
                                     key={index}
                                     data={{
+                                        id: item.id,
                                         img: item.avt,
                                         avt: item.avt,
                                         content: item.content,

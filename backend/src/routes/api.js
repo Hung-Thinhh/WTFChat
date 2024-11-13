@@ -6,7 +6,7 @@ import {
     deletaChatController,
 } from '../controllers/chatController';
 import { getFriendController } from '../controllers/getFriendController.js';
-
+import {getReportType} from "../controllers/reportController.js";
 import { getRoomController } from '../controllers/getChatRoomCtrl.js';
 import {
     checkAccount,
@@ -81,6 +81,8 @@ const initApiRouter = (app) => {
     router.post('/createroom', getRoomController); // api tạo phòng chat
     router.post('/finduser', findUserController); // api tìm người dùng
 
+    //report 
+    router.get('/getReportType', getReportType);
     //admin
     router.get('/getUserById/:id', getUserById);
     router.get('/banUserById/:id', banUserById);

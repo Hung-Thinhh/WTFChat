@@ -174,18 +174,29 @@ h1 {
         min-width: 150px;
     }
 
-    .menu_item {
+    .menu_item,
+    .szh-menu__item--submenu {
         color: #fff;
         gap: 2rem;
         border-radius: 6px;
         font-size: 15px;
         padding: 5px 10px;
 
+        &.szh-menu__item--submenu {
+            padding: 0;
+            background-color: transparent!important;
+            &:hover{
+                background-color: transparent!important;
+            }
+        }
+        
         svg {
             width: 15px;
 
         }
-
+        &:hover {
+            background-color: rgb(170 170 170 / 8%);
+        }
         &.szh-menu__item--hover {
             background-color: rgb(170 170 170 / 8%);
         }
