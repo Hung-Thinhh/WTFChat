@@ -5,14 +5,17 @@ import MessageInput from '../../card/MessageInput';
 import { useContext, useEffect, useState, useRef } from 'react';
 import ChatDataContext from 'lib/Context/ChatContext';
 import getChat from 'services/getChat';
+import { getReportType } from 'controller/report';
 import { socket } from '../../../socket';
 
 const ChatPage = () => {
     const { currUser } = useContext(ChatDataContext);
     const { ChatData } = useContext(ChatDataContext);
     const { RoomInfo } = useContext(ChatDataContext);
+    const { reportType, setReportType } = useContext(ChatDataContext);
     const [curChatData, setCurChatData] = useState([]);
     const [isSending, setIsSending] = useState(false);
+    const [isReply, setIsReply] = useState('');
     const [room, setRoom] = useState('');
     const [tempId, setTempId] = useState(null);
     const chatWindowRef = useRef(null);
@@ -31,7 +34,20 @@ const ChatPage = () => {
             console.error('Error fetching new messages:', error);
         }
     };
-
+    const fetchReportType = async () => {
+        try {
+            const response = await getReportType();
+            if (response && response.EC === 0) {
+                setRoom(ChatData); // Lấy ra roomId để gửi tin nhắn
+                setReportType(response.DT); // Giả sử API trả về danh sách tin nhắn trong response.DT
+            }
+        } catch (error) {
+            console.error('Error fetching new messages:', error);
+        }
+    };
+    const handleDataReply = async(data) => {
+        setIsReply(data);
+    };
     const handleSetData = async (message) => {
         if (isSending) return; // Kiểm tra xem đang gửi hay không
         setIsSending(true); // Đánh dấu là đang gửi
@@ -63,6 +79,7 @@ const ChatPage = () => {
     useEffect(() => {
         if (RoomInfo) {
             fetchNewMessages();
+            fetchReportType();
         }
     }, [RoomInfo]);
     useEffect(() => {
@@ -102,7 +119,7 @@ const ChatPage = () => {
             chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
         }
     }, [curChatData]);
-
+   
     if (!currUser) return null;
 
     return (
@@ -116,20 +133,22 @@ const ChatPage = () => {
                                 <MessageBubble
                                     key={index}
                                     data={{
-                                        img: item.image ? item.image :"",  
+                                        img: item.image ? item.image :"",
                                         avt: item.avt,
                                         content: item.content,
                                         time: item.time,
                                         user: item.senderid !== currUser.id ? 'other' : 'me', // nếu là me thì là tin nhấn của bản thân user
                                         status: item.status ? item.status : 'done',
+                                        sender:item.senderName
                                     }}
+                                    onReply={handleDataReply}
                                 />
                             ))
                         ) : (
                             <h1>CHƯA CÓ TIN NHÁN NÀO</h1>
                         )}
                     </div>
-                    <MessageInput value={handleSetData} />
+                    <MessageInput value={handleSetData} isReply={isReply} onReply={handleDataReply}/>
                 </div>
             ) : (
                 <h1>CHỌN MỘT CUỘC TRÒ TRUYỆN ĐỂ BĂT ĐẦU</h1>
