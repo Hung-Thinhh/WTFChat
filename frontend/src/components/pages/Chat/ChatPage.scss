@@ -7,11 +7,9 @@ h1 {
 }
 
 .chatPage_container {
-    position: fixed;
-    left: 30%;
-    top: 5%;
     width: 65%;
     height: 90%;
+    margin: 30px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -27,7 +25,6 @@ h1 {
         background-color: rgba(60, 60, 67, 0.2901960784);
         width: 100%;
         padding: 0.5rem 2rem;
-        height: 8%;
         text-align: center;
         font-size: 1.5rem;
         color: #FFF;

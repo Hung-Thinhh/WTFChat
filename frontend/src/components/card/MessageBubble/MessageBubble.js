@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext,useCallback } from 'react';
 import './MessageBubble.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -18,11 +18,15 @@ import '@szhsin/react-menu/dist/index.css';
 import '@szhsin/react-menu/dist/transitions/zoom.css';
 import ChatDataContext from 'lib/Context/ChatContext';
 const MessageBubble = (data) => {
-    // console.log(data);
     const { reportType, setReportType } = useContext(ChatDataContext);
     const [status, setStatus] = useState('sending');
     const userClass = data.data.user;
-    
+    const handlePropReply = useCallback(() => {
+        data.onReply(data.data);
+    }, []);
+    const handleReply = ()=> {
+        handlePropReply()
+    }
     const formatTime = (datestring) => {
         const date = new Date(datestring);
         const now = new Date();
@@ -127,7 +131,7 @@ const MessageBubble = (data) => {
                 onClose={() => setOpen(false)}
                 className="my-menu"
             >
-                <MenuItem className="menu_item">
+                <MenuItem className="menu_item" onClick={handleReply}>
                     <FontAwesomeIcon icon={faReply} /> Reply
                 </MenuItem>
                 <MenuItem className="menu_item">
