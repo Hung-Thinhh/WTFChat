@@ -11,12 +11,17 @@ import RegisterForm from './RegisterForm';
 import { initState, reducer } from './RegisterReducer/reducer';
 import { setError, setLoading } from './RegisterReducer/action';
 import OTPForm from 'components/OTPForm';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerSelector } from '../../../redux/selectors';
 
 const cx = classNames.bind(styles);
 
 function Register() {
     const nav = useNavigate();
-    const [state, dispatch] = useReducer(reducer, initState);
+    // redux
+    const state = useSelector(registerSelector);
+    const dispatch = useDispatch();
+    // const [state, dispatch] = useReducer(reducer, initState);
     const [page, setPage] = useState(true);
     const [countDown, setCountDown] = useState(30);
 
@@ -98,7 +103,8 @@ function Register() {
                 </div>
                 <form className={cx('form')}>
                     {page ? (
-                        <RegisterForm state={state} dispatch={dispatch} />
+                        // <RegisterForm state={state} dispatch={dispatch} />
+                        <RegisterForm />
                     ) : (
                         <OTPForm state={state} dispatch={dispatch} />
                     )}

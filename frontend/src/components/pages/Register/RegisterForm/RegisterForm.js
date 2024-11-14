@@ -10,14 +10,20 @@ import { getAge } from 'lib/function/function';
 import { register, sendVerifyMail } from 'controller/authen';
 import config from 'config';
 import { initState, reducer } from '../RegisterReducer/reducer';
-import { setError, setInput, showPass } from '../RegisterReducer/action';
+// import { setError, setInput, showPass } from '../RegisterReducer/action';
+import { useDispatch, useSelector } from 'react-redux';
+import { setInput, showPass, setError } from '../registerSlice';
+import { registerSelector } from '../../../../redux/selectors';
 
 const cx = classNames.bind(styles);
 
 const genderList = ['Nam', 'Nữ', 'Khác'];
 
-function RegisterForm({ state, dispatch }) {
-    // const [state, dispatch] = useReducer(reducer, initState);
+// function RegisterForm({ state, dispatch }) {
+function RegisterForm() {
+    // redux
+    const state = useSelector(registerSelector);
+    const dispatch = useDispatch();
 
     const handleChange = (event) => {
         dispatch(setInput({ key: event.target.name, value: event.target.value }));
