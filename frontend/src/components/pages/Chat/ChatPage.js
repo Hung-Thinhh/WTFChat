@@ -26,7 +26,16 @@ const ChatPage = () => {
             if (response && response.EC === 0) {
                 socket.emit('join_room', ChatData);
                 setRoom(ChatData); // Lấy ra roomId để gửi tin nhắn
-                setCurChatData(response.DT); // Giả sử API trả về danh sách tin nhắn trong response.DT
+                let data = response.DT;
+                data.forEach((item) => {
+                    if (item.traloi !== null) {
+                        const replyMessage = data.find((msg) => msg.id == item.traloi);
+                        if (replyMessage) {
+                            item.traloi = replyMessage;
+                        }
+                    }
+                })
+                setCurChatData(data); // Giả sử API trả về danh sách tin nhắn trong response.DT
             } else {
                 return <h1>Chưa có gì cả</h1>;
             }
@@ -45,7 +54,7 @@ const ChatPage = () => {
             console.error('Error fetching new messages:', error);
         }
     };
-    const handleDataReply = async(data) => {
+    const handleDataReply = async (data) => {
         setIsReply(data);
     };
     const handleSetData = async (message) => {
@@ -62,12 +71,12 @@ const ChatPage = () => {
             image: message.image,
             time: new Date().toISOString(),
             status: 'sending',
+            traloi: isReply ? isReply.id : null,
         };
 
         setCurChatData((prevMessages) => [...prevMessages, messageData]);
 
         try {
-            console.log('SOCKET | send_mess | data:', messageData);
             socket.emit('send_mess', messageData); // Gửi tin nhắn qua socket trực tiếp không qua API
             setIsSending(false); // Gửi thành công thì đánh dấu là đã gửi
         } catch (error) {
@@ -85,17 +94,24 @@ const ChatPage = () => {
     useEffect(() => {
         const handleNewChat = (data) => {
             setCurChatData((prevMessages) => {
+                // Tìm trong dữ liệu chatdata xem có id tương ứng với data.traloi không
+                if (data.traloi) {
+                    const replyMessage = prevMessages.find((msg) => msg.id == data.traloi);
+                    if (replyMessage) {
+                        data.traloi = replyMessage;
+                    }
+                }
+
                 const index = prevMessages.findIndex((msg) => msg.id === tempId);
+                console.log(JSON.stringify(data));
                 if (index !== -1) {
                     // Cập nhật tin nhắn nếu đã tồn tại
-
                     const updatedMessages = [...prevMessages];
                     updatedMessages[index] = { ...updatedMessages[index], ...data, status: 'done' };
                     setTempId(null);
                     return updatedMessages;
                 } else {
-                    // kiểm tra xem tin nhắn đã tồn tại chưa
-
+                    // Kiểm tra xem tin nhắn đã tồn tại chưa
                     const index = prevMessages.findIndex((msg) => msg.id === data.id);
                     if (index !== -1) {
                         return prevMessages;
@@ -119,7 +135,9 @@ const ChatPage = () => {
             chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
         }
     }, [curChatData]);
-   
+    useEffect(() => {
+        console.log(isReply);
+    }, [isReply]);
     if (!currUser) return null;
 
     return (
@@ -133,13 +151,15 @@ const ChatPage = () => {
                                 <MessageBubble
                                     key={index}
                                     data={{
-                                        img: item.image ? item.image :"",
+                                        id: item.id,
+                                        img: item.image ? item.image : "",
                                         avt: item.avt,
                                         content: item.content,
                                         time: item.time,
                                         user: item.senderid !== currUser.id ? 'other' : 'me', // nếu là me thì là tin nhấn của bản thân user
                                         status: item.status ? item.status : 'done',
-                                        sender:item.senderName
+                                        sender: item.senderName,
+                                        traloi: item.traloi ? item.traloi : null,
                                     }}
                                     onReply={handleDataReply}
                                 />
@@ -148,7 +168,7 @@ const ChatPage = () => {
                             <h1>CHƯA CÓ TIN NHÁN NÀO</h1>
                         )}
                     </div>
-                    <MessageInput value={handleSetData} isReply={isReply} onReply={handleDataReply}/>
+                    <MessageInput value={handleSetData} isReply={isReply} onReply={handleDataReply} />
                 </div>
             ) : (
                 <h1>CHỌN MỘT CUỘC TRÒ TRUYỆN ĐỂ BĂT ĐẦU</h1>

@@ -87,6 +87,7 @@ const MessageInput = ({ value, isReply, onReply }) => {
                             onChange={(e) => setInputValue(e.target.value)}
                         />
                     </div>
+                    
                     {isPopupVisible && selectedImage && (
                         <div className="img_popup">
                             <div className="close" onClick={() => {
