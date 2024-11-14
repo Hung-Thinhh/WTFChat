@@ -4,7 +4,6 @@ import ChatDataContext from 'lib/Context/ChatContext';
 
 const PrivateRoutes = ({ component }, props) => {
     const { currUser } = useContext(ChatDataContext); // get current user data from global state
-    console.log(currUser);
 
     if (currUser) {
         console.log('đã check ');

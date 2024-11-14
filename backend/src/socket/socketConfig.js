@@ -97,8 +97,8 @@ const setupWebSocket = (server) => {
                   size: buffer.length
                 };
               }
-      
-              const chat = await createChat(data.senderid, data.roomid, data.content, data.time, fileInfo);
+              console.log('SOCKET | SEND_MESS | DATA | ', fileInfo);
+              const chat = await createChat(data.senderid, data.roomid, data.content, data.time, fileInfo,data.traloi);
               io.to(data.roomid).emit('new_chat', chat.DT); // Phát sự kiện tới phòng cụ thể
             } catch (error) {
               console.error('Error creating chat:', error);

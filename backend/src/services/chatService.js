@@ -58,21 +58,21 @@ const uploadImage = async (file) => {
   }
 };
 
-const createChat = async (senderid, roomid, content, time, media) => {
-  // console.log('SERVICE | CREATE CHAT SERVICE | MEDIA | ', senderid, roomid, content, time, media);
+const createChat = async (senderid, roomid, content, time, media, traloi) => {
+  console.log('SERVICE | CREATE CHAT SERVICE | MEDIA | ', senderid, roomid, content, time, media,traloi);
   try {
     let fileId = null;
     if (media) {
       fileId = 'https://drive.google.com/thumbnail?id=' + await uploadImage(media);
       const [result] = await pool.query(`
-        INSERT INTO tinnhan (content, idThanhvien, idRoom, time, image) 
+        INSERT INTO tinnhan (content, idThanhvien, idRoom, time, image,traloi) 
         SELECT 
-            ?,tv.id, ?,?,?
+            ?,tv.id, ?,?,?,?
         FROM thanhvien tv
         JOIN nguoidung u ON tv.userid = u.id
         WHERE u.id = ? AND tv.idRoom = ?;
         `,
-        [content, roomid, time, fileId, senderid, roomid]); // thêm một tin nhắn mới
+        [content, roomid, time, fileId, traloi ,senderid, roomid]); // thêm một tin nhắn mới
       await pool.query(`UPDATE phongchat SET update_time = ? WHERE id = ?`, [time, roomid]);
     
       if (result.affectedRows > 0) {
@@ -92,14 +92,14 @@ const createChat = async (senderid, roomid, content, time, media) => {
     } else { // nếu không có tệp đính kèm
       console.log('SERVICE | CREATE CHAT SERVICE | NO MEDIA | ', senderid, roomid, content, time);
       const [result] = await pool.query(`
-        INSERT INTO tinnhan (content, idThanhvien, idRoom, time) 
+        INSERT INTO tinnhan (content, idThanhvien, idRoom, time,traloi) 
         SELECT 
-            ?,tv.id, ?,?
+            ?,tv.id, ?,?,?
         FROM thanhvien tv
         JOIN nguoidung u ON tv.userid = u.id
         WHERE u.id = ? AND tv.idRoom = ?;
         `,
-        [content, roomid, time, senderid, roomid]); // thêm một tin nhắn mới
+        [content, roomid, time,traloi ,senderid, roomid]); // thêm một tin nhắn mới
       await pool.query(`UPDATE phongchat SET update_time = ? WHERE id = ?`, [time, roomid]);
       if (result.affectedRows > 0) {
         const [newMessage] = await pool.query(`SELECT tinnhan.*, thanhvien.userid FROM tinnhan,thanhvien WHERE tinnhan.id = ? AND tinnhan.idThanhvien=thanhvien.id`, [result.insertId]);
@@ -136,6 +136,7 @@ const getChat = async (userId, roomId) => {
       t.content,
       t.time,
       t.image,
+      t.traloi,
       CONCAT(u.firstname, ' ', u.lastname) AS senderName,u.id AS senderid,
       u.avatar AS avt
       FROM tinnhan t
