@@ -43,7 +43,7 @@ export const checkUserJWT = async (req, res, next) => {
     if (!token)
         return res.status(401).json({
             EM: 'JWT | ERROR | Xác thực thất bại',
-            EC: '-1',
+            EC: '401',
         });
 
     const decoded = verifyToken(token);
