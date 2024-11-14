@@ -14,6 +14,7 @@ const getChatRoom = async (id) => {
                     ELSE p.avt
                 END AS avt,
                 p.update_time,
+                otherUser.id AS otherUserId,  -- Thêm cột này để lấy id của người dùng khác
                 (
                     SELECT 
                         JSON_OBJECT(
@@ -32,13 +33,13 @@ const getChatRoom = async (id) => {
                     FROM phongchat p
                     JOIN thanhvien tv ON p.id = tv.idRoom
                     LEFT JOIN (
-                        SELECT tv.idRoom, CONCAT(u.firstname, ' ', u.lastname) AS name, u.avatar AS avatar
+                        SELECT tv.idRoom, CONCAT(u.firstname, ' ', u.lastname) AS name, u.avatar AS avatar, u.id AS id  -- Thêm u.id vào SELECT của subquery
                         FROM thanhvien tv
                         JOIN nguoidung u ON tv.userid = u.id
                         WHERE tv.userid != ?
                     ) AS otherUser ON p.id = otherUser.idRoom
                     WHERE tv.userid = ?
-                    GROUP BY p.id, p.groupName, p.avt, p.update_time
+                    GROUP BY p.id, p.groupName, p.avt, p.update_time, otherUser.id
                     ORDER BY p.update_time DESC;
             `,
             [id,id],

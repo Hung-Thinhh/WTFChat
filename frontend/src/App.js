@@ -19,6 +19,7 @@ function App(props) {
     // const location = useLocation();
     // const prevPath = localStorage.getItem('prevPath') || '/';
     const { setCurrUser } = useContext(ChatDataContext);
+    const { setlistStatus } = useContext(ChatDataContext);
     const [checkAcc, setCheckAcc] = useState(false);
     const [pageProps, setPageProps] = useState({}); // những props muốn chuyền vào pages để sữ dụng
 
@@ -35,7 +36,17 @@ function App(props) {
             alert('Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com');
         }
     };
+    const handleListStatus = (data) => {
+        console.log('dô');
 
+        setlistStatus(data);
+    };
+    useEffect(() => {
+        socket.on('user_status_update', handleListStatus);
+        return () => {
+            socket.off('user_status_update', handleListStatus);
+        };
+    }, []);
     useEffect(() => {
         // check account whenever go to page
         const checkAccount = async () => {
