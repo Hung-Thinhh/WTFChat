@@ -2,13 +2,20 @@ import classNames from 'classnames/bind';
 
 import styles from './OTPForm.module.scss';
 import { useRef, useState } from 'react';
-import { setError, setOTP } from 'components/pages/Register/RegisterReducer/action';
+// import { setError, setOTP } from 'components/pages/Register/RegisterReducer/action';
+import { setError, setOTP } from '../pages/Register/registerSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerSelector } from '../../redux/selectors';
 
 const cx = classNames.bind(styles);
 
-function OTPForm({ state, dispatch }) {
+// function OTPForm({ state, dispatch }) {
+function OTPForm() {
     // const [otp, setOtp] = useState(Array(6).fill(''));
     const inputRefs = useRef(Array(6).fill(null));
+    // redux
+    const state = useSelector(registerSelector);
+    const dispatch = useDispatch();
 
     const handleInputChange = (index, value) => {
         const newOtp = [...state.otp];
