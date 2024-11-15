@@ -15,3 +15,28 @@ export const registerSelector = createSelector(
     otpSelector,
     (input, showPass, err, loading, otp) => ({ input, showPass, err, loading, otp }),
 );
+
+// forgetPass
+export const forgetPassInputSelector = (state) => state.forgetPass.input;
+export const forgetPassErrorSelector = (state) => state.forgetPass.err;
+export const forgetPassLoadingSelector = (state) => state.forgetPass.loading;
+export const forgetPassShowPassSelector = (state) => state.forgetPass.showPass;
+export const forgetPassOtpSelector = (state) => state.forgetPass.otp;
+export const forgetPassSearchUserSelector = (state) => state.forgetPass.searchUser;
+
+export const forgetPassSelector = createSelector(
+    forgetPassInputSelector,
+    forgetPassErrorSelector,
+    forgetPassLoadingSelector,
+    forgetPassShowPassSelector,
+    forgetPassOtpSelector,
+    forgetPassSearchUserSelector,
+    (input, err, loading, showPass, otp, searchUser) => ({
+        input,
+        err,
+        loading,
+        showPass,
+        otp,
+        searchUser,
+    }),
+);

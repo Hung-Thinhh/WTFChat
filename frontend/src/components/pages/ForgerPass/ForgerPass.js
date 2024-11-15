@@ -3,22 +3,26 @@ import styles from '../Login/Login.module.scss';
 import OTPForm from 'components/OTPForm';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from 'components/Button';
-import { useEffect, useReducer, useState } from 'react';
-import { initState, reducer } from './ForgetPassReducer/reducer';
+import { useEffect, useState } from 'react';
 import FindEmailForm from 'components/FindEmailForm/FindEmailForm';
-import { setError, setInput, setLoading, showPass } from './ForgetPassReducer/action';
+import { setError, setInput, setLoading, showPass } from './forgetPassSlice';
 import { changePass, sendOTP } from 'controller/authen';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import config from 'config';
+import { useDispatch, useSelector } from 'react-redux';
+import { forgetPassSelector } from '../../../redux/selectors';
 
 const cx = classNames.bind(styles);
 
 function ForgetPass() {
     const nav = useNavigate();
-    const [state, dispatch] = useReducer(reducer, initState);
     const [page, setPage] = useState(true);
     const [countDown, setCountDown] = useState(30);
+
+    // redux
+    const state = useSelector(forgetPassSelector);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const id = setInterval(() => {
@@ -33,7 +37,9 @@ function ForgetPass() {
 
     const handlePassShow = (event) => {
         event.preventDefault();
-        dispatch(showPass(state.showPass));
+        console.log(!state.showPass);
+
+        dispatch(showPass(!state.showPass));
     };
 
     const handleChange = (event) => {
@@ -140,7 +146,7 @@ function ForgetPass() {
                                     onChange={handleChange}
                                 />
                             </div>
-                            <OTPForm state={state} dispatch={dispatch} />
+                            <OTPForm forgetPassForm />
                         </>
                     )}
                     {!!state.err && <div className={cx('err-tag')}>* {state.err}</div>}
@@ -150,7 +156,7 @@ function ForgetPass() {
                                 className={cx('sign')}
                                 type="rounded"
                                 size="medium"
-                                disabled={!!state.err || state.loading}
+                                disabled={!!state.err || !!state.loading}
                                 onClick={() => setPage(true)}
                             >
                                 Trở lại

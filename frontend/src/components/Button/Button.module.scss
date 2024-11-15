@@ -28,7 +28,6 @@
     margin-left: 8px;
 }
 
-
 .icon,
 .onlyIcon {
     display: inline-block;
@@ -60,12 +59,12 @@
 }
 
 .outline {
-    color: var(--primary);
+    color: #161823;
     border-color: currentColor;
 
     &:hover {
         border-color: currentColor;
-        background-color: rgba(254, 44, 85, 0.06);
+        background-color: rgba(75, 75, 75, 0.06);
     }
 }
 

@@ -1,28 +1,25 @@
 import classNames from 'classnames/bind';
 
 import styles from './OTPForm.module.scss';
-import { useRef, useState } from 'react';
-// import { setError, setOTP } from 'components/pages/Register/RegisterReducer/action';
+import { useRef } from 'react';
 import { setError, setOTP } from '../pages/Register/registerSlice';
+import { setError as setFPError, setOTP as setFPOTP } from '../pages/ForgerPass/forgetPassSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerSelector } from '../../redux/selectors';
+import { forgetPassSelector, registerSelector } from '../../redux/selectors';
 
 const cx = classNames.bind(styles);
 
-// function OTPForm({ state, dispatch }) {
-function OTPForm() {
-    // const [otp, setOtp] = useState(Array(6).fill(''));
+function OTPForm({ forgetPassForm = false }) {
     const inputRefs = useRef(Array(6).fill(null));
     // redux
-    const state = useSelector(registerSelector);
+    const state = useSelector(forgetPassForm ? forgetPassSelector : registerSelector);
     const dispatch = useDispatch();
 
     const handleInputChange = (index, value) => {
         const newOtp = [...state.otp];
         newOtp[index] = value;
-        dispatch(setOTP(newOtp));
-        dispatch(setError(''));
-
+        dispatch(forgetPassForm ? setFPOTP(newOtp) : setOTP(newOtp));
+        dispatch(forgetPassForm ? setFPError('') : setError(''));
         if (value.length === 0) {
             // Check if input is empty (character deleted)
             if (index > 0) {
@@ -85,7 +82,7 @@ function OTPForm() {
 
         const newOtp = [...state.otp];
         newOtp.splice(0, 6, ...pastedText.split(''));
-        dispatch(setOTP(newOtp));
+        dispatch(forgetPassForm ? setFPOTP(newOtp) : setOTP(newOtp));
 
         if (pastedText.length > index + 1) {
             inputRefs.current[index + 1].focus();

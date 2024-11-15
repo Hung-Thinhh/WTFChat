@@ -3,14 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import styles from 'components/pages/Login/Login.module.scss';
 import Button from 'components/Button';
-// import { useReducer, useState } from 'react';
-// import { Link, useNavigate } from 'react-router-dom';
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
-// import { getAge } from 'lib/function/function';
-// import { register, sendVerifyMail } from 'controller/authen';
-// import config from 'config';
-// import { initState, reducer } from '../RegisterReducer/reducer';
-// import { setError, setInput, showPass } from '../RegisterReducer/action';
 import { useDispatch, useSelector } from 'react-redux';
 import { setInput, showPass, setError } from '../registerSlice';
 import { registerSelector } from '../../../../redux/selectors';
@@ -19,7 +12,6 @@ const cx = classNames.bind(styles);
 
 const genderList = ['Nam', 'Nữ', 'Khác'];
 
-// function RegisterForm({ state, dispatch }) {
 function RegisterForm() {
     // redux
     const state = useSelector(registerSelector);
@@ -34,7 +26,7 @@ function RegisterForm() {
 
     const handlePassShow = (event) => {
         event.preventDefault();
-        dispatch(showPass(state.showPass));
+        dispatch(showPass(!state.showPass));
     };
 
     const handleRatio = (event, value) => {

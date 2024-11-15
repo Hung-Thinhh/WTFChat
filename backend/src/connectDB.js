@@ -15,7 +15,7 @@ const pool = mysql.createPool({
     password: '', // Mật khẩu của MySQL
     database: 'wtfchat_thinkwing', // Tên database muốn kết nối
     port: '3306',
-    connectionLimit: 10,
+    // connectionLimit: 10,
 });
 
 pool.getConnection()

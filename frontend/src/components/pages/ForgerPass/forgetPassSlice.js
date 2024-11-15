@@ -1,20 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-export const registerSlice = createSlice({
-    name: 'register',
+export const forgetPassSlice = createSlice({
+    name: 'forgetPass',
     initialState: {
         input: {
             email: '',
-            username: '',
             password: '',
             repass: '',
-            birthdate: '',
-            gender: 0,
         },
         showPass: false,
         err: '',
         loading: false,
         otp: Array(6).fill(''),
+        searchUser: '',
     },
     reducers: {
         setInput: (state, action) => {
@@ -34,9 +32,13 @@ export const registerSlice = createSlice({
         setOTP: (state, action) => {
             state.otp = action.payload;
         },
+        setSearchUser: (state, action) => {
+            state.searchUser = action.payload;
+        },
     },
 });
 
-export const { setInput, showPass, setError, setLoading, setOTP } = registerSlice.actions;
+export const { setInput, showPass, setError, setLoading, setOTP, setSearchUser } =
+    forgetPassSlice.actions;
 
-export default registerSlice.reducer;
+export default forgetPassSlice.reducer;
