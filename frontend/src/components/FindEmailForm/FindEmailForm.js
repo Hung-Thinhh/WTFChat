@@ -1,26 +1,24 @@
 import classNames from 'classnames/bind';
 import styles from './FindEmailForm.module.scss';
 import Avatar from 'components/Avatar';
-import {
-    setError,
-    setInput,
-    setSearchUser,
-} from 'components/pages/ForgerPass/ForgetPassReducer/action';
-import { setLoading } from 'components/pages/Register/RegisterReducer/action';
+import { setError, setInput, setSearchUser, setLoading } from '../pages/ForgerPass/forgetPassSlice';
 import Button from 'components/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { searchMail } from 'controller/authen';
+import { useDispatch, useSelector } from 'react-redux';
+import { forgetPassSelector } from '../../redux/selectors';
 
 const cx = classNames.bind(styles);
 
-function FindEmailForm({ state, dispatch }) {
-    const handleChange = (event) => {
-        console.log('aaa');
+function FindEmailForm() {
+    const state = useSelector(forgetPassSelector);
+    const dispatch = useDispatch();
 
+    function handleChange(event) {
         dispatch(setInput({ key: event.target.name, value: event.target.value }));
         if (state.err) dispatch(setError(''));
-    };
+    }
 
     const handleSearchEmail = async (event) => {
         event.preventDefault();
@@ -51,7 +49,7 @@ function FindEmailForm({ state, dispatch }) {
                 />
                 <Button
                     className={cx('search-btn')}
-                    type="circle"
+                    type="outline"
                     size="small"
                     onClick={handleSearchEmail}
                 >

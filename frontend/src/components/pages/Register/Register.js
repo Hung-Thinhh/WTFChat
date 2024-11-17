@@ -2,21 +2,24 @@ import classNames from 'classnames/bind';
 
 import styles from '../Login/Login.module.scss';
 import Button from 'components/Button';
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAge } from 'lib/function/function';
 import { register, sendOTP } from 'controller/authen';
 import config from 'config';
 import RegisterForm from './RegisterForm';
-import { initState, reducer } from './RegisterReducer/reducer';
-import { setError, setLoading } from './RegisterReducer/action';
+import { setError, setLoading } from './registerSlice';
 import OTPForm from 'components/OTPForm';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerSelector } from '../../../redux/selectors';
 
 const cx = classNames.bind(styles);
 
 function Register() {
     const nav = useNavigate();
-    const [state, dispatch] = useReducer(reducer, initState);
+    // redux
+    const state = useSelector(registerSelector);
+    const dispatch = useDispatch();
     const [page, setPage] = useState(true);
     const [countDown, setCountDown] = useState(30);
 
@@ -98,9 +101,10 @@ function Register() {
                 </div>
                 <form className={cx('form')}>
                     {page ? (
-                        <RegisterForm state={state} dispatch={dispatch} />
+                        // <RegisterForm state={state} dispatch={dispatch} />
+                        <RegisterForm />
                     ) : (
-                        <OTPForm state={state} dispatch={dispatch} />
+                        <OTPForm />
                     )}
                     {!!state.err && <div className={cx('err-tag')}>* {state.err}</div>}
                     <div className={cx('btn-group')}>
