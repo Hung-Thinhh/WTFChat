@@ -11,7 +11,6 @@ body {
     color: var(--white-color);
     font-family: 'Roboto', 'Arial', sans-serif;
     overflow: hidden;
-    /* background-image: url(https://cdn.wallpapersafari.com/58/16/FhZevj.jpg); */
     background-image: url(/public/background.png);
     background-repeat: no-repeat;
     background-size: cover;
@@ -70,106 +69,7 @@ button {
     transition: opacity 300ms ease-in;
 }
 
-:root {
-    --lightmain-color: #257eff;
-    --lightwhite-color: #fff;
-    --lightfooter-text: #333;
-    --light-text-1: #000;
-    --light-text-2: #868585;
-    --lightbg-white: #ebf1ff;
-    --lightbg-white-1: #bcd0fe;
-    --lightdeep-black: #000;
-    --lightbackground-color: rgb(217, 228, 255) 52%;
-    --lightrightsidebar-light: #ebf1ff;
-    --lightrightsidebar-item: rgba(255, 255, 255, 0.3);
-    --likerightsidebar-hover: rgba(60, 117, 255, 0.34);
-    --light-bg-radio: #afc7ff;
-    --light-stroke: #001062;
-    --light-bg-header: #bfd7fa;
-    --light-bg-player: #fff;
-    --light-item-player: #424242;
-    --light-line-player: #fff;
 
-    /* --background-color-dark: linear-gradient(180deg, 
-  rgb(27, 27, 27) 0%, 
-  rgb(86, 86, 86) 42%, 
-  rgb(130, 130, 130) 100%);
-  --rightsidebar-dark: #7d818a; */
-    /* Thêm các biến màu cho text, borders, v.v ... cho cả hai chủ đề */
-    --main-color-dark: #fff;
-    --white-color-dark: #000;
-    --footer-text-dark: #ccc;
-    --dark-text-1: #fff;
-    --dark-text-2: #a6b3c4;
-
-    /* Màu trung gian sáng hơn đối ngược của #333 */
-    --bg-white-dark: #102037;
-    --bg-white-1-dark: #2f3e62;
-    --deep-black-dark: #dddddd;
-    /* Màu tối hơn và đậm hơn đối ngược của light blue */
-    --background-color-dark: #162a45;
-    --rightsidebar-dark: #21344e;
-    /* Tương tự như nền tối */
-    --darkrightsidebar-item: rgba(255, 255, 255, 0.2);
-    --darkrightsidebar-hover: rgb(88 118 188 / 34%);
-    --dark-bg-radio: #3b68ef;
-    --dark-stroke: #ffffff;
-    --dark-bg-header: #162a45;
-    --dark-bg-player: #172f4f;
-    --dark-item-player: #fff;
-    --dark-line-player: #5d6d84;
-    --dark-form-login: #072b56;
-}
-
-[data-theme='dark'] {
-    /* Set lại các biến cho dark theme */
-    --rigthsidebar-bg: var(--rightsidebar-dark);
-    --main-color: var(--main-color-dark);
-    --white-color: var(--white-color-dark);
-    --footer-text: var(--footer-text-dark);
-    --bg-white: var(--bg-white-dark);
-    --bg-white-1: var(--bg-white-1-dark);
-    --deep-black: var(--deep-black-dark);
-    --background-color: var(--background-color-dark);
-    --trightsidebar-light: var(--rightsidebar-dark);
-    --rightsidebar-item-active: var(--darkrightsidebar-item);
-    --rightsidebar-hover: var(--darkrightsidebar-hover);
-    --bg-radio: var(--dark-bg-radio);
-    --color-stroke: var(--dark-stroke);
-    --bg-header: var(--dark-bg-header);
-    --bg-player: var(--dark-bg-player);
-    --item-player: var(--dark-item-player);
-    --text-1: var(--dark-text-1);
-    --text-2: var(--dark-text-2);
-    --line-player: var(--dark-line-player);
-    --bg-form_login: var(--dark-form-login);
-    --arrow_btn_bg: var(--dark-item-player);
-}
-
-[data-theme='light'] {
-    /* Set lại các biến cho light theme */
-    --rigthsidebar-bg: var(--lightrightsidebar-light);
-    --main-color: var(--lightmain-color);
-    --white-color: var(--lightwhite-color);
-    --footer-text: var(--lightfooter-text);
-    --bg-white: var(--lightbg-white);
-    --bg-white-1: var(--lightbg-white-1);
-    --deep-black: var(--lightdeep-black);
-    --background-color: var(--lightbackground-color);
-    --trightsidebar-light: var(--lightrightsidebar-light);
-    --rightsidebar-item-active: var(--lightrightsidebar-item);
-    --rightsidebar-hover: var(--likerightsidebar-hover);
-    --bg-radio: var(--light-bg-radio);
-    --color-stroke: var(--light-stroke);
-    --bg-header: var(--light-bg-header);
-    --bg-player: var(--light-bg-player);
-    --item-player: var(--light-item-player);
-    --text-1: var(--light-text-1);
-    --text-2: var(--light-text-2);
-    --line-player: var(--light-line-player);
-    --bg-form_login: var(--light-line-player);
-    --arrow_btn_bg: var(--lightmain-color);
-}
 
 /* scrollbar  */
 html *::-webkit-scrollbar {
@@ -194,3 +94,5 @@ html *::-webkit-scrollbar-track {
     justify-content: center;
     align-items: center;
 }
+
+
