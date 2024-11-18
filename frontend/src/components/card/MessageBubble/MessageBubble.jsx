@@ -103,7 +103,14 @@ const MessageBubble = (data) => {
     // status dropdown
     const [isOpen, setOpen] = useState(false);
     const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 });
+    const handleCopy = () => {
+        if (data.data.img) {
+            navigator.clipboard.writeText(data.data.img)
+            return;
+        }
+        navigator.clipboard.writeText(data.data.content)
 
+    }
     return (
         <div id={`message${data.data.id}`}
 
@@ -130,6 +137,7 @@ const MessageBubble = (data) => {
                         />
                     </div>
                 )}
+
                 <div className={`messageBox ${userClass}`} style={{ maxWidth: '500px', width: 'fit-content' }}>
                     {/* {data.data.img && <img src={data.data.img} alt="Attached image" />} */}
                     <div className="messageText">
@@ -177,7 +185,7 @@ const MessageBubble = (data) => {
                 <MenuItem className="menu_item">
                     <FontAwesomeIcon icon={faPen} /> Edit
                 </MenuItem>
-                <MenuItem className="menu_item">
+                <MenuItem className="menu_item" onClick={handleCopy}>
                     <FontAwesomeIcon icon={faCopy} /> Copy
                 </MenuItem>
 
