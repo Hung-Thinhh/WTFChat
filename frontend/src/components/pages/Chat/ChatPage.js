@@ -8,13 +8,14 @@ import getChat from 'services/getChat';
 import { getReportType, sendReport } from 'controller/report';
 import { socket } from '../../../socket';
 import Modal from 'react-modal';
-import song from '../../../notify.mp3'
+import song from '../../../notify.mp3';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+
 Modal.setAppElement('#root');
+
 const ChatPage = () => {
-    const { currUser } = useContext(ChatDataContext);
-    const { ChatData } = useContext(ChatDataContext);
-    const { RoomInfo } = useContext(ChatDataContext);
-    const { reportType, setReportType } = useContext(ChatDataContext);
+    const { currUser, ChatData, RoomInfo, reportType, setReportType } = useContext(ChatDataContext);
     const [curChatData, setCurChatData] = useState([]);
     const [isSending, setIsSending] = useState(false);
     const [isReply, setIsReply] = useState('');
@@ -23,44 +24,40 @@ const ChatPage = () => {
     const [tempId, setTempId] = useState(null);
     const chatWindowRef = useRef(null);
     const [offset, setOffset] = useState(0);
-    const [audio, setAudio] = useState(new Audio(song));
-
-
+    const [audio] = useState(new Audio(song));
+    const [modalIsOpen, setIsOpen] = useState(false);
 
     const fetchNewMessages = async () => {
         try {
-            const response = await getChat({ userId: currUser.id, roomId: ChatData, offset: offset });
+            const response = await getChat({ userId: currUser.id, roomId: ChatData, offset });
             if (response && response.EC === 0) {
                 socket.emit('join_room', ChatData);
-                setRoom(ChatData); // Lấy ra roomId để gửi tin nhắn
+                setRoom(ChatData);
                 let data = response.DT;
                 data.forEach((item) => {
                     if (item.traloi !== null) {
-                        const replyMessage = data.find((msg) => msg.id == item.traloi);
+                        const replyMessage = data.find((msg) => msg.id === item.traloi);
                         if (replyMessage) {
                             item.traloi = replyMessage;
                         }
                     }
                 });
-                setCurChatData(data); // Giả sử API trả về danh sách tin nhắn trong response.DT
+                setCurChatData(data);
                 setOffset((prevOffset) => prevOffset + 50);
-            } else {
-                return <h1>Chưa có gì cả</h1>;
             }
         } catch (error) {
             console.error('Error fetching new messages:', error);
         }
     };
+
     const lazyLoad = async () => {
         try {
-            const response = await getChat({ userId: currUser.id, roomId: ChatData, offset: offset });
+            const response = await getChat({ userId: currUser.id, roomId: ChatData, offset });
             if (response && response.EC === 0) {
-                socket.emit('join_room', ChatData);
-                setRoom(ChatData); // Lấy ra roomId để gửi tin nhắn
                 let data = response.DT;
                 data.forEach((item) => {
                     if (item.traloi !== null) {
-                        const replyMessage = data.find((msg) => msg.id == item.traloi);
+                        const replyMessage = data.find((msg) => msg.id === item.traloi);
                         if (replyMessage) {
                             item.traloi = replyMessage;
                         }
@@ -77,35 +74,33 @@ const ChatPage = () => {
                     return newData;
                 });
                 setOffset((prevOffset) => prevOffset + 50);
-            } else {
-                return <h1>Chưa có gì cả</h1>;
             }
         } catch (error) {
             console.error('Error fetching new messages:', error);
         }
     };
-
 
     const fetchReportType = async () => {
         try {
             const response = await getReportType();
             if (response && response.EC === 0) {
-                setRoom(ChatData); // Lấy ra roomId để gửi tin nhắn
-                setReportType(response.DT); // Giả sử API trả về danh sách tin nhắn trong response.DT
+                setReportType(response.DT);
             }
         } catch (error) {
-            console.error('Error fetching new messages:', error);
+            console.error('Error fetching report types:', error);
         }
     };
-    const handleDataReply = async (data) => {
+
+    const handleDataReply = (data) => {
         setIsReply(data);
     };
-    const handleReport = async (data) => {
-        const newData = { ...data, userId: currUser.id };
 
+    const handleReport = (data) => {
+        const newData = { ...data, userId: currUser.id };
         setReport(newData);
         openModal();
     };
+
     const handleSendReport = async () => {
         const response = await sendReport(report);
         if (response && response.EC === 0) {
@@ -113,11 +108,12 @@ const ChatPage = () => {
             setReport('');
         }
     };
-    const handleSetData = async (message) => {
-        if (isSending) return; // Kiểm tra xem đang gửi hay không
-        setIsSending(true); // Đánh dấu là đang gửi
 
-        const temp = Date.now(); // Tạo ID tạm thời cho tin nhắn
+    const handleSetData = (message) => {
+        if (isSending) return;
+        setIsSending(true);
+
+        const temp = Date.now();
         setTempId(temp);
         const messageData = {
             id: temp,
@@ -133,27 +129,27 @@ const ChatPage = () => {
         setCurChatData((prevMessages) => [...prevMessages, messageData]);
 
         try {
-            socket.emit('send_mess', messageData); // Gửi tin nhắn qua socket trực tiếp không qua API
-            setIsSending(false); // Gửi thành công thì đánh dấu là đã gửi
+            socket.emit('send_mess', messageData);
+            setIsSending(false);
         } catch (error) {
             console.error('Error sending message:', error);
-            setIsSending(false); // Gửi thất bại thì đánh dấu là đã gửi
+            setIsSending(false);
         }
     };
-    // Lấy thông tin room chat
+
     useEffect(() => {
         if (RoomInfo) {
             fetchNewMessages();
             fetchReportType();
         }
     }, [RoomInfo]);
+
     useEffect(() => {
         const handleNewChat = (data) => {
             audio.play();
             setCurChatData((prevMessages) => {
-                // Tìm trong dữ liệu chatdata xem có id tương ứng với data.traloi không
                 if (data.traloi) {
-                    const replyMessage = prevMessages.find((msg) => msg.id == data.traloi);
+                    const replyMessage = prevMessages.find((msg) => msg.id === data.traloi);
                     if (replyMessage) {
                         data.traloi = replyMessage;
                     }
@@ -161,13 +157,11 @@ const ChatPage = () => {
 
                 const index = prevMessages.findIndex((msg) => msg.id === tempId);
                 if (index !== -1) {
-                    // Cập nhật tin nhắn nếu đã tồn tại
                     const updatedMessages = [...prevMessages];
                     updatedMessages[index] = { ...updatedMessages[index], ...data, status: 'done' };
                     setTempId(null);
                     return updatedMessages;
                 } else {
-                    // Kiểm tra xem tin nhắn đã tồn tại chưa
                     const index = prevMessages.findIndex((msg) => msg.id === data.id);
                     if (index !== -1) {
                         return prevMessages;
@@ -175,7 +169,6 @@ const ChatPage = () => {
                         return [...prevMessages, { ...data, status: 'done' }];
                     }
                 }
-
             });
         };
 
@@ -185,11 +178,11 @@ const ChatPage = () => {
             socket.off('new_chat', handleNewChat);
         };
     }, [ChatData, tempId]);
-    // Add scroll event listener
+
     useEffect(() => {
         const handleScroll = () => {
             if (chatWindowRef.current && chatWindowRef.current.scrollTop === 0) {
-                lazyLoad()
+                lazyLoad();
             }
         };
         const chatWindow = chatWindowRef.current;
@@ -201,17 +194,23 @@ const ChatPage = () => {
                 chatWindow.removeEventListener('scroll', handleScroll);
             }
         };
-    }, [chatWindowRef.current, offset]);
+    }, [offset]);
 
-
-    //vị trí tin nhắn
     useEffect(() => {
         if (chatWindowRef.current && offset <= 50) {
             chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
         }
     }, [curChatData]);
 
-    const [modalIsOpen, setIsOpen] = React.useState(false);
+    const scrollToMessage = (id) => {
+        const messageElement = document.getElementById(`message${id}`);
+        if (messageElement && chatWindowRef.current) {
+            const chatWindowHeight = chatWindowRef.current.clientHeight;
+            const messageElementOffset = messageElement.offsetTop;
+            chatWindowRef.current.scrollTop = messageElementOffset - (chatWindowHeight / 2) + (messageElement.clientHeight / 2) - 50;
+        }
+    };
+
     function openModal() {
         setIsOpen(true);
     }
@@ -230,7 +229,8 @@ const ChatPage = () => {
             }
             return prevMessages;
         });
-    })
+    });
+
     if (!currUser) return null;
 
     return (
@@ -239,17 +239,18 @@ const ChatPage = () => {
                 <div className="chatPage_container">
                     <HeaderChatPage RoomInfo={RoomInfo} />
                     <div className="ChatWindow" ref={chatWindowRef}>
-                        {curChatData ? (
+                        {curChatData.length > 0 ? (
                             curChatData.map((item, index) => (
                                 <MessageBubble
                                     key={index}
+                                    id={item.id}
                                     data={{
                                         id: item.id,
                                         img: item.image ? item.image : '',
                                         avt: item.avt,
                                         content: item.content,
                                         time: item.time,
-                                        user: item.senderid !== currUser.id ? 'other' : 'me', // nếu là me thì là tin nhấn của bản thân user
+                                        user: item.senderid !== currUser.id ? 'other' : 'me',
                                         status: item.status ? item.status : 'done',
                                         sender: item.senderName,
                                         traloi: item.traloi ? item.traloi : null,
@@ -259,7 +260,7 @@ const ChatPage = () => {
                                 />
                             ))
                         ) : (
-                            <h1>CHƯA CÓ TIN NHÁN NÀO</h1>
+                            <h1>CHƯA CÓ TIN NHẮN NÀO</h1>
                         )}
                     </div>
                     <MessageInput
@@ -267,15 +268,14 @@ const ChatPage = () => {
                         isReply={isReply}
                         onReply={handleDataReply}
                     />
-
                     <Modal
                         isOpen={modalIsOpen}
                         onRequestClose={closeModal}
                         contentLabel="Example Modal"
                         style={{
                             overlay: {
-                                backgroundColor: 'rgba(0, 0, 0, 0.5)', // Màu nền overlay
-                                zIndex: 1000, // Z-index của overlay
+                                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                zIndex: 1000,
                             },
                             content: {
                                 top: '50%',
@@ -284,22 +284,33 @@ const ChatPage = () => {
                                 bottom: 'auto',
                                 marginRight: '-50%',
                                 transform: 'translate(-50%, -50%)',
-                                backgroundColor: '#212121', // Màu nền content
-                                padding: '20px', // Padding của content
-                                border: '1px solid #ccc', // Viền của content
-                                borderRadius: '5px', // Bo góc của content
+                                backgroundColor: '#212121',
+                                padding: '20px',
+                                border: '1px solid #ccc',
+                                borderRadius: '5px',
                             },
                         }}
                     >
-                        <div>Bạn có chắc chắc muốn báo cáo tin nhắn này không ?</div>
+                        <div>Bạn có chắc chắc muốn báo cáo tin nhắn này không?</div>
                         <div className="btn_modal">
                             <span onClick={closeModal}>Huỷ</span>
                             <span onClick={handleSendReport}>Xác nhận</span>
                         </div>
                     </Modal>
+
+                    {chatWindowRef.current && chatWindowRef.current.scrollHeight - chatWindowRef.current.scrollTop !== chatWindowRef.current.clientHeight && (
+                        <button className='go-down' onClick={() => {
+                            if (chatWindowRef.current) {
+                                chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+                            }
+                        }}>
+                            <FontAwesomeIcon icon={faChevronDown} />
+                        </button>
+                    )}
+
                 </div>
             ) : (
-                <h1>CHỌN MỘT CUỘC TRÒ TRUYỆN ĐỂ BĂT ĐẦU</h1>
+                <h1>CHỌN MỘT CUỘC TRÒ TRUYỆN ĐỂ BẮT ĐẦU</h1>
             )}
         </>
     );
