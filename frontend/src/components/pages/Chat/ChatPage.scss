@@ -209,3 +209,38 @@ h1 {
         }
     }
 }
+
+.ReactModalPortal{
+    .ReactModal__Overlay {
+        background-color: rgba(0, 0, 0, 0.5)!important; 
+        z-index: 1000; 
+        .ReactModal__Content{
+
+            top: 50%;
+            left: 50%;
+            right: auto;
+            bottom: auto;
+            margin-right: -50%;
+            transform: translate(-50%, -50%);
+            background-color: #212121; 
+            padding: 20px; 
+            border: 1px solid #ccc;
+            border-radius: 5px; 
+            color: #fff;
+            .btn_modal{
+                display: flex;
+                justify-content: space-around;
+                padding-top: 20px;
+                color: #8774e1;
+                span{
+                    padding:  5px 12px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    &:hover{
+                        background-color: #292730;
+                    }
+                }
+            }
+        }
+    }
+}

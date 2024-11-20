@@ -1,6 +1,6 @@
-import React from 'react';
-import { useEffect, useState, useContext, useCallback } from 'react';
+import React,{ useEffect, useState, useContext, useCallback } from 'react';
 import './MessageBubble.scss';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faCheck,
@@ -12,21 +12,44 @@ import {
     faTrash,
     faFlag,
 } from '@fortawesome/free-solid-svg-icons';
+
 import OpengraphReactComponent from 'opengraph-react';
+
 import { ControlledMenu, MenuItem, SubMenu, MenuHeader } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 import '@szhsin/react-menu/dist/transitions/zoom.css';
+
+
 import ChatDataContext from 'lib/Context/ChatContext';
+
+
 const MessageBubble = (data) => {
-    const { reportType, setReportType } = useContext(ChatDataContext);
+    const { reportType } = useContext(ChatDataContext);
     const [status, setStatus] = useState('sending');
     const userClass = data.data.user;
+    // truyền data lên component cha
     const handlePropReply = useCallback(() => {
         data.onReply(data.data);
     }, []);
     const handleReply = () => {
         handlePropReply()
     }
+    const handlePropReport = useCallback((data_report) => {
+        data.reportting(data_report);
+        console.log('ahahahha');
+        
+    }, []);
+    const handleReport = (data_report) => {
+        const newReport = {
+            report_type: data_report,
+            mess_data: {
+                content: data.data.content,
+                img: data.data.img
+            }
+        }
+        handlePropReport(newReport)
+    }
+    // time
     const formatTime = (datestring) => {
         const date = new Date(datestring);
         const now = new Date();
@@ -76,11 +99,10 @@ const MessageBubble = (data) => {
             setStatus('failed');
         }
     }, [data.data.status]);
+
+    // status dropdown
     const [isOpen, setOpen] = useState(false);
     const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 });
-    const handleReport = (key) => {
-        console.log(key);
-    };
     const handleCopy = () => {
         if (data.data.img) {
             navigator.clipboard.writeText(data.data.img)
@@ -96,7 +118,6 @@ const MessageBubble = (data) => {
 
             onContextMenu={(e) => {
                 if (typeof document.hasFocus === 'function' && !document.hasFocus()) return;
-
                 e.preventDefault();
                 setAnchorPoint({ x: e.clientX, y: e.clientY });
                 setOpen(true);
@@ -184,7 +205,7 @@ const MessageBubble = (data) => {
                                 <MenuItem
                                     key={report.id}
                                     className="menu_item"
-                                    onClick={() => handleReport(report.id)}
+                                    onClick={() =>handleReport(report.id)}
                                 >
                                     {report.content}
                                 </MenuItem>
@@ -195,6 +216,7 @@ const MessageBubble = (data) => {
                     <FontAwesomeIcon icon={faTrash} /> Delete
                 </MenuItem>
             </ControlledMenu>
+           
         </div>
     );
 };

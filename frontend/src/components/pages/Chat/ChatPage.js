@@ -2,12 +2,14 @@ import './ChatPage.scss';
 import HeaderChatPage from './HeaderChatPage';
 import MessageBubble from '../../card/MessageBubble';
 import MessageInput from '../../card/MessageInput';
-import { useContext, useEffect, useState, useRef } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import ChatDataContext from 'lib/Context/ChatContext';
 import getChat from 'services/getChat';
-import { getReportType } from 'controller/report';
+import { getReportType, sendReport } from 'controller/report';
 import { socket } from '../../../socket';
-
+import Modal from 'react-modal';
+import song from '../../../notify.mp3'
+Modal.setAppElement('#root');
 const ChatPage = () => {
     const { currUser } = useContext(ChatDataContext);
     const { ChatData } = useContext(ChatDataContext);
@@ -17,9 +19,11 @@ const ChatPage = () => {
     const [isSending, setIsSending] = useState(false);
     const [isReply, setIsReply] = useState('');
     const [room, setRoom] = useState('');
+    const [report, setReport] = useState('');
     const [tempId, setTempId] = useState(null);
     const chatWindowRef = useRef(null);
     const [offset, setOffset] = useState(0);
+    const [audio, setAudio] = useState(new Audio(song));
 
 
 
@@ -37,6 +41,7 @@ const ChatPage = () => {
                             item.traloi = replyMessage;
                         }
                     }
+                });
                 });
                 setCurChatData(data); // Giả sử API trả về danh sách tin nhắn trong response.DT
                 setOffset((prevOffset) => prevOffset + 50);
@@ -97,6 +102,22 @@ const ChatPage = () => {
     const handleDataReply = async (data) => {
         setIsReply(data);
     };
+    const handleReport = async (data) => {
+        const newData = { ...data, userId: currUser.id };
+        console.log(newData);
+
+        setReport(newData);
+        console.log('hahaha');
+        openModal();
+    };
+    const handleSendReport = async () => {
+        const response = await sendReport(report);
+        if (response && response.EC === 0) {
+            console.log('ok');
+            closeModal();
+            setReport('');
+        }
+    };
     const handleSetData = async (message) => {
         if (isSending) return; // Kiểm tra xem đang gửi hay không
         setIsSending(true); // Đánh dấu là đang gửi
@@ -133,6 +154,7 @@ const ChatPage = () => {
     }, [RoomInfo]);
     useEffect(() => {
         const handleNewChat = (data) => {
+            audio.play();
             setCurChatData((prevMessages) => {
                 // Tìm trong dữ liệu chatdata xem có id tương ứng với data.traloi không
                 if (data.traloi) {
@@ -159,6 +181,7 @@ const ChatPage = () => {
                         return [...prevMessages, { ...data, status: 'done' }];
                     }
                 }
+                
             });
         };
 
@@ -198,6 +221,15 @@ const ChatPage = () => {
     useEffect(() => {
         console.log(isReply);
     }, [isReply]);
+
+    const [modalIsOpen, setIsOpen] = React.useState(false);
+    function openModal() {
+        setIsOpen(true);
+    }
+
+    function closeModal() {
+        setIsOpen(false);
+    }
     if (!currUser) return null;
 
     return (
@@ -212,7 +244,7 @@ const ChatPage = () => {
                                     key={index}
                                     data={{
                                         id: item.id,
-                                        img: item.image ? item.image : "",
+                                        img: item.image ? item.image : '',
                                         avt: item.avt,
                                         content: item.content,
                                         time: item.time,
@@ -222,13 +254,48 @@ const ChatPage = () => {
                                         traloi: item.traloi ? item.traloi : null,
                                     }}
                                     onReply={handleDataReply}
+                                    reportting={handleReport}
                                 />
                             ))
                         ) : (
                             <h1>CHƯA CÓ TIN NHÁN NÀO</h1>
                         )}
                     </div>
-                    <MessageInput value={handleSetData} isReply={isReply} onReply={handleDataReply} />
+                    <MessageInput
+                        value={handleSetData}
+                        isReply={isReply}
+                        onReply={handleDataReply}
+                    />
+                   
+                    <Modal
+                        isOpen={modalIsOpen}
+                        onRequestClose={closeModal}
+                        contentLabel="Example Modal"
+                        style={{
+                            overlay: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.5)', // Màu nền overlay
+                                zIndex: 1000, // Z-index của overlay
+                            },
+                            content: {
+                                top: '50%',
+                                left: '50%',
+                                right: 'auto',
+                                bottom: 'auto',
+                                marginRight: '-50%',
+                                transform: 'translate(-50%, -50%)',
+                                backgroundColor: '#212121', // Màu nền content
+                                padding: '20px', // Padding của content
+                                border: '1px solid #ccc', // Viền của content
+                                borderRadius: '5px', // Bo góc của content
+                            },
+                        }}
+                    >
+                        <div>Bạn có chắc chắc muốn báo cáo tin nhắn này không ?</div>
+                        <div className="btn_modal">
+                            <span onClick={closeModal}>Huỷ</span>
+                            <span onClick={handleSendReport}>Xác nhận</span>
+                        </div>
+                    </Modal>
                 </div>
             ) : (
                 <h1>CHỌN MỘT CUỘC TRÒ TRUYỆN ĐỂ BĂT ĐẦU</h1>
