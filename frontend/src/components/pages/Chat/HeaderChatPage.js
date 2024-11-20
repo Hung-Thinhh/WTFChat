@@ -7,10 +7,14 @@ import { timePassed } from 'lib/function/formatTime';
 import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 import '@szhsin/react-menu/dist/transitions/zoom.css';
+import { setShowMenu } from '../../layout/ChatLayout/LeftSidebar/sidebarSlide';
+import { useDispatch, useSelector } from 'react-redux';
+import { showMenuSelector } from '../../../redux/selectors';
 const HeaderChatPage = ({ RoomInfo }) => {
     const { listStatus } = useContext(ChatDataContext);
     const [status, setStatus] = useState('');
-
+    const dispatch = useDispatch();
+    const state = useSelector(showMenuSelector);
     useEffect(() => {
         const intervalId = setInterval(() => {
             // Tạo hàm cập nhật trạng thái
@@ -32,7 +36,7 @@ const HeaderChatPage = ({ RoomInfo }) => {
 
     return (
         <div className="chatpage_header">
-            <div className="header_wrap">
+            <div className="header_wrap" onClick={()=>dispatch(setShowMenu(!state))}>
                 <div className="infor">
                     <div className="chatPage_chat_avt">
                         <img

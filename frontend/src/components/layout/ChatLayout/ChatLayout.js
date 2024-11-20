@@ -3,6 +3,7 @@ import classNames from 'classnames/bind';
 
 import styles from '../HomeLayout/HomeLayout.module.scss';
 import RightSidebar from './RightSidebar';
+import LeftSiedbar from './LeftSidebar';
 
 const cx = classNames.bind(styles);
 
@@ -11,6 +12,7 @@ function HomeLayout({ children, contactInfo }) {
         <div className={cx('wrapper')}>
             <RightSidebar />
             {children}
+            <LeftSiedbar />
         </div>
     );
 }

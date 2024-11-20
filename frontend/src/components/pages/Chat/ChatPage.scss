@@ -6,21 +6,36 @@ h1 {
     margin-left: 30%;
 }
 
+
 .chatPage_container {
-    position: fixed;
-    left: 30%;
-    top: 5%;
     width: 65%;
     height: 90%;
+    margin: 30px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     background-color: #1C1B1C;
     z-index: 1;
-    border-radius: 1rem;
-    box-shadow: 9px 9px 1px 1px #3b3b3b;
-
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+    // box-shadow: 9px 9px 1px 1px #3b3b3b;
+    .go-down{
+        position: absolute;
+        bottom: 13%;
+        right: 0;
+        margin: 10px;
+        background-color: #694cff;
+        border-radius: 50%;
+        padding: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        &:hover{
+            background-color: #3b3b3b;
+        }
+    }
+    transition: all 0.3s ease-in-out;
 
     .chatpage_header {
         background-color: rgba(60, 60, 67, 0.2901960784);
@@ -31,7 +46,7 @@ h1 {
         text-align: center;
         font-size: 1.5rem;
         color: #FFF;
-
+;
         .header_wrap {
             display: flex;
             justify-content: space-between;
@@ -174,18 +189,29 @@ h1 {
         min-width: 150px;
     }
 
-    .menu_item {
+    .menu_item,
+    .szh-menu__item--submenu {
         color: #fff;
         gap: 2rem;
         border-radius: 6px;
         font-size: 15px;
         padding: 5px 10px;
 
+        &.szh-menu__item--submenu {
+            padding: 0;
+            background-color: transparent!important;
+            &:hover{
+                background-color: transparent!important;
+            }
+        }
+        
         svg {
             width: 15px;
 
         }
-
+        &:hover {
+            background-color: rgb(170 170 170 / 8%);
+        }
         &.szh-menu__item--hover {
             background-color: rgb(170 170 170 / 8%);
         }
@@ -195,6 +221,41 @@ h1 {
 
             &:hover {
                 background-color: #3a302e;
+            }
+        }
+    }
+}
+
+.ReactModalPortal{
+    .ReactModal__Overlay {
+        background-color: rgba(0, 0, 0, 0.5)!important; 
+        z-index: 1000; 
+        .ReactModal__Content{
+
+            top: 50%;
+            left: 50%;
+            right: auto;
+            bottom: auto;
+            margin-right: -50%;
+            transform: translate(-50%, -50%);
+            background-color: #212121; 
+            padding: 20px; 
+            border: 1px solid #ccc;
+            border-radius: 5px; 
+            color: #fff;
+            .btn_modal{
+                display: flex;
+                justify-content: space-around;
+                padding-top: 20px;
+                color: #8774e1;
+                span{
+                    padding:  5px 12px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    &:hover{
+                        background-color: #292730;
+                    }
+                }
             }
         }
     }

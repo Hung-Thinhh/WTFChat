@@ -13,8 +13,9 @@ const chatController = async (req, res) => {
         const content = req.body.content;
         const time = req.body.time;
         const numlike = req.body.numlike;
+        const media = req.file ? req.file : null;
         const io = getIO();
-        const data = await createChat(senderid, friendid, groupid, content, time, numlike);
+        const data = await createChat(senderid, friendid, groupid, content, time, numlike, media);
         
         io.emit('new_chat', data);
         return res.status(200).json({
@@ -34,8 +35,8 @@ const chatController = async (req, res) => {
 
 const getChatController = async (req, res) => {
     try {
-        const { userId, roomId } = req.body;
-        const data = await getChat(userId, roomId);
+        const { userId, roomId ,offset} = req.body;
+        const data = await getChat(userId, roomId,offset);
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,
@@ -52,7 +53,8 @@ const getChatController = async (req, res) => {
 }
 const deletaChatController = async (req, res) => {
     try {
-        const data = await deletaChat();
+        const {id} = req.body;
+        const data = await deletaChat(id);
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,

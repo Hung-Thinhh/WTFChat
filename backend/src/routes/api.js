@@ -6,8 +6,9 @@ import {
     deletaChatController,
 } from '../controllers/chatController';
 import { getFriendController } from '../controllers/getFriendController.js';
-
+import {getReportType,sendReport,getReportAPI} from "../controllers/AdminReportController.js";
 import { getRoomController } from '../controllers/getChatRoomCtrl.js';
+import GetInfoRoom from '../controllers/GetInfoRoom.js';
 import {
     checkAccount,
     getPublicKey,
@@ -72,20 +73,26 @@ const initApiRouter = (app) => {
     // chat
     router.post('/chat', chatController); // api gửi tin nhắn
     router.post('/getchat', getChatController); // api lấy tin nhắn
+    router.post('/getroominfo', GetInfoRoom); // api lấy tin nhắn
 
     // friend
     router.post('/friendList', getFriendController); // api lấy tin nhắn
 
-    router.get('/deletechat', deletaChatController); // api xoa tin nhắn
+    router.post('/deletechat', deletaChatController); // api xoa tin nhắn
     router.post('/getchatroom', getRoomController); // api lấy phòng chat
     router.post('/createroom', getRoomController); // api tạo phòng chat
     router.post('/finduser', findUserController); // api tìm người dùng
+
+    //report 
+    router.get('/getReportType', getReportType);
+    router.post('/sendReport', sendReport);
 
     //admin
     router.get('/getUserById/:id', getUserById);
     router.get('/banUserById/:id', banUserById);
     router.get('/unbanUserById/:id', unbanUserById);
     router.get('/getUser/:page', getListUserAPI);
+    router.get('/getReport/:page', getReportAPI);
     router.post('/edit-user', editUser);
 
     return app.use('/api', router);
