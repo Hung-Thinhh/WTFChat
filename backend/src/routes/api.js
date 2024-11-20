@@ -6,8 +6,9 @@ import {
     deletaChatController,
 } from '../controllers/chatController';
 import { getFriendController } from '../controllers/getFriendController.js';
-import {getReportType} from "../controllers/reportController.js";
+import { getReportType } from "../controllers/reportController.js";
 import { getRoomController } from '../controllers/getChatRoomCtrl.js';
+import GetInfoRoom from '../controllers/GetInfoRoom.js';
 import {
     checkAccount,
     getPublicKey,
@@ -72,6 +73,7 @@ const initApiRouter = (app) => {
     // chat
     router.post('/chat', chatController); // api gửi tin nhắn
     router.post('/getchat', getChatController); // api lấy tin nhắn
+    router.post('/getroominfo', GetInfoRoom); // api lấy tin nhắn
 
     // friend
     router.post('/friendList', getFriendController); // api lấy tin nhắn

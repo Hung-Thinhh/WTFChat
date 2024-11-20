@@ -2,7 +2,7 @@ import pool from '../connectDB.js';
 import { google } from 'googleapis';
 import fs from 'fs';
 import path from 'path';
-import e from 'cors';
+// import e from 'cors';
 
 const GOOGLE_DRIVE_CLIENT_ID = process.env.CLIENT_ID;
 const GOOGLE_DRIVE_CLIENT_SECRET = process.env.CLIENT_SECRET;
@@ -59,62 +59,63 @@ const uploadImage = async (file) => {
 };
 
 const createChat = async (senderid, roomid, content, time, media, traloi) => {
-  console.log('SERVICE | CREATE CHAT SERVICE | MEDIA | ', senderid, roomid, content, time, media,traloi);
   try {
     let fileId = null;
     if (media) {
+      console.log('SERVICE | CREATE CHAT SERVICE | MEDIA | ', media);
       fileId = 'https://drive.google.com/thumbnail?id=' + await uploadImage(media);
       const [result] = await pool.query(`
-        INSERT INTO tinnhan (content, idThanhvien, idRoom, time, image,traloi) 
+        INSERT INTO tinnhan (content, idThanhvien, idRoom, time, image, traloi) 
         SELECT 
-            ?,tv.id, ?,?,?,?
+            ?, tv.id, ?, ?, ?, ?
         FROM thanhvien tv
         JOIN nguoidung u ON tv.userid = u.id
         WHERE u.id = ? AND tv.idRoom = ?;
         `,
-        [content, roomid, time, fileId, traloi ,senderid, roomid]); // thêm một tin nhắn mới
+        [content, roomid, time, fileId, traloi ? traloi : null, senderid, roomid]); // thêm một tin nhắn mới
+      console.log('SERVICE | CREATE CHAT SERVICE | NEW MESSAGE | ', content, roomid, time, fileId, traloi, senderid, roomid);
       await pool.query(`UPDATE phongchat SET update_time = ? WHERE id = ?`, [time, roomid]);
-    
       if (result.affectedRows > 0) {
-        const [newMessage] = await pool.query(`SELECT tinnhan.*, thanhvien.userid FROM tinnhan,thanhvien WHERE tinnhan.id = ? AND tinnhan.idThanhvien=thanhvien.id`, [result.insertId]);
-    
+        const [newMessage] = await pool.query(`SELECT tinnhan.*, thanhvien.userid FROM tinnhan, thanhvien WHERE tinnhan.id = ? AND tinnhan.idThanhvien = thanhvien.id`, [result.insertId]);
         return {
           EM: 'Success',
           EC: 0,
           DT: newMessage[0]
         };
+      } else {
+        return {
+          EM: 'Failed to insert data',
+          EC: -1,
+          DT: []
+        };
       }
-      return {
-        EM: 'Failed to insert data',
-        EC: -1,
-        DT: []
-      };
     } else { // nếu không có tệp đính kèm
-      console.log('SERVICE | CREATE CHAT SERVICE | NO MEDIA | ', senderid, roomid, content, time);
+      console.log('SERVICE | CREATE CHAT SERVICE | NO MEDIA | ');
       const [result] = await pool.query(`
-        INSERT INTO tinnhan (content, idThanhvien, idRoom, time,traloi) 
+        INSERT INTO tinnhan (content, idThanhvien, idRoom, time, traloi) 
         SELECT 
-            ?,tv.id, ?,?,?
+            ?, tv.id, ?, ?, ?
         FROM thanhvien tv
         JOIN nguoidung u ON tv.userid = u.id
         WHERE u.id = ? AND tv.idRoom = ?;
         `,
-        [content, roomid, time,traloi ,senderid, roomid]); // thêm một tin nhắn mới
+        [content, roomid, time, traloi ? traloi : null, senderid, roomid]); // thêm một tin nhắn mới
+      console.log('SERVICE | CREATE CHAT SERVICE | NEW MESSAGE | ', content, roomid, time, fileId, traloi, senderid, roomid);
       await pool.query(`UPDATE phongchat SET update_time = ? WHERE id = ?`, [time, roomid]);
       if (result.affectedRows > 0) {
-        const [newMessage] = await pool.query(`SELECT tinnhan.*, thanhvien.userid FROM tinnhan,thanhvien WHERE tinnhan.id = ? AND tinnhan.idThanhvien=thanhvien.id`, [result.insertId]);
+        const [newMessage] = await pool.query(`SELECT tinnhan.*, thanhvien.userid FROM tinnhan, thanhvien WHERE tinnhan.id = ? AND tinnhan.idThanhvien = thanhvien.id`, [result.insertId]);
         return {
           EM: 'Success',
           EC: 0,
           DT: newMessage[0]
         };
+      } else {
+        return {
+          EM: 'Failed to insert data',
+          EC: -1,
+          DT: []
+        };
       }
-      return {
-        EM: 'Failed to insert data',
-        EC: -1,
-        DT: []
-      };
-
     }
   } catch (error) {
     console.log('SERVICE | CREATE CHAT SERVICE | ERROR | ', error); // dAev only
@@ -127,7 +128,7 @@ const createChat = async (senderid, roomid, content, time, media, traloi) => {
 };
 
 
-const getChat = async (userId, roomId) => {
+const getChat = async (userId, roomId, offset) => {
   try {
     // Lấy tin nhắn giữa hai người dùng
     const [rows] = await pool.query(
@@ -143,13 +144,14 @@ const getChat = async (userId, roomId) => {
       JOIN thanhvien tv ON t.idThanhvien = tv.id
       JOIN nguoidung u ON tv.userid = u.id
       WHERE t.idRoom = ?
-      ORDER BY t.time ASC`,
-      [roomId]
+      ORDER BY t.time DESC
+      LIMIT 50 OFFSET ?`,
+      [roomId, offset]
     );
     return {
       EM: 'Success',
       EC: 0,
-      DT: rows,
+      DT: rows.reverse(),
     };
 
   } catch (error) {
@@ -216,9 +218,45 @@ const deletaChat = async () => {
 
 
 
+const getInfo = async (roomId) => {
+  try {
+    const [rows] = await pool.query(
+      `SELECT
+      t.id,
+      t.time,
+      t.image,
+      CONCAT(u.firstname, ' ', u.lastname) AS senderName,
+      u.id AS senderid,
+      u.avatar AS avt
+      FROM tinnhan t
+      JOIN thanhvien tv ON t.idThanhvien = tv.id
+      JOIN nguoidung u ON tv.userid = u.id
+      WHERE t.idRoom = ?
+        AND t.image IS NOT NULL
+      ORDER BY t.time
+      `,
+      [roomId],
+    );
+    return {
+      EM: 'Success',
+      EC: 1,
+      DT: rows,
+    };
+  } catch (error) {
+    console.log('SERVICE | GET CHAT ROOM SERVICE | ERROR | ', error);
+    return {
+      EM: 'Database query error',
+      EC: -1,
+      DT: [],
+    };
+  }
+}
+
+
 module.exports = {
   createChat,
   getChat,
   deletaChat,
-  createRoom
+  createRoom,
+  getInfo
 };

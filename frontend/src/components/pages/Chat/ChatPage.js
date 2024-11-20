@@ -19,10 +19,13 @@ const ChatPage = () => {
     const [room, setRoom] = useState('');
     const [tempId, setTempId] = useState(null);
     const chatWindowRef = useRef(null);
+    const [offset, setOffset] = useState(0);
+
+
 
     const fetchNewMessages = async () => {
         try {
-            const response = await getChat({ userId: currUser.id, roomId: ChatData });
+            const response = await getChat({ userId: currUser.id, roomId: ChatData, offset: offset });
             if (response && response.EC === 0) {
                 socket.emit('join_room', ChatData);
                 setRoom(ChatData); // Lấy ra roomId để gửi tin nhắn
@@ -34,8 +37,9 @@ const ChatPage = () => {
                             item.traloi = replyMessage;
                         }
                     }
-                })
+                });
                 setCurChatData(data); // Giả sử API trả về danh sách tin nhắn trong response.DT
+                setOffset((prevOffset) => prevOffset + 50);
             } else {
                 return <h1>Chưa có gì cả</h1>;
             }
@@ -43,6 +47,42 @@ const ChatPage = () => {
             console.error('Error fetching new messages:', error);
         }
     };
+    const lazyLoad = async () => {
+        console.log(offset + 50);
+        try {
+            const response = await getChat({ userId: currUser.id, roomId: ChatData, offset: offset });
+            if (response && response.EC === 0) {
+                socket.emit('join_room', ChatData);
+                setRoom(ChatData); // Lấy ra roomId để gửi tin nhắn
+                let data = response.DT;
+                data.forEach((item) => {
+                    if (item.traloi !== null) {
+                        const replyMessage = data.find((msg) => msg.id == item.traloi);
+                        if (replyMessage) {
+                            item.traloi = replyMessage;
+                        }
+                    }
+                });
+                setCurChatData((previous) => {
+                    const newData = [...previous];
+                    data.forEach((item) => {
+                        if (!previous.some((msg) => msg.id === item.id)) {
+                            newData.push(item);
+                        }
+                    });
+                    newData.sort((a, b) => new Date(a.time) - new Date(b.time));
+                    return newData;
+                });
+                setOffset((prevOffset) => prevOffset + 50);
+            } else {
+                return <h1>Chưa có gì cả</h1>;
+            }
+        } catch (error) {
+            console.error('Error fetching new messages:', error);
+        }
+    };
+
+
     const fetchReportType = async () => {
         try {
             const response = await getReportType();
@@ -128,13 +168,33 @@ const ChatPage = () => {
             socket.off('new_chat', handleNewChat);
         };
     }, [ChatData, tempId]);
+    // Add scroll event listener
+    useEffect(() => {
+        const handleScroll = () => {
+            if (chatWindowRef.current && chatWindowRef.current.scrollTop === 0) {
+                lazyLoad()
+            }
+        };
+        const chatWindow = chatWindowRef.current;
+        if (chatWindow) {
+            chatWindow.addEventListener('scroll', handleScroll);
+        }
+        return () => {
+            if (chatWindow) {
+                chatWindow.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, [chatWindowRef.current, offset]);
+
 
     //vị trí tin nhắn
     useEffect(() => {
-        if (chatWindowRef.current) {
+        if (chatWindowRef.current && offset <= 50) {
             chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
         }
     }, [curChatData]);
+
+
     useEffect(() => {
         console.log(isReply);
     }, [isReply]);

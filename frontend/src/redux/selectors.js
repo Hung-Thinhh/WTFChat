@@ -40,3 +40,14 @@ export const forgetPassSelector = createSelector(
         searchUser,
     }),
 );
+
+
+// sideBar
+export const showMenuSelector = (state) => state.sidebar.showMenu;
+
+export const showMenu1Selector = createSelector(
+    showMenuSelector,
+    (showMenu) => ({
+        showMenu
+    }),
+);

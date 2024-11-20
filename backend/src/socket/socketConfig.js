@@ -2,7 +2,7 @@ import { Server } from 'socket.io';
 let io;
 
 import { createChat } from '../services/chatService.js';
-import { handleCheckAccount } from '../services/AuthenService.js';
+// import { handleCheckAccount } from '../services/AuthenService.js';
 import redisClient from '../connectRedis.js';
 import path from 'path';
 import fs from 'fs';
@@ -97,7 +97,6 @@ const setupWebSocket = (server) => {
                   size: buffer.length
                 };
               }
-              console.log('SOCKET | SEND_MESS | DATA | ', fileInfo);
               const chat = await createChat(data.senderid, data.roomid, data.content, data.time, fileInfo,data.traloi);
               io.to(data.roomid).emit('new_chat', chat.DT); // Phát sự kiện tới phòng cụ thể
             } catch (error) {

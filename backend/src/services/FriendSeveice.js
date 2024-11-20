@@ -26,7 +26,6 @@ const getFriendList = async (userId, friendId) => {
             };
         }
 
-        console.log('SERVICE | GET FRIEND SERVICE | FRIEND ROWS | ', friendRows);
         return {
             EM: 'Friends retrieved successfully',
             EC: 1,
