@@ -1,6 +1,6 @@
 import './ChatRoomComponent.scss';
 import ChatDataContext from 'lib/Context/ChatContext';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import classNames from 'classnames';
 
 export default function ChatRoom({ id, avt, name, time, mess, sender, friendId }) {

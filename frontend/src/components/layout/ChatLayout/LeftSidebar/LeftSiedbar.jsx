@@ -26,10 +26,6 @@ const LeftSiedbar = () => {
           fetchInfo();
         }
     }, [ChatData])
-    useEffect(() => {
-        console.log(roomInfo);
-        console.log('roomInfo', RoomInfo);
-    }, [roomInfo])
     
     return (
         <div className={`leftSidebar ${state ? 'hide' : 'show'}`}>

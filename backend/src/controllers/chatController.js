@@ -53,7 +53,8 @@ const getChatController = async (req, res) => {
 }
 const deletaChatController = async (req, res) => {
     try {
-        const data = await deletaChat();
+        const {id} = req.body;
+        const data = await deletaChat(id);
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,

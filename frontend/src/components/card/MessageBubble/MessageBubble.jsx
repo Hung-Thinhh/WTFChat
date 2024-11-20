@@ -1,6 +1,6 @@
-import React,{ useEffect, useState, useContext, useCallback } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 import './MessageBubble.scss';
-
+import { socket } from 'socket';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faCheck,
@@ -37,7 +37,7 @@ const MessageBubble = (data) => {
     const handlePropReport = useCallback((data_report) => {
         data.reportting(data_report);
         console.log('ahahahha');
-        
+
     }, []);
     const handleReport = (data_report) => {
         const newReport = {
@@ -111,6 +111,10 @@ const MessageBubble = (data) => {
         navigator.clipboard.writeText(data.data.content)
 
     }
+    const handleDelete = () => {
+        socket.emit('delete_mess', {id: data.data.id , roomid : 1});
+    }
+
     return (
         <div id={`message${data.data.id}`}
 
@@ -205,18 +209,18 @@ const MessageBubble = (data) => {
                                 <MenuItem
                                     key={report.id}
                                     className="menu_item"
-                                    onClick={() =>handleReport(report.id)}
+                                    onClick={() => handleReport(report.id)}
                                 >
                                     {report.content}
                                 </MenuItem>
                             );
                         })}
                 </SubMenu>
-                <MenuItem className="menu_item delete-chat">
+                <MenuItem className="menu_item delete-chat" onClick={handleDelete}>
                     <FontAwesomeIcon icon={faTrash} /> Delete
                 </MenuItem>
             </ControlledMenu>
-           
+
         </div>
     );
 };

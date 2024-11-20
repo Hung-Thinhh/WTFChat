@@ -4,11 +4,10 @@ import className from "classnames/bind";
 import ChatDataContext from 'lib/Context/ChatContext';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useRef, useContext } from "react";
+import {useContext } from "react";
 const cx = className.bind(styles);
 
 export default function FriendItem({ id, avt, name, time, mess }) {
-    console.log("FriendItem",id, avt, name, time, mess);
     const { ChatData, setChatData } = useContext(ChatDataContext);
     const { setRoomInfo } = useContext(ChatDataContext);
     const handleClick = () => {

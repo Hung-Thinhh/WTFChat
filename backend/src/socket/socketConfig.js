@@ -2,6 +2,7 @@ import { Server } from 'socket.io';
 let io;
 
 import { createChat } from '../services/chatService.js';
+import { deletaChat } from '../services/chatService.js';
 // import { handleCheckAccount } from '../services/AuthenService.js';
 import redisClient from '../connectRedis.js';
 import path from 'path';
@@ -29,7 +30,7 @@ const setupWebSocket = (server) => {
                     //lấy danh sách status_users
                     const resdis_online_users = await redisClient.get('online_users');
                     const online_users = JSON.parse(resdis_online_users);
-                    
+
                     // check if user not in list
                     if (!online_users.some((userObj) => userObj.userId === user)) {
                         //nếu chưa thì thêm vào
@@ -52,7 +53,7 @@ const setupWebSocket = (server) => {
                             // console.log(online_users);
                         }
                     }
-                    io.emit('user_status_update',JSON.parse(await redisClient.get('online_users')));
+                    io.emit('user_status_update', JSON.parse(await redisClient.get('online_users')));
                 } else {
                     console.log('SOCKET | ERROR | Xác thực thất bại cho websocket không có id');
                     socket.disconnect();
@@ -75,34 +76,45 @@ const setupWebSocket = (server) => {
         // Xử lý sự kiện gửi tin nhắn
         socket.on('send_mess', async (data) => {
             try {
-      
-              let fileInfo = null;
-              if (data.image) {
-                const buffer = Buffer.from(data.image, 'base64');
-                const fileName = `${Date.now()}.png`; // Hoặc sử dụng phần mở rộng phù hợp với loại tệp
-                const filePath = path.join(__dirname, '/../../uploads', fileName);
-      
-                // Lưu trữ tệp hình ảnh
-                await fs.promises.writeFile(filePath, buffer);
-      
-                // Tạo đối tượng chứa thông tin chi tiết về tệp
-                fileInfo = {
-                  fieldname: 'image',
-                  originalname: fileName,
-                  encoding: '7bit',
-                  mimetype: 'image/png',
-                  destination: 'uploads/',
-                  filename: fileName,
-                  path: filePath,
-                  size: buffer.length
-                };
-              }
-              const chat = await createChat(data.senderid, data.roomid, data.content, data.time, fileInfo,data.traloi);
-              io.to(data.roomid).emit('new_chat', chat.DT); // Phát sự kiện tới phòng cụ thể
+
+                let fileInfo = null;
+                if (data.image) {
+                    const buffer = Buffer.from(data.image, 'base64');
+                    const fileName = `${Date.now()}.png`; // Hoặc sử dụng phần mở rộng phù hợp với loại tệp
+                    const filePath = path.join(__dirname, '/../../uploads', fileName);
+
+                    // Lưu trữ tệp hình ảnh
+                    await fs.promises.writeFile(filePath, buffer);
+
+                    // Tạo đối tượng chứa thông tin chi tiết về tệp
+                    fileInfo = {
+                        fieldname: 'image',
+                        originalname: fileName,
+                        encoding: '7bit',
+                        mimetype: 'image/png',
+                        destination: 'uploads/',
+                        filename: fileName,
+                        path: filePath,
+                        size: buffer.length
+                    };
+                }
+                const chat = await createChat(data.senderid, data.roomid, data.content, data.time, fileInfo, data.traloi);
+                io.to(data.roomid).emit('new_chat', chat.DT); // Phát sự kiện tới phòng cụ thể
             } catch (error) {
-              console.error('Error creating chat:', error);
+                console.error('Error creating chat:', error);
             }
-          });
+        });
+
+
+        socket.on('delete_mess', async (data) => {
+            try {
+                const delete_mess = await deletaChat(data.id);
+                delete_mess.id = data.id;
+                io.to(data.roomid).emit('delete_res', {delete_mess}); // Phát sự kiện tới phòng cụ thể
+            } catch (error) {
+                console.error('Error creating chat:', error);
+            }
+        });
 
         socket.on('disconnect', async () => {
             const resdis_online_users = await redisClient.get('online_users');
@@ -113,7 +125,7 @@ const setupWebSocket = (server) => {
                 await redisClient.set('online_users', JSON.stringify(online_users));
                 // console.log(online_users);
                 // console.log('không có');
-                
+
             } else {
                 const userIndex = online_users.findIndex((userObj) => userObj.userId === user);
                 if (userIndex !== -1) {
@@ -123,13 +135,13 @@ const setupWebSocket = (server) => {
                         status: 'offline',
                     };
                     await redisClient.set('online_users', JSON.stringify(online_users));
-                // console.log(online_users);
-                // console.log('có');
+                    // console.log(online_users);
+                    // console.log('có');
 
                 }
             }
             // gửi lên cliend
-            io.emit('user_status_update',JSON.parse(await redisClient.get('online_users')));
+            io.emit('user_status_update', JSON.parse(await redisClient.get('online_users')));
 
             // console.log('Người dùng đã ngắt kết nối:', socket.id);
         });

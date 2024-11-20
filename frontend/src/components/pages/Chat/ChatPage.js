@@ -42,7 +42,6 @@ const ChatPage = () => {
                         }
                     }
                 });
-                });
                 setCurChatData(data); // Giả sử API trả về danh sách tin nhắn trong response.DT
                 setOffset((prevOffset) => prevOffset + 50);
             } else {
@@ -53,7 +52,6 @@ const ChatPage = () => {
         }
     };
     const lazyLoad = async () => {
-        console.log(offset + 50);
         try {
             const response = await getChat({ userId: currUser.id, roomId: ChatData, offset: offset });
             if (response && response.EC === 0) {
@@ -104,16 +102,13 @@ const ChatPage = () => {
     };
     const handleReport = async (data) => {
         const newData = { ...data, userId: currUser.id };
-        console.log(newData);
 
         setReport(newData);
-        console.log('hahaha');
         openModal();
     };
     const handleSendReport = async () => {
         const response = await sendReport(report);
         if (response && response.EC === 0) {
-            console.log('ok');
             closeModal();
             setReport('');
         }
@@ -165,7 +160,6 @@ const ChatPage = () => {
                 }
 
                 const index = prevMessages.findIndex((msg) => msg.id === tempId);
-                console.log(JSON.stringify(data));
                 if (index !== -1) {
                     // Cập nhật tin nhắn nếu đã tồn tại
                     const updatedMessages = [...prevMessages];
@@ -181,7 +175,7 @@ const ChatPage = () => {
                         return [...prevMessages, { ...data, status: 'done' }];
                     }
                 }
-                
+
             });
         };
 
@@ -217,11 +211,6 @@ const ChatPage = () => {
         }
     }, [curChatData]);
 
-
-    useEffect(() => {
-        console.log(isReply);
-    }, [isReply]);
-
     const [modalIsOpen, setIsOpen] = React.useState(false);
     function openModal() {
         setIsOpen(true);
@@ -230,6 +219,18 @@ const ChatPage = () => {
     function closeModal() {
         setIsOpen(false);
     }
+
+    socket.on('delete_res', (data) => {
+        setCurChatData((prevMessages) => {
+            const index = prevMessages.findIndex((msg) => msg.id === data.delete_mess.id);
+            if (index !== -1) {
+                const updatedMessages = [...prevMessages];
+                updatedMessages.splice(index, 1);
+                return updatedMessages;
+            }
+            return prevMessages;
+        });
+    })
     if (!currUser) return null;
 
     return (
@@ -266,7 +267,7 @@ const ChatPage = () => {
                         isReply={isReply}
                         onReply={handleDataReply}
                     />
-                   
+
                     <Modal
                         isOpen={modalIsOpen}
                         onRequestClose={closeModal}

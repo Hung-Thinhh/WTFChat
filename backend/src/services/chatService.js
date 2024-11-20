@@ -76,7 +76,7 @@ const createChat = async (senderid, roomid, content, time, media, traloi) => {
       console.log('SERVICE | CREATE CHAT SERVICE | NEW MESSAGE | ', content, roomid, time, fileId, traloi, senderid, roomid);
       await pool.query(`UPDATE phongchat SET update_time = ? WHERE id = ?`, [time, roomid]);
       if (result.affectedRows > 0) {
-        const [newMessage] = await pool.query(`SELECT tinnhan.*, thanhvien.userid FROM tinnhan, thanhvien WHERE tinnhan.id = ? AND tinnhan.idThanhvien = thanhvien.id`, [result.insertId]);
+        const [newMessage] = await pool.query(`SELECT tinnhan.*, thanhvien.userid FROM tinnhan, thanhvien WHERE tinnhan.id = ? AND tinnhan.idThanhvien = thanhvien.id AND tinnhan.status = 0`, [result.insertId]);
         return {
           EM: 'Success',
           EC: 0,
@@ -103,7 +103,7 @@ const createChat = async (senderid, roomid, content, time, media, traloi) => {
       console.log('SERVICE | CREATE CHAT SERVICE | NEW MESSAGE | ', content, roomid, time, fileId, traloi, senderid, roomid);
       await pool.query(`UPDATE phongchat SET update_time = ? WHERE id = ?`, [time, roomid]);
       if (result.affectedRows > 0) {
-        const [newMessage] = await pool.query(`SELECT tinnhan.*, thanhvien.userid FROM tinnhan, thanhvien WHERE tinnhan.id = ? AND tinnhan.idThanhvien = thanhvien.id`, [result.insertId]);
+        const [newMessage] = await pool.query(`SELECT tinnhan.*, thanhvien.userid FROM tinnhan, thanhvien WHERE tinnhan.id = ? AND tinnhan.idThanhvien = thanhvien.id AND tinnhan.status = 0`, [result.insertId]);
         return {
           EM: 'Success',
           EC: 0,
@@ -143,7 +143,7 @@ const getChat = async (userId, roomId, offset) => {
       FROM tinnhan t
       JOIN thanhvien tv ON t.idThanhvien = tv.id
       JOIN nguoidung u ON tv.userid = u.id
-      WHERE t.idRoom = ?
+      WHERE t.idRoom = ? AND t.status = 0
       ORDER BY t.time DESC
       LIMIT 50 OFFSET ?`,
       [roomId, offset]
@@ -198,13 +198,13 @@ const createRoom = async (userOneId, userTwoId) => {
   }
 };
 
-const deletaChat = async () => {
+const deletaChat = async (id) => {
   try {
-    const [rowss] = await pool.query(`DELETE FROM tinnhan`);
+    const [result] = await pool.query(`UPDATE tinnhan SET status = 1 WHERE id = ?`, [ id]);
     return {
       EM: 'Success',
       EC: 0,
-      DT: rowss
+      DT: result
     };
   } catch (error) {
     console.log('SERVICE | DELETE CHAT SERVICE | ERROR | ', error);
