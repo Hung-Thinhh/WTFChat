@@ -2,12 +2,18 @@ import styles from "./ChatRoomComponent.module.scss";
 import ChatDataContext from 'lib/Context/ChatContext';
 import { useContext, useEffect } from 'react';
 import classNames from 'classnames/bind';
-import DropDownMenu from "./DropDownMenu";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEllipsisVertical, faBellSlash, faLock, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu';
 const cx = classNames.bind(styles);
-export default function ChatRoom({ id, avt, name, time, mess, sender }) {
+export default function ChatRoom({ id, avt, name, time, mess, sender, friendId, type = 'chatroom' }) {
     const { ChatData, setChatData } = useContext(ChatDataContext);
     const { setRoomInfo } = useContext(ChatDataContext);
-    const handleClick = () => {
+    const handleClick = (e) => {
+        if (e.target.classList.contains('btn_more')) return
+        if (type === 'new') {
+            return;
+        }
         setChatData(id);
         setRoomInfo({ id, avt, name, friendId });
     };
@@ -37,7 +43,11 @@ export default function ChatRoom({ id, avt, name, time, mess, sender }) {
                 </div>
 
             </div>
-            <DropDownMenu className={cx('CR_menu')}></DropDownMenu>
+            <Menu menuButton={<MenuButton className={cx("btn_more")}><FontAwesomeIcon icon={faEllipsisVertical} /></MenuButton>} transition className={cx("my-menu")}>
+                <MenuItem className={cx("menu_item")}><FontAwesomeIcon icon={faBellSlash} />Mute</MenuItem>
+                <MenuItem className={cx("menu_item")}><FontAwesomeIcon icon={faLock} /> Block user</MenuItem>
+                <MenuItem className={cx("menu_item", "deleteUser")}><FontAwesomeIcon icon={faTrash} /> Delete friend</MenuItem>
+            </Menu>
         </div>
     );
 }

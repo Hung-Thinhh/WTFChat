@@ -11,7 +11,7 @@
     z-index: 1;
     border-radius: 1rem;
     box-shadow: 9px 9px 1px 1px #3b3b3b;
-
+    position: relative;
     .page {
         border-radius: 1rem;
     }
@@ -34,15 +34,20 @@
             color: aliceblue;
             font-size: 1.5rem;
         }
-        .search {
-            width: 90%;
-            padding: 1rem;
-            border-radius: 1rem;
-            margin: 1rem;
-            background: #3b3b3b;
-            color: aliceblue;
-            font-size: 1.5rem;
-            animation: slideInFromLeft 0.2s ease-in-out;
+        // .search {
+        //     width: 90%;
+        //     padding: 1rem;
+        //     border-radius: 1rem;
+        //     margin: 1rem;
+        //     background: #3b3b3b;
+        //     color: aliceblue;
+        //     font-size: 1.5rem;
+        //     animation: slideInFromLeft 0.2s ease-in-out;
+        // }
+        .search{
+            position: absolute;
+            bottom : 0;
+            left: 0;
         }
     }
 
@@ -379,3 +384,5 @@
         opacity: 1;
     }
 }
+
+

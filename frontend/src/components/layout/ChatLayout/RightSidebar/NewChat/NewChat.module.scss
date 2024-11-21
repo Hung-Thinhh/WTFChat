@@ -4,11 +4,13 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 10;
+    z-index: 1000000;
     background-color: #05050580;
     backdrop-filter: blur(1rem);
     height: 100%;
     width: 100%;
+    display: none;
+
     .container {
         position: absolute;
         top: 50%;
@@ -16,8 +18,29 @@
         border-radius: 1rem;
         transform: translate(-50%, -50%);
         background-color: #2a2a2a;
-        width: 80rem;
+        width: 40rem;
         height: 50rem;
+        display: flex;
+        flex-direction: column;
+        padding: 2rem 1rem 1rem 1rem;
+        .content{
+            padding: 1rem;
+            .search{
+                background-color: #3b3b3b;
+                border-radius: 1rem;
+                padding: 1rem;
+            }
+            width: 100%;
+            height: 100%;
+            .membercontainer{
+                height: 100%;
+            }
+        }
+        .btnGr {
+            display: flex;
+            justify-content: flex-end;
+            padding: 1rem;
+        }
     }
 }
 
@@ -28,6 +51,8 @@
 }
 
 .unActive {
+    display: none;
+
     opacity: 1;
     animation: fadeOut 0.5s forwards;
     animation-fill-mode: forwards;
@@ -36,7 +61,6 @@
 @keyframes fadeOut {
     to {
         opacity: 0;
-        display: none;
     }
 }
 

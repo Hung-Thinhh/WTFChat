@@ -16,7 +16,7 @@ h1 {
     justify-content: space-between;
     align-items: center;
     background-color: #1C1B1C;
-    z-index: 1;
+    z-index: 0;
     border-radius: 15px;
     overflow: hidden;
     position: relative;
@@ -46,7 +46,6 @@ h1 {
         text-align: center;
         font-size: 1.5rem;
         color: #FFF;
-;
         .header_wrap {
             display: flex;
             justify-content: space-between;
@@ -137,7 +136,13 @@ h1 {
         height: 100%;
         overflow-y: scroll;
         overflow-x: hidden;
-
+        h1{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin: 0 !important;
+        }
         &.animate-new-message {
             animation: fadeIn 0.5s ease;
         }

@@ -8,12 +8,11 @@ import Footer from './Footer';
 import ChatRoom from './ChatRoomComponent';
 import ChatDataContext from 'lib/Context/ChatContext';
 import getChatRoom from 'services/getchatroom';
-import FriendItem from './FriendItem';
 import Search from './Footer/Search';
 import getFriendList from 'services/getFriendList';
 import findUser from 'services/findUserService';
 import useDebounce from 'hooks/useDebounce';
-
+import NewChat from './NewChat';
 const cx = classNames.bind(styles);
 
 const RightSidebar = () => {
@@ -70,6 +69,24 @@ const RightSidebar = () => {
         };
         fetchData();
     }, [useDebounce(searchData, 500)]);
+
+    useEffect(() => {
+        const handleEnterKey = (event) => {
+            if (event.key === 'Enter') {
+                const fetchData = async () => {
+                    if (!searchData) return;
+                    const res = await findUser({ text: searchData });
+                    setFindData(res.DT);
+                };
+                fetchData();
+            }
+        };
+
+        window.addEventListener('keydown', handleEnterKey);
+        return () => {
+            window.removeEventListener('keydown', handleEnterKey);
+        };
+    }, [searchData]);
     // Load chat room and friend list when component is mounted
     useEffect(() => {
         fetchChatRoom();
@@ -105,9 +122,9 @@ const RightSidebar = () => {
                                             id={room.id}
                                             sender={
                                                 JSON.parse(room.last_message) ?
-                                                JSON.parse(room.last_message).idUser !== currUser.id
-                                                    ? JSON.parse(room.last_message).sender
-                                                    : 'You':null
+                                                    JSON.parse(room.last_message).idUser !== currUser.id
+                                                        ? JSON.parse(room.last_message).sender
+                                                        : 'You' : null
                                             }
                                             name={room.groupName}
                                             avt={room.avt}
@@ -131,6 +148,8 @@ const RightSidebar = () => {
                                             name={`${friend.firstname} ${friend.lastname}`}
                                             avt={friend.avatar}
                                             time={timePassed(friend.last_message_time)}
+                                            friendId={friend.id}
+
                                         />
                                     ))
                                 ) : (
@@ -143,25 +162,30 @@ const RightSidebar = () => {
                                             {findData &&
                                                 findData.map((item) =>
                                                     item.loai === 'nguoidung' ? (
-                                                        <FriendItem
+                                                        <ChatRoom
                                                             key={item.id}
                                                             id={item.id}
                                                             name={
                                                                 item.firstname + ' ' + item.lastname
                                                             }
                                                             avt={item.avatar}
+                                                            friendId={item.id}
+
                                                         />
                                                     ) : (
-                                                        <FriendItem
+                                                        <ChatRoom
                                                             key={item.id}
                                                             id={item.id}
                                                             name={item.groupname}
                                                             avt={item.avatar}
+                                                            friendId={item.id}
+
                                                         />
                                                     ),
                                                 )}
                                         </div>
                                         <Search
+                                            className={cx('search')}
                                             value={searchData}
                                             onChange={handleSearchChange}
                                         ></Search>
