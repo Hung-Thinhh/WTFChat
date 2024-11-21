@@ -11,8 +11,9 @@ function HomeLayout({ children, contactInfo }) {
     return (
         <div className={cx('wrapper')}>
             <RightSidebar />
-            {children}
-            <LeftSiedbar />
+            <div className={cx('content')}>
+                {children}
+                <LeftSiedbar /></div>
         </div>
     );
 }

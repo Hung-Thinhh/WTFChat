@@ -43,11 +43,13 @@ export default function ChatRoom({ id, avt, name, time, mess, sender, friendId, 
                 </div>
 
             </div>
-            <Menu menuButton={<MenuButton className={cx("btn_more")}><FontAwesomeIcon icon={faEllipsisVertical} /></MenuButton>} transition className={cx("my-menu")}>
-                <MenuItem className={cx("menu_item")}><FontAwesomeIcon icon={faBellSlash} />Mute</MenuItem>
-                <MenuItem className={cx("menu_item")}><FontAwesomeIcon icon={faLock} /> Block user</MenuItem>
-                <MenuItem className={cx("menu_item", "deleteUser")}><FontAwesomeIcon icon={faTrash} /> Delete friend</MenuItem>
-            </Menu>
-        </div>
+            {type !== "new" ?
+                (<Menu menuButton={<MenuButton className={cx("btn_more")}><FontAwesomeIcon icon={faEllipsisVertical} /></MenuButton>} transition className={cx("my-menu")}>
+                    <MenuItem className={cx("menu_item")}><FontAwesomeIcon icon={faBellSlash} />Mute</MenuItem>
+                    <MenuItem className={cx("menu_item")}><FontAwesomeIcon icon={faLock} />Block user</MenuItem>
+                    <MenuItem className={cx("menu_item", "deleteUser")}><FontAwesomeIcon icon={faTrash} />Delete friend/Add friend</MenuItem>
+                </Menu>) : (<input type="checkbox" className={cx("checkbox")}></input>)
+            }
+        </div >
     );
 }

@@ -6,22 +6,21 @@ h1 {
     margin-left: 30%;
 }
 
-
 .chatPage_container {
-    width: 65%;
+    width: 100%;
     height: 90%;
     margin: 30px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    background-color: #1C1B1C;
+    background-color: #1c1b1c;
     z-index: 0;
     border-radius: 15px;
     overflow: hidden;
     position: relative;
     // box-shadow: 9px 9px 1px 1px #3b3b3b;
-    .go-down{
+    .go-down {
         position: absolute;
         bottom: 13%;
         right: 0;
@@ -31,7 +30,7 @@ h1 {
         padding: 10px;
         cursor: pointer;
         transition: all 0.3s ease-in-out;
-        &:hover{
+        &:hover {
             background-color: #3b3b3b;
         }
     }
@@ -41,11 +40,11 @@ h1 {
         background-color: rgba(60, 60, 67, 0.2901960784);
         width: 100%;
         padding: 0.7rem;
-        height: 8%;
+        height: 10%;
         border-radius: 1rem 1rem 0 0;
         text-align: center;
         font-size: 1.5rem;
-        color: #FFF;
+        color: #fff;
         .header_wrap {
             display: flex;
             justify-content: space-between;
@@ -71,7 +70,7 @@ h1 {
                 .chatPage_chat_name {
                     height: 100%;
                     font-size: 1.5rem;
-                    color: #FFFFFF;
+                    color: #ffffff;
                     text-align: justify;
 
                     h3 {
@@ -99,6 +98,7 @@ h1 {
                 .btn_more {
                     width: 40px;
                     height: 40px;
+                    min-width: 0;
                     border-radius: 50%;
                     cursor: pointer;
                     background-color: transparent;
@@ -115,28 +115,24 @@ h1 {
                     svg {
                         font-size: 15px;
                     }
-
-
                 }
 
                 .my-menu {
                     ul {
                         top: 10px !important;
-                        left: -100px !important;
                     }
                 }
-
             }
         }
     }
 
     .ChatWindow {
         width: 100%;
-        background-image: linear-gradient(to right bottom, #694cff, #5343cf, #41399f, #322e71, #252246, #2a2548, #2e2749, #322a4b, #523b78, #7a4aa6, #aa57d2, #e05ffb);
+      
         height: 100%;
         overflow-y: scroll;
         overflow-x: hidden;
-        h1{
+        h1 {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -203,16 +199,16 @@ h1 {
         padding: 5px 10px;
 
         &.szh-menu__item--submenu {
+            top: 20rem;
             padding: 0;
-            background-color: transparent!important;
-            &:hover{
-                background-color: transparent!important;
+            background-color: transparent !important;
+            &:hover {
+                background-color: transparent !important;
             }
         }
-        
+
         svg {
             width: 15px;
-
         }
         &:hover {
             background-color: rgb(170 170 170 / 8%);
@@ -231,37 +227,223 @@ h1 {
     }
 }
 
-.ReactModalPortal{
+.ReactModalPortal {
     .ReactModal__Overlay {
-        background-color: rgba(0, 0, 0, 0.5)!important; 
-        z-index: 1000; 
-        .ReactModal__Content{
-
+        background-color: rgba(0, 0, 0, 0.5) !important;
+        z-index: 1000;
+        .ReactModal__Content {
             top: 50%;
             left: 50%;
             right: auto;
             bottom: auto;
             margin-right: -50%;
             transform: translate(-50%, -50%);
-            background-color: #212121; 
-            padding: 20px; 
+            background-color: #212121;
+            padding: 20px;
             border: 1px solid #ccc;
-            border-radius: 5px; 
+            border-radius: 5px;
             color: #fff;
-            .btn_modal{
+            .btn_modal {
                 display: flex;
                 justify-content: space-around;
                 padding-top: 20px;
                 color: #8774e1;
-                span{
-                    padding:  5px 12px;
+                span {
+                    padding: 5px 12px;
                     border-radius: 5px;
                     cursor: pointer;
-                    &:hover{
+                    &:hover {
                         background-color: #292730;
                     }
                 }
             }
         }
     }
+}
+@keyframes hero-gradient-animation {
+    0% {
+        --s-start-0: 9%;
+        --s-end-0: 55%;
+        --x-0: 85%;
+        --c-0: hsla(267, 52%, 83%, 1);
+        --y-0: 80%;
+        --c-1: hsla(336, 100%, 82%, 1);
+        --x-1: 60%;
+        --s-start-1: 5%;
+        --s-end-1: 72%;
+        --y-1: 24%;
+        --y-2: 82%;
+        --c-2: hsla(54, 100%, 65%, 0.49);
+        --s-start-2: 5%;
+        --s-end-2: 52%;
+        --x-2: 13%;
+        --s-start-3: 13%;
+        --s-end-3: 68%;
+        --y-3: 7%;
+        --c-3: hsla(299, 72%, 68%, 1);
+        --x-3: 24%;
+    }
+
+    100% {
+        --s-start-0: 9%;
+        --s-end-0: 55%;
+        --x-0: 31%;
+        --c-0: hsla(267, 52%, 83%, 1);
+        --y-0: 94%;
+        --c-1: hsla(337, 82%, 95%, 1);
+        --x-1: 2%;
+        --s-start-1: 5%;
+        --s-end-1: 72%;
+        --y-1: 25%;
+        --y-2: 20%;
+        --c-2: hsla(54, 100%, 65%, 0.49);
+        --s-start-2: 5%;
+        --s-end-2: 52%;
+        --x-2: 98%;
+        --s-start-3: 13%;
+        --s-end-3: 68%;
+        --y-3: 92%;
+        --c-3: hsla(299, 72%, 68%, 1);
+        --x-3: 95%;
+    }
+}
+
+@property --s-start-0 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 9%
+}
+
+@property --s-end-0 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 55%
+}
+
+@property --x-0 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 85%
+}
+
+@property --c-0 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: hsla(267, 52%, 83%, 1)
+}
+
+@property --y-0 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 80%
+}
+
+@property --c-1 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: hsla(336, 100%, 82%, 1)
+}
+
+@property --x-1 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 60%
+}
+
+@property --s-start-1 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 5%
+}
+
+@property --s-end-1 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 72%
+}
+
+@property --y-1 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 24%
+}
+
+@property --y-2 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 82%
+}
+
+@property --c-2 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: hsla(54, 100%, 65%, 0.49)
+}
+
+@property --s-start-2 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 5%
+}
+
+@property --s-end-2 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 52%
+}
+
+@property --x-2 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 13%
+}
+
+@property --s-start-3 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 13%
+}
+
+@property --s-end-3 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 68%
+}
+
+@property --y-3 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 7%
+}
+
+@property --c-3 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: hsla(299, 72%, 68%, 1)
+}
+
+@property --x-3 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 24%
+}
+
+.ChatWindow {
+    --x-0: 85%;
+    --c-0: hsla(267, 52%, 83%, 1);
+    --y-0: 80%;
+    --c-1: hsla(336, 100%, 82%, 1);
+    --x-1: 60%;
+    --y-1: 24%;
+    --y-2: 82%;
+    --c-2: hsla(54, 100%, 65%, 0.49);
+    --x-2: 13%;
+    --y-3: 7%;
+    --c-3: hsla(299, 72%, 68%, 1);
+    --x-3: 24%;
+    ;
+    background-color: hsla(115, 0%, 100%, 1);
+    background-image: radial-gradient(circle at var(--x-0) var(--y-0), var(--c-0) var(--s-start-0), transparent var(--s-end-0)), radial-gradient(circle at var(--x-1) var(--y-1), var(--c-1) var(--s-start-1), transparent var(--s-end-1)), radial-gradient(circle at var(--x-2) var(--y-2), var(--c-2) var(--s-start-2), transparent var(--s-end-2)), radial-gradient(circle at var(--x-3) var(--y-3), var(--c-3) var(--s-start-3), transparent var(--s-end-3));
+    animation: hero-gradient-animation 10s linear infinite alternate;
+    background-blend-mode: normal, normal, normal, normal;
 }

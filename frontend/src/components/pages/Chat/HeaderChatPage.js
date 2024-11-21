@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircle,faLock,faTrash,faBellSlash,faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
+import { faCircle, faLock, faTrash, faBellSlash, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 // import { faBell,faBellSlash } from '@fortawesome/free-regular-svg-icons';
 import React, { useContext, useEffect, useState } from 'react';
 import ChatDataContext from 'lib/Context/ChatContext';
@@ -10,6 +10,7 @@ import '@szhsin/react-menu/dist/transitions/zoom.css';
 import { setShowMenu } from '../../layout/ChatLayout/LeftSidebar/sidebarSlide';
 import { useDispatch, useSelector } from 'react-redux';
 import { showMenuSelector } from '../../../redux/selectors';
+import Button from 'components/Button';
 const HeaderChatPage = ({ RoomInfo }) => {
     const { listStatus } = useContext(ChatDataContext);
     const [status, setStatus] = useState('');
@@ -36,7 +37,7 @@ const HeaderChatPage = ({ RoomInfo }) => {
 
     return (
         <div className="chatpage_header">
-            <div className="header_wrap" onClick={()=>dispatch(setShowMenu(!state))}>
+            <div className="header_wrap" >
                 <div className="infor">
                     <div className="chatPage_chat_avt">
                         <img
@@ -83,11 +84,13 @@ const HeaderChatPage = ({ RoomInfo }) => {
                     </div>
                 </div>
                 <div className="more">
-                    <Menu menuButton={<MenuButton className="btn_more"><FontAwesomeIcon icon={faEllipsisVertical} /></MenuButton>} transition className="my-menu">
-                        <MenuItem className="menu_item"><FontAwesomeIcon icon={faBellSlash} />Mute</MenuItem>
-                        <MenuItem className="menu_item"><FontAwesomeIcon icon={faLock} /> Block user</MenuItem>
-                        <MenuItem className="menu_item delete-chat"><FontAwesomeIcon icon={faTrash} /> Delete chat</MenuItem>
-                    </Menu>
+                    <Button onClick={() => dispatch(setShowMenu(!state))}
+                        className="btn_more" onlyIcon={true}
+                        rightIcon={<FontAwesomeIcon icon={faEllipsisVertical} />}
+                    >
+
+                    </Button>
+
                 </div>
             </div>
         </div>
