@@ -42,6 +42,7 @@ const MessageBubble = (data) => {
     const handleReport = (data_report) => {
         const newReport = {
             report_type: data_report,
+            id_mess:data.data.id,
             mess_data: {
                 content: data.data.content,
                 img: data.data.img
@@ -65,17 +66,17 @@ const MessageBubble = (data) => {
         if (diffSeconds <= 10) {
             return `bây giờ`;
         } else if (diffSeconds <= 60) {
-            return `${diffSeconds} giây trước`;
+            return `${diffSeconds} giây`;
         } else if (diffMinutes <= 60) {
-            return `${diffMinutes} phút trước`;
+            return `${diffMinutes} phút`;
         } else if (diffHours <= 24) {
-            return `${diffHours} giờ trước`;
+            return `${diffHours} giờ`;
         } else if (diffDays <= 30) {
-            return `${diffDays} ngày trước`;
+            return `${diffDays} ngày`;
         } else if (diffDays <= 365) {
-            return `${diffMonths} tháng trước`;
+            return `${diffMonths} tháng`;
         } else {
-            return `${diffYears} năm trước`;
+            return `${diffYears} năm`;
         }
     };
     // useEffect(() => {

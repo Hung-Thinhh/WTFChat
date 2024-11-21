@@ -74,3 +74,14 @@ backend
 	+ Hiễn thị danh sách người dùng, nhóm.
 	+ Cấm người dùng (nâng cấp cấm theo thời gian).
 	+ Cấm nhóm (nâng cấp cấm theo thời gian).
+
+
+
+
+
+
+
+	sau khi check report tin nhắn bị ban sẽ kh dc hiển thị Websocket
+	làm trang home (dữ liệu user mới 5 đứa,biểu đồ)
+	mute chat
+	block user

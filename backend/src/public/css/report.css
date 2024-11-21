@@ -1,0 +1,46 @@
+.img-magnifier-container {
+    position: relative;
+  }
+  
+  .img-magnifier-glass {
+    position: absolute;
+    border: 3px solid #000;
+    border-radius: 50%;
+    cursor: none;
+    /*Set the size of the magnifier glass:*/
+    width: 100px;
+    height: 100px;
+  }
+  .modal{
+    overflow-y: hidden!important;
+    background-color: #00000099;
+  }
+  .modal-dialog{
+    width: max-content;
+    height: 100vh;
+    max-width: 1000px!important;
+    margin-top: 20px !important;
+    display: flex;
+    align-items: center;
+  }
+  .modal-body{
+    padding: 0 !important;
+  }
+  #myimage{
+    width: 100% !important;
+  }
+  .username{
+    display: flex;
+    flex-direction: column;
+  }
+  .username img{
+    width: 100px;
+    border-radius: 5px;
+    cursor: zoom-in;
+  }
+  .username span{
+    text-align: justify;
+  }
+  .action{
+    display: table-cell;
+  }

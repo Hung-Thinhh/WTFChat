@@ -13,16 +13,16 @@ export const timePassed = (datestring) => {
     if (diffSeconds <= 10) {
         return `bây giờ`;
     } else if (diffSeconds <= 60) {
-        return `${diffSeconds} giây trước`;
+        return `${diffSeconds} giây`;
     } else if (diffMinutes <= 60) {
-        return `${diffMinutes} phút trước`;
+        return `${diffMinutes} phút`;
     } else if (diffHours <= 24) {
-        return `${diffHours} giờ trước`;
+        return `${diffHours} giờ`;
     } else if (diffDays <= 30) {
-        return `${diffDays} ngày trước`;
+        return `${diffDays} ngày`;
     } else if (diffDays <= 365) {
-        return `${diffMonths} tháng trước`;
+        return `${diffMonths} tháng`;
     } else {
-        return `${diffYears} năm trước`;
+        return `${diffYears} năm`;
     }
 };

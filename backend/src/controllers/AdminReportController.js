@@ -48,7 +48,6 @@ const getReport = async (req, res) => {
         const page = req.params.page || null;
         const result = await reportService.getReport(page);
         if (result) {
-            console.log(result);
             
             return result;
         } else {
@@ -93,4 +92,40 @@ const getReportAPI = async (req, res) => {
         };
     }
 };
-export { getReportType,sendReport,getReport,getReportAPI };
+const banReportById = async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const result = await reportService.banReportById(id);
+        if (result) {
+            return res.status(200).json(result);
+        }
+    } catch (error) {
+        console.log(error);
+
+        return {
+            EM: error.message,
+            EC: 1,
+            DT: [],
+        };
+    }
+};
+const unbanReportById = async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const result = await reportService.unbanReportById(id);
+        if (result) {
+            return res.status(200).json(result);
+        }
+    } catch (error) {
+        console.log(error);
+
+        return {
+            EM: error.message,
+            EC: 1,
+            DT: [],
+        };
+    }
+};
+export { getReportType,sendReport,getReport,getReportAPI,banReportById,unbanReportById };
