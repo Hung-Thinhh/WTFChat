@@ -33,8 +33,6 @@ function App(props) {
         }
     };
     const handleListStatus = (data) => {
-        console.log('dô');
-
         setlistStatus(data);
     };
     useEffect(() => {

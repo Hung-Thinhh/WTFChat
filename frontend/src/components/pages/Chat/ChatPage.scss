@@ -6,6 +6,7 @@ h1 {
     margin-left: 30%;
 }
 
+
 .chatPage_container {
     width: 65%;
     height: 90%;
@@ -18,8 +19,23 @@ h1 {
     z-index: 1;
     border-radius: 15px;
     overflow: hidden;
+    position: relative;
     // box-shadow: 9px 9px 1px 1px #3b3b3b;
-
+    .go-down{
+        position: absolute;
+        bottom: 13%;
+        right: 0;
+        margin: 10px;
+        background-color: #694cff;
+        border-radius: 50%;
+        padding: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        &:hover{
+            background-color: #3b3b3b;
+        }
+    }
+    transition: all 0.3s ease-in-out;
 
     .chatpage_header {
         background-color: rgba(60, 60, 67, 0.2901960784);
@@ -28,7 +44,7 @@ h1 {
         text-align: center;
         font-size: 1.5rem;
         color: #FFF;
-
+;
         .header_wrap {
             display: flex;
             justify-content: space-between;
