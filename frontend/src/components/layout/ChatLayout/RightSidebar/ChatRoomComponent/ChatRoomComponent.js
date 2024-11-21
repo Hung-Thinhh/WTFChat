@@ -2,11 +2,15 @@ import './ChatRoomComponent.scss';
 import ChatDataContext from 'lib/Context/ChatContext';
 import { useContext } from 'react';
 import classNames from 'classnames';
+import { setOffset } from '../../LeftSidebar/sidebarSlide';
+import { useDispatch } from 'react-redux';
 
 export default function ChatRoom({ id, avt, name, time, mess, sender, friendId }) {
     const { ChatData, setChatData } = useContext(ChatDataContext);
     const { setRoomInfo } = useContext(ChatDataContext);
+    const dispatch = useDispatch();
     const handleClick = () => {
+        dispatch(setOffset(0));
         setChatData(id);
         setRoomInfo({ id, avt, name, friendId });
     };

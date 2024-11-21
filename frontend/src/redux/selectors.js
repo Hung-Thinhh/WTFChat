@@ -44,10 +44,13 @@ export const forgetPassSelector = createSelector(
 
 // sideBar
 export const showMenuSelector = (state) => state.sidebar.showMenu;
+export const offsetSelector = (state) => state.sidebar.offset;
 
 export const showMenu1Selector = createSelector(
     showMenuSelector,
-    (showMenu) => ({
-        showMenu
+    offsetSelector,
+    (showMenu,offset) => ({
+        showMenu,
+        offset,
     }),
 );

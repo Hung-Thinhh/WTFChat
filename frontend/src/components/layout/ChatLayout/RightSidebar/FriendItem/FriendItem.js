@@ -2,15 +2,18 @@ import styles from "./FriendItem.module.scss";
 import { faMagnifyingGlass, faUser } from "@fortawesome/free-solid-svg-icons";
 import className from "classnames/bind";
 import ChatDataContext from 'lib/Context/ChatContext';
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {useContext } from "react";
+import { setOffset } from '../../LeftSidebar/sidebarSlide';
+import { useDispatch } from 'react-redux';
 const cx = className.bind(styles);
 
 export default function FriendItem({ id, avt, name, time, mess }) {
     const { ChatData, setChatData } = useContext(ChatDataContext);
     const { setRoomInfo } = useContext(ChatDataContext);
+    const dispatch = useDispatch();
     const handleClick = () => {
+        dispatch(setOffset(0));
         setChatData(id);
         setRoomInfo({ id, avt, name });
     }
