@@ -6,7 +6,7 @@ import {
     deletaChatController,
 } from '../controllers/chatController';
 import { getFriendController } from '../controllers/getFriendController.js';
-import {getReportType,sendReport,getReportAPI} from "../controllers/AdminReportController.js";
+import {getReportType,sendReport,getReportAPI,banReportById,unbanReportById} from "../controllers/AdminReportController.js";
 import { getRoomController } from '../controllers/getChatRoomCtrl.js';
 import GetInfoRoom from '../controllers/GetInfoRoom.js';
 import {
@@ -86,6 +86,8 @@ const initApiRouter = (app) => {
     //report 
     router.get('/getReportType', getReportType);
     router.post('/sendReport', sendReport);
+    router.get('/banReportById/:id', banReportById);
+    router.get('/unbanReportById/:id', unbanReportById);
 
     //admin
     router.get('/getUserById/:id', getUserById);

@@ -19,7 +19,8 @@
 
         <!-- Custom styles for this template -->
         <link href="css/sb-admin-2.min.css" rel="stylesheet" />
-        <link rel="stylesheet" href="css/user.css" />
+        <link rel="stylesheet" href="css/table.css" />
+        <link rel="stylesheet" href="css/report.css" />
 
         <!-- Custom styles for this page -->
         <link href="datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
@@ -56,11 +57,11 @@
                                     <table class="table table-hover table-striped border-primary">
                                         <thead class="table-dark">
                                             <tr>
-                                                <th scope="col" style="width: 5%;">#</th>
-                                                <th scope="col" style="width: 50%;">Message</th>
-                                                <th scope="col" style="width: 15%;">Date </th>
-                                                <th scope="col" style="width: 15%;">Type Report</th>
-                                                <th scope="col" style="width: 15%;">Action</th>
+                                                <th scope="col" style="width: 5%">#</th>
+                                                <th scope="col" style="width: 50%">Message</th>
+                                                <th scope="col" style="width: 15%">Date</th>
+                                                <th scope="col" style="width: 15%">Type Report</th>
+                                                <th scope="col" style="width: 15%">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -68,27 +69,34 @@
                                             <tr>
                                                 <th scope="row"><%= i+1 %></th>
                                                 <td class="username">
-                                                    <% if (JSON.parse(reports.user[i].content).img) { %>
+                                                    <% if (JSON.parse(reports.user[i].content).img)
+                                                    { %>
                                                     <img
-                                                        src="<%= reports.user[i].avatar ? reports.user[i].avatar : 'https://w7.pngwing.com/pngs/205/731/png-transparent-default-avatar-thumbnail.png' %>"
+                                                    class="img_mess"
+                                                        data-toggle="modal"
+                                                        data-target="#exampleModal"
+                                                        src="<%=  JSON.parse(reports.user[i].content).img  %>"
                                                         alt=""
-                                                    /><%}%>
-                                                    <%= JSON.parse(reports.user[i].content).content %> 
+                                                    />
+                                                    <%}%>
+                                                    <span>
+                                                        <%=
+                                                        JSON.parse(reports.user[i].content).content
+                                                        %></span
+                                                    >
+                                                   
                                                 </td>
                                                 <td>
-                                                    <% if (reports.user[i].create_at) { %> <% let date =
-                                                    new Date(reports.user[i].create_at); %> <%=
-                                                    date.getDate().toString().padStart(2, '0')
+                                                    <% if (reports.user[i].create_at) { %> <% let
+                                                    date = new Date(reports.user[i].create_at); %>
+                                                    <%= date.getDate().toString().padStart(2, '0')
                                                     %>/<%= (date.getMonth() +
                                                     1).toString().padStart(2, '0') %>/<%=
                                                     date.getFullYear() %> <% } else { %> -- <% } %>
                                                 </td>
-                                              
-                                                <td>
-                                                    <%= reports.user[i].type %> 
-                                                </td>
+
+                                                <td><%= reports.user[i].type %></td>
                                                 <td class="action">
-                                                   
                                                     <% if (reports.user[i].status ==0) {%>
                                                     <button
                                                         class="BanUserButton"
@@ -101,7 +109,10 @@
                                                         class="UnBanUserButton"
                                                         id="<%= reports.user[i].id %>"
                                                     >
-                                                        <i class="fa fa-unlock" aria-hidden="true"></i>
+                                                        <i
+                                                            class="fa fa-unlock"
+                                                            aria-hidden="true"
+                                                        ></i>
                                                     </button>
 
                                                     <% } %>
@@ -122,7 +133,28 @@
                     <!-- /.container-fluid -->
                 </div>
                 <!-- End of Main Content -->
-
+                <!-- Modal -->
+                <div
+                    class="modal fade"
+                    id="exampleModal"
+                    tabindex="-1"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true"
+                >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <div class="img-magnifier-container">
+                                    <img
+                                        id="myimage"
+                                        src="https://www.w3schools.com/howto/img_girl.jpg"
+                                        alt="Girl"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- Footer -->
                 <footer class="sticky-footer bg-white">
                     <div class="container my-auto">
@@ -141,9 +173,12 @@
         <a class="scroll-to-top rounded" href="#page-top">
             <i class="fas fa-angle-up"></i>
         </a>
-        
 
-        <div aria-live="polite" aria-atomic="true" style="position: fixed;z-index: 1050; right: 20px; top: 20px ;">
+        <div
+            aria-live="polite"
+            aria-atomic="true"
+            style="position: fixed; z-index: 1050; right: 20px; top: 20px"
+        >
             <div
                 id="liveToast"
                 class="toast"
@@ -153,7 +188,12 @@
                 data-delay="3000"
             >
                 <div class="toast-header">
-                    <img src="https://phongvu.vn/cong-nghe/wp-content/uploads/2024/09/Meme-meo-bieu-cam-3-1024x1024.jpg" style="width: 30px;" class="rounded mr-2" alt="..." />
+                    <img
+                        src="https://phongvu.vn/cong-nghe/wp-content/uploads/2024/09/Meme-meo-bieu-cam-3-1024x1024.jpg"
+                        style="width: 30px"
+                        class="rounded mr-2"
+                        alt="..."
+                    />
                     <strong class="mr-auto">Notify</strong>
                     <button
                         type="button"

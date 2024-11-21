@@ -1,0 +1,56 @@
+table.table tr th,
+table.table tr td {
+    padding: 12px 15px;
+    vertical-align: middle;
+}
+
+table.table tr th:first-child {
+    width: 60px;
+}
+
+table.table tr th:last-child {
+    width: 150px;
+}
+td{
+    border: 0!important;
+}
+table.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #ecf9ff;
+}
+
+table.table-striped tbody tr:hover {
+    background-color: #ddecf5;
+}
+td button {
+    border: 0;
+    background-color: transparent !important;
+}
+.action{
+    display: flex;
+    justify-items: center;
+    align-items: center;
+}
+.action button {
+    margin: 0 5px 0 0;
+}
+.action button i{
+    font-size: 18px;
+    cursor: pointer;
+}
+.action .editUserButton i{
+    
+    color: #369ff3;
+}
+.action .BanUserButton i{
+    color: #f45449;
+}
+.action .UnBanUserButton i{
+    color: #8fb58f;
+}
+.hidden{
+    display: none !important;
+}
+.form-loading{
+    min-height: 300px;
+    align-items: center;
+}
