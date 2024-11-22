@@ -50,10 +50,10 @@ window.env = {
   "PATHEXT": ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.CPL",
   "POSH_AZURE_ENABLED": "False",
   "POSH_CURSOR_COLUMN": "1",
-  "POSH_CURSOR_LINE": "30",
+  "POSH_CURSOR_LINE": "10",
   "POSH_GIT_ENABLED": "False",
   "POSH_INSTALLER": "ws",
-  "POSH_PID": "19772",
+  "POSH_PID": "6544",
   "POSH_SHELL_VERSION": "5.1.22621.4391",
   "POSH_THEME": "C:\\Users\\rurim\\AppData\\Local\\Programs\\oh-my-posh\\themes\\tokyo.omp.json",
   "POSH_THEMES_PATH": "C:\\Users\\rurim\\AppData\\Local\\Programs\\oh-my-posh\\themes",
@@ -85,6 +85,6 @@ window.env = {
   "windir": "C:\\Windows",
   "WSLENV": "WT_SESSION:WT_PROFILE_ID:",
   "WT_PROFILE_ID": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
-  "WT_SESSION": "0586b821-d61f-4db9-a93c-e784de942feb",
+  "WT_SESSION": "f86bf6fc-c138-4436-bc45-5ac427272c03",
   "ZES_ENABLE_SYSMAN": "1"
 };
