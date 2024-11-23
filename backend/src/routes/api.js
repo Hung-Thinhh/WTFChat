@@ -5,10 +5,11 @@ import {
     getChatController,
     deletaChatController,
 } from '../controllers/chatController';
-import { getFriendController } from '../controllers/getFriendController.js';
-import {getReportType,sendReport,getReportAPI} from "../controllers/AdminReportController.js";
+import { getFriendController, addFriendController, delFriendController, blockFriendController } from '../controllers/FriendController.js';
+import { getReportType, sendReport, getReportAPI } from "../controllers/AdminReportController.js";
 import { getRoomController } from '../controllers/getChatRoomCtrl.js';
 import GetInfoRoom from '../controllers/GetInfoRoom.js';
+import createRoomController from '../controllers/CreateRoomController.js';
 import {
     checkAccount,
     getPublicKey,
@@ -77,10 +78,13 @@ const initApiRouter = (app) => {
 
     // friend
     router.post('/friendList', getFriendController); // api lấy tin nhắn
+    router.post('/addFriend', addFriendController); // api lấy tin nhắn
+    router.post('/delFriend', delFriendController); // api lấy tin nhắn
+    router.post('/blockFriend', blockFriendController); // api lấy tin nhắn
 
     router.post('/deletechat', deletaChatController); // api xoa tin nhắn
     router.post('/getchatroom', getRoomController); // api lấy phòng chat
-    router.post('/createroom', getRoomController); // api tạo phòng chat
+    router.post('/createroom', createRoomController); // api tạo phòng chat
     router.post('/finduser', findUserController); // api tìm người dùng
 
     //report 

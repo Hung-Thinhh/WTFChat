@@ -28,7 +28,7 @@ const getUserInfo = async (email) => {
         await pool.query('START TRANSACTION');
 
         const currUser = await pool.query(
-            `SELECT xacthuc.status, nguoidung.firstname, nguoidung.lastname, nguoidung.avatar, nguoidung.birthdate, nguoidung.gender
+            `SELECT xacthuc.status, nguoidung.firstname, nguoidung.lastname, nguoidung.id,nguoidung.avatar, nguoidung.birthdate, nguoidung.gender
             FROM xacthuc 
             INNER JOIN nguoidung ON xacthuc.email=nguoidung.email
             WHERE xacthuc.email = ?`,

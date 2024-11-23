@@ -1,11 +1,9 @@
-import {
-    getFriendList,
-} from "../services/FriendSeveice.js";
+import { getChatRoom } from "../services/getChatRom.js";
 
-const getFriendController = async (req, res) => {
+const getRoomController = async (req, res) => {
     try {
         const id = req.body.id;
-        const data = await getFriendList(id);
+        const data = await getChatRoom(id);
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,
@@ -22,6 +20,4 @@ const getFriendController = async (req, res) => {
 };
 
 
-export {
-    getFriendController,
-};
+export default getRoomController;

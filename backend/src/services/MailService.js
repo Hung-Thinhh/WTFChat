@@ -163,39 +163,6 @@ const sendOTP = async (email) => {
                 EC: '400',
             };
 
-        // Lấy AccessToken
-        const myAccessTokenObject = await myOAuth2Client.getAccessToken();
-        // Access Token sẽ nằm trong property 'token'
-        const myAccessToken = myAccessTokenObject?.token;
-
-        // Check if access token needs refresh
-        if (Date.now() >= myAccessTokenObject.expiry_date - 5 * 60 * 1000) {
-            // Token is expiring soon, refresh it
-            const newAccessTokenObject = await myOAuth2Client.refreshToken(
-                GOOGLE_MAILER_REFRESH_TOKEN,
-            );
-            myAccessToken = newAccessTokenObject.token;
-        }
-
-        // Tạo một biến Transport từ Nodemailer với đầy đủ cấu hình, dùng để gọi hành động gửi mail
-        const transport = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                type: 'OAuth2',
-                user: ADMIN_EMAIL_ADDRESS,
-                clientId: GOOGLE_MAILER_CLIENT_ID,
-                clientSecret: GOOGLE_MAILER_CLIENT_SECRET,
-                refresh_token: GOOGLE_MAILER_REFRESH_TOKEN,
-                accessToken: myAccessToken,
-            },
-        });
-
-        // mailOption là những thông tin gửi từ phía client lên thông qua API
-        const otp = otpGenerator.generate(6, {
-            upperCaseAlphabets: false,
-            specialChars: false,
-        });
-
         // Redis
         // đếm số lần người dùng nhận otp | nếu key chưa tồn tại hàm sẽ đặt bằng 0 rồi tăng
         const userCallTime = await redisClient.incr(email + 'Calltime');
@@ -204,6 +171,13 @@ const sendOTP = async (email) => {
                 EM: 'SEND_OTP | ERROR | Lượt gửi otp của người dùng trong ngày đã hết',
                 EC: '401',
             };
+        // mailOption là những thông tin gửi từ phía client lên thông qua API
+        const otp = otpGenerator.generate(6, {
+            upperCaseAlphabets: false,
+            specialChars: false,
+        });
+        console.log(otp);
+        
         // Lưu vào redis với key là email người dùng và value là otp
         // Ghi lại giá trị mới nếu key tồn tại
         await redisClient.set(email + 'OTP', otp);
@@ -217,8 +191,38 @@ const sendOTP = async (email) => {
             html: generateOtpMail(otp),
         };
 
-        // Gọi hành động gửi email
-        await transport.sendMail(mailOptions);
+
+
+        // // Lấy AccessToken
+        // const myAccessTokenObject = await myOAuth2Client.getAccessToken();
+        // // Access Token sẽ nằm trong property 'token'
+        // const myAccessToken = myAccessTokenObject?.token;
+
+        // // Check if access token needs refresh
+        // if (Date.now() >= myAccessTokenObject.expiry_date - 5 * 60 * 1000) {
+        //     // Token is expiring soon, refresh it
+        //     const newAccessTokenObject = await myOAuth2Client.refreshToken(
+        //         GOOGLE_MAILER_REFRESH_TOKEN,
+        //     );
+        //     myAccessToken = newAccessTokenObject.token;
+        // }
+
+        // // Tạo một biến Transport từ Nodemailer với đầy đủ cấu hình, dùng để gọi hành động gửi mail
+        // const transport = nodemailer.createTransport({
+        //     service: 'gmail',
+        //     auth: {
+        //         type: 'OAuth2',
+        //         user: ADMIN_EMAIL_ADDRESS,
+        //         clientId: GOOGLE_MAILER_CLIENT_ID,
+        //         clientSecret: GOOGLE_MAILER_CLIENT_SECRET,
+        //         refresh_token: GOOGLE_MAILER_REFRESH_TOKEN,
+        //         accessToken: myAccessToken,
+        //     },
+        // });
+
+
+        // // Gọi hành động gửi email
+        // await transport.sendMail(mailOptions);
 
         // Không có lỗi gì thì trả về success
         return {

@@ -4,7 +4,7 @@ import util from 'tweetnacl-util';
 
 const privateKey = process.env.PRIVATE_KEY;
 
-const decrypt = (receiverSecretKey, encryptedData) => {
+export const decrypt = (receiverSecretKey, encryptedData) => {
     const receiverSecretKeyUint8Array = util.decodeBase64(receiverSecretKey);
     const nonce = util.decodeBase64(encryptedData.nonce);
     const ciphertext = util.decodeBase64(encryptedData.ciphertext);
@@ -39,3 +39,8 @@ export const decryptData = async (req, res, next) => {
         next(); // Skip middleware if not a POST request or no encrypted data
     }
 };
+
+
+
+
+

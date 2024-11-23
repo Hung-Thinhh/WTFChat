@@ -1,7 +1,7 @@
 
 import pool from '../connectDB.js';
 
-const getFriendList = async (userId, friendId) => {
+export const getFriendList = async (userId, friendId) => {
     try {
         // Lấy ID phòng chat giữa hai người dùng
         const [friendRows] = await pool.query(
@@ -32,20 +32,151 @@ const getFriendList = async (userId, friendId) => {
             DT: friendRows
         };
 
-        
-        console.log('SERVICE | GET FRIEND SERVICE | ROOM ROWS | ', roomRows);
-        if (roomRows.length === 0) {
-            return {
-                EM: 'No room found',
-                EC: 0,
-                DT: []
-            };
-        }
+
+        // console.log('SERVICE | GET FRIEND SERVICE | ROOM ROWS | ', roomRows);
+        // if (roomRows.length === 0) {
+        //     return {
+        //         EM: 'No room found',
+        //         EC: 0,
+        //         DT: []
+        //     };
+        // }
     } catch (error) {
         console.log('SERVICE | GET FRIEND SERVICE | ERROR | ', error);
         throw error
     }
 };
 
+export const addFriend = async (userId, friendId) => {
+    try {
+        await pool.query('START TRANSACTION');
 
-export { getFriendList }
+        // Lấy ID phòng chat giữa hai người dùng
+        const [friendRows] = await pool.query(
+            "INSERT INTO `banbe`(`useroneid`, `usertwoid`) VALUES (?,?)",
+            [userId, friendId]
+        );
+
+        if (friendRows.affectedRows === 0) {
+            return {
+                EM: 'have error',
+                EC: 0,
+                DT: []
+            };
+        }
+        await pool.query('COMMIT');
+
+        return {
+            EM: 'Friends add successfully',
+            EC: 1,
+            DT: friendRows
+        };
+
+    } catch (error) {
+        await pool.query('ROLLBACK');
+
+        console.log('SERVICE | ADD FRIEND SERVICE | ERROR | ', error);
+        throw error
+    }
+};
+
+export const delFriend = async (friendId) => {
+    try {
+        await pool.query('START TRANSACTION');
+
+        // Xóa bạn bè giữa hai người dùng
+        const [friendRows] = await pool.query(
+            "DELETE FROM `banbe` WHERE usertwoid = ? OR useroneid = ?",
+            [friendId, friendId]
+        );
+        console.log(friendRows);
+
+        if (friendRows.affectedRows === 0) {
+            return {
+                EM: 'have error',
+                EC: 0,
+                DT: []
+            };
+        }
+        await pool.query('COMMIT');
+
+        return {
+            EM: 'Friends del successfully',
+            EC: 1,
+            DT: friendRows
+        };
+
+    } catch (error) {
+        await pool.query('ROLLBACK');
+
+        console.log('SERVICE | DEL FRIEND SERVICE | ERROR | ', error);
+        throw error
+    }
+};
+
+export const blockFriend = async (userId, friendId, status) => {
+    try {
+        await pool.query('START TRANSACTION');
+
+        // Lấy ID phòng chat giữa hai người dùng
+        const [friendRows] = await pool.query(
+            "INSERT INTO `banbe`(`useroneid`, `usertwoid`, `block`) VALUES (?,?, ?) ON DUPLICATE KEY UPDATE `block` = ?",
+            [userId, friendId, status, status]
+        );
+
+        if (friendRows.affectedRows === 0) {
+            return {
+                EM: 'have error',
+                EC: 0,
+                DT: []
+            };
+        }
+        await pool.query('COMMIT');
+
+        return {
+            EM: 'Friends block successfully',
+            EC: 1,
+            DT: friendRows
+        };
+
+    } catch (error) {
+        await pool.query('ROLLBACK');
+
+        console.log('SERVICE | BLOCK FRIEND SERVICE | ERROR | ', error);
+        throw error
+    }
+};
+
+export const notifyFriend = async (userId, friendId, status) => {
+    try {
+        await pool.query('START TRANSACTION');
+
+        // Lấy ID phòng chat giữa hai người dùng
+        const [friendRows] = await pool.query(
+            "INSERT INTO `banbe`(`useroneid`, `usertwoid`, `notify`) VALUES (?,?, ?) ON DUPLICATE KEY UPDATE `notify` = ?",
+            [userId, friendId, status, status]
+        );
+
+        if (friendRows.affectedRows === 0) {
+            return {
+                EM: 'have error',
+                EC: 0,
+                DT: []
+            };
+        }
+        
+        await pool.query('COMMIT');
+
+        return {
+            EM: 'Friends notify change successfully',
+            EC: 1,
+            DT: friendRows
+        };
+
+    } catch (error) {
+        await pool.query('ROLLBACK');
+
+        console.log('SERVICE | NOTIFY FRIEND SERVICE | ERROR | ', error);
+        throw error
+    }
+};

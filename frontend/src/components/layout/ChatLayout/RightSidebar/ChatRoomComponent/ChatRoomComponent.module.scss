@@ -103,12 +103,23 @@
 .btn_more {
     background-color: transparent;
     border: none;
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
     color: #aaaaaa;
     font-size: 20px;
     cursor: pointer;
-
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    justify-content: center;
+    background-color: #434343;
+    align-items: center;
+    border-radius: 100%;
     &:hover {
         color: #f8f8f8;
+        background-color: #5e5e5e;
     }
     .menu_item {
         display: flex;
@@ -158,12 +169,18 @@
             background-color: rgb(170 170 170 / 8%);
         }
 
-        &.deleteUser {
+        &.deleteUser,.addFUser {
             color: #d24f50;
 
             &:hover {
                 background-color: #3a302e;
             }
+        }
+
+        &.addFUser{
+            color: #4fd25a;
+
+          
         }
     }
 }

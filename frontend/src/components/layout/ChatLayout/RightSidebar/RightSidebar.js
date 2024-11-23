@@ -170,6 +170,7 @@ const RightSidebar = () => {
                                                             }
                                                             avt={item.avatar}
                                                             friendId={item.id}
+                                                            isFriend={item.isFriend}
 
                                                         />
                                                     ) : (
@@ -179,6 +180,8 @@ const RightSidebar = () => {
                                                             name={item.groupname}
                                                             avt={item.avatar}
                                                             friendId={item.id}
+                                                            isFriend={item.isFriend}
+
 
                                                         />
                                                     ),
