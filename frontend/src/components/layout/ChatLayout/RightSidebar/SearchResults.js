@@ -15,7 +15,7 @@ const SearchResults = ({ findData, searchData, handleSearchChange }) => {
             <div className={cx('searchData')}>
                 {findData && findData.length > 0 ? (
                     <>
-                        <div className={cx('label')}>Bạn bè</div>
+                        {findData.filter(item => item.isFriend && !item.isBlock).length > 0 && <div className={cx('label')}>Bạn bè</div>}
                         {findData.filter(item => item.isFriend && !item.isBlock).map((item) => (
                             <ChatRoom
                                 type='friend'
@@ -28,7 +28,7 @@ const SearchResults = ({ findData, searchData, handleSearchChange }) => {
                                 isBlock={item.isBlock}
                             />
                         ))}
-                        <div className={cx('label')}>Block list</div>
+                        {findData.filter(item => item.isBlock).length > 0 && <div className={cx('label')}>Block list</div>}
                         {findData.filter(item => item.isBlock).map((item) => (
                             <ChatRoom
                                 type='friend'
@@ -41,7 +41,7 @@ const SearchResults = ({ findData, searchData, handleSearchChange }) => {
                                 isBlock={item.isBlock}
                             />
                         ))}
-                        <div className={cx('label')}>Người lạ</div>
+                        {findData.filter(item => !item.isFriend && !item.isBlock).length > 0 && <div className={cx('label')}>Người lạ</div>}
                         {findData.filter(item => !item.isFriend && !item.isBlock).map((item) => (
                             <ChatRoom
                                 type='friend'

@@ -1,6 +1,6 @@
 .rightsidebar {
     width: 24%;
-    min-width:300px;
+    min-width: 300px;
     height: 90%;
     margin: 30px;
     display: flex;
@@ -12,6 +12,8 @@
     border-radius: 1rem;
     box-shadow: 9px 9px 1px 1px #3b3b3b;
     position: relative;
+    padding: 6rem 0 0 0;
+
     .page {
         border-radius: 1rem;
     }
@@ -22,21 +24,27 @@
         max-height: 100%;
 
         .searchData {
-            padding: 0 0 10% 0;
+            padding: 0 0 6rem 0;
             overflow-y: auto;
             height: 100%;
         }
 
         .sidebar_header {
-            width: 100%;
             padding: 1.7rem;
             display: flex;
             gap: 1rem;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            position: absolute;
+            background-color: #1a1a1a46;
+            backdrop-filter: blur(1rem);
+            border-radius: 1rem 1rem 0 0;
             text-transform: capitalize;
             text-decoration: underline;
             font-size: 2rem;
             text-shadow: 0.1rem 0.1rem 0 #ffffff80;
-            font-style: bold;
+            font-weight: bold;
             align-items: center;
             width: 100%;
             color: aliceblue;
@@ -51,9 +59,9 @@
         //     font-size: 1.5rem;
         //     animation: slideInFromLeft 0.2s ease-in-out;
         // }
-        .search{
+        .search {
             position: absolute;
-            bottom : 0;
+            bottom: 0;
             left: 0;
         }
     }
@@ -392,15 +400,14 @@
     }
 }
 
-
-.nonePage{
+.nonePage {
     color: yellow;
     padding: 1rem;
-    text-shadow: 0.1rem 0.1rem 0rem red ;
+    text-shadow: 0.1rem 0.1rem 0rem red;
 }
 
-.label{
+.label {
     color: white;
     font-size: 1.5rem;
-    margin: 1rem 0  1rem 0;
+    margin: 1rem 0 1rem 0;
 }
