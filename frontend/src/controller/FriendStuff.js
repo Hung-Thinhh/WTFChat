@@ -15,3 +15,7 @@ export const delFriendCtrl = (data) => {
 export const blockFriendCtrl = (data) => {
     return axios.post(`/api/blockFriend`,data);
 };  
+
+export const getBlockFriendListCtrl = (data) => {
+    return axios.post(`/api/getBlockFriendList`,data);
+}

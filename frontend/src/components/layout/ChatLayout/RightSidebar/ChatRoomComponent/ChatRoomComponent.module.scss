@@ -60,11 +60,18 @@
                 }
             }
             .CR_mess {
+                .iduser{
+                    font-size: small;
+                }
                 text-align: justify;
                 .Sender {
+                    font-size: small;
+
                     margin-right: 10px;
                 }
                 .content {
+                    font-size: small;
+
                     color: #aaaaaa;
                 }
             }
@@ -208,7 +215,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+    transition: background-color .1s, border-color .1s, box-shadow .1s;
   }
   
   /* The checkmark */
@@ -219,7 +226,7 @@
     background-color: white; /* Checkmark color */
     clip-path: polygon(14% 44%, 0% 65%, 50% 100%, 100% 14%, 84% 0%, 50% 70%);
     opacity: 0; /* Initially hidden */
-    transition: opacity 0.3s;
+    transition: opacity .1s;
   }
   
   /* Hover effect */

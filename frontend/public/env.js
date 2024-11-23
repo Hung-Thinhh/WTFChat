@@ -53,7 +53,7 @@ window.env = {
   "POSH_CURSOR_LINE": "10",
   "POSH_GIT_ENABLED": "False",
   "POSH_INSTALLER": "ws",
-  "POSH_PID": "18380",
+  "POSH_PID": "7776",
   "POSH_SHELL_VERSION": "5.1.22621.4391",
   "POSH_THEME": "C:\\Users\\rurim\\AppData\\Local\\Programs\\oh-my-posh\\themes\\tokyo.omp.json",
   "POSH_THEMES_PATH": "C:\\Users\\rurim\\AppData\\Local\\Programs\\oh-my-posh\\themes",
@@ -85,6 +85,6 @@ window.env = {
   "windir": "C:\\Windows",
   "WSLENV": "WT_SESSION:WT_PROFILE_ID:",
   "WT_PROFILE_ID": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
-  "WT_SESSION": "61ed3c0a-420b-4e79-a817-c56790af3698",
+  "WT_SESSION": "a9ecda0a-d495-4da6-9fb9-eadb91b8b37c",
   "ZES_ENABLE_SYSMAN": "1"
 };

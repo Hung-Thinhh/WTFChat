@@ -1,7 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./Footer.module.scss";
-import { faMagnifyingGlass, faUserGroup, faBoxArchive, faPlus, faComment } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faUserGroup, faUserSlash, faPlus, faComment } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames/bind";
 import Button from "components/Button";
 const cx = classNames.bind(styles);
@@ -32,10 +32,10 @@ const Footer = ({ pageState, setPageData, onClickNewChat }) => {
                     <FontAwesomeIcon icon={faUserGroup} />
                 </div>
                 <div
-                    onClick={() => handlePageClick('archive')}
-                    className={cx('nav-link', pageState === 'archive' && 'activebtn')}
+                    onClick={() => handlePageClick('block')}
+                    className={cx('nav-link', pageState === 'block' && 'activebtn')}
                 >
-                    <FontAwesomeIcon icon={faBoxArchive} />
+                    <FontAwesomeIcon icon={faUserSlash} />
                 </div>
             </div>
             <Button onClick={onClickNewChat} className={cx('btnAddChat')} rightIcon={<FontAwesomeIcon icon={faPlus} />} onlyIcon={true} />

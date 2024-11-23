@@ -18,24 +18,43 @@
         border-radius: 1rem;
         transform: translate(-50%, -50%);
         background-color: #2a2a2a;
-        width: 40rem;
-        height: 50rem;
+        width: 80rem;
+        max-height: fit-content;
         display: flex;
         flex-direction: column;
-        padding: 2rem 1rem 1rem 1rem;
-        .content{
-            padding: 1rem;
-            .search{
-                background-color: #3b3b3b;
-                border-radius: 1rem;
-                padding: 1rem;
-            }
-            width: 100%;
-            height: 100%;
-            .membercontainer{
+        .maincontainer {
+            display: flex;
+            .choosedmember {
+                padding-top: 2rem;
+                width: 70rem;
                 height: 100%;
+                display: flex;
+                gap: 1rem;
+                align-items: center;
+                flex-wrap: wrap;
+                overflow-y: auto;
+            }
+            .content {
+                .title {
+                    font-weight: 600;
+                    margin-bottom: 2rem;
+                }
+                padding: 1rem;
+                .search {
+                    background-color: #3b3b3b;
+                    border-radius: 1rem;
+                    padding: 1rem;
+                }
+                width: 100%;
+                height: 100%;
+                .membercontainer {
+                    height: 30rem;
+                    overflow-y: auto;
+                }
             }
         }
+        padding: 2rem 1rem 1rem 1rem;
+
         .btnGr {
             display: flex;
             justify-content: flex-end;

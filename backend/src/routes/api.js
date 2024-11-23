@@ -5,7 +5,7 @@ import {
     getChatController,
     deletaChatController,
 } from '../controllers/chatController';
-import { getFriendController, addFriendController, delFriendController, blockFriendController } from '../controllers/FriendController.js';
+import { getFriendController, addFriendController, delFriendController, blockFriendController, getBlockFriendController } from '../controllers/FriendController.js';
 import { getReportType, sendReport, getReportAPI } from "../controllers/AdminReportController.js";
 import { getRoomController } from '../controllers/getChatRoomCtrl.js';
 import GetInfoRoom from '../controllers/GetInfoRoom.js';
@@ -81,6 +81,7 @@ const initApiRouter = (app) => {
     router.post('/addFriend', addFriendController); // api lấy tin nhắn
     router.post('/delFriend', delFriendController); // api lấy tin nhắn
     router.post('/blockFriend', blockFriendController); // api lấy tin nhắn
+    router.post('/getBlockFriendList', getBlockFriendController); // api lấy tin nhắn
 
     router.post('/deletechat', deletaChatController); // api xoa tin nhắn
     router.post('/getchatroom', getRoomController); // api lấy phòng chat

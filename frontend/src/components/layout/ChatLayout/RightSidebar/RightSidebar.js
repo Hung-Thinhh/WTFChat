@@ -1,18 +1,21 @@
-import { timePassed } from 'lib/function/formatTime';
 import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import styles from './RightSidebar.module.scss';
 import classNames from 'classnames/bind';
+import styles from './RightSidebar.module.scss';
 import Footer from './Footer';
-import ChatRoom from './ChatRoomComponent';
 import ChatDataContext from 'lib/Context/ChatContext';
 import getChatRoom from 'services/getchatroom';
-import Search from './Footer/Search';
 import getFriendList from 'services/getFriendList';
 import findUser from 'services/findUserService';
 import useDebounce from 'hooks/useDebounce';
 import NewChat from './NewChat';
+import getBlockFriendList from 'services/getBlockFriendList';
+import ChatList from './ChatList';
+import FriendList from './FriendList';
+import SearchResults from './SearchResults';
+import BlockList from './BlockList';
+
 const cx = classNames.bind(styles);
 
 const RightSidebar = () => {
@@ -23,37 +26,42 @@ const RightSidebar = () => {
     const [findData, setFindData] = useState([]);
     const [searchData, setSearchData] = useState('');
     const [stateNewChatPopUp, setStateNewChatPopUp] = useState(false);
-    const handleNewChat = (e) => {
-        setStateNewChatPopUp(true)
+    const [blocklist, setBlockList] = useState([]);
 
+    const handleNewChat = (e) => {
+        setStateNewChatPopUp(true);
     };
 
-    // Fetch chat room
     const fetchChatRoom = useCallback(async () => {
         try {
             const response = await getChatRoom({ id: currUser.id });
-            setRoomData(response.DT); // API trả về danh sách phòng chat và tin nhắn mới nhất
+            setRoomData(response.DT);
         } catch (error) {
             console.error('Error fetching new messages:', error);
         }
     }, [currUser]);
 
-    // Fetch friend list
     const fetchFriendList = useCallback(async () => {
         try {
             const response = await getFriendList({ id: currUser.id });
-            setFriend(response.DT); // API trả về danh sách bạn bè
+            setFriend(response.DT);
         } catch (error) {
-            console.error('Error fetching new messages:', error);
+            console.error('Error fetching friend list:', error);
         }
     }, [currUser]);
 
-    // Handle search change
+    const fetchBlockList = useCallback(async () => {
+        try {
+            const response = await getBlockFriendList({ id: currUser.id });
+            setBlockList(response.DT);
+        } catch (error) {
+            console.error('Error fetching block list:', error);
+        }
+    }, [currUser]);
+
     const handleSearchChange = async (e) => {
-        const data = {
-            text: e.target.value,
-        };
-        if (data.text === '' || data.text === null || data.text === undefined || !data.text) {
+        const data = { text: e.target.value };
+        if (!data.text) {
             setFindData([]);
             setSearchData(data.text);
         } else {
@@ -87,116 +95,52 @@ const RightSidebar = () => {
             window.removeEventListener('keydown', handleEnterKey);
         };
     }, [searchData]);
-    // Load chat room and friend list when component is mounted
+
     useEffect(() => {
         fetchChatRoom();
     }, [fetchChatRoom, fetchFriendList, currUser]);
 
-
     useEffect(() => {
-        if (pageState === 'friend') {
-            fetchFriendList();
-        }
+        (() => {
+            switch (pageState) {
+                case 'friend':
+                    return fetchFriendList();
+                case 'block':
+                    return fetchBlockList();
+                default:
+                    return null;
+            }
+        })();
+        setFindData([]);
+        setSearchData('');
     }, [pageState]);
-
 
     if (!currUser) return null;
 
     return (
         <div className={cx('rightsidebar')}>
-            <NewChat active={stateNewChatPopUp} setActive={setStateNewChatPopUp}></NewChat>
+            <NewChat active={stateNewChatPopUp} setActive={setStateNewChatPopUp} />
             <div className={cx('me-auto', 'list_nav')}>
                 <div className={cx('sidebar_header')}>
-                    <FontAwesomeIcon icon={faUser} /> Wtf Chat
+                    <FontAwesomeIcon icon={faUser} />{pageState}
                 </div>
-
                 {
-                    // Render different content based on the current page state
                     (() => {
                         switch (pageState) {
                             case 'chat':
-                                return chatRoom && chatRoom.length > 0 ? (
-                                    chatRoom.map((room) => (
-                                        <ChatRoom
-                                            key={room.id}
-                                            id={room.id}
-                                            sender={
-                                                JSON.parse(room.last_message) ?
-                                                    JSON.parse(room.last_message).idUser !== currUser.id
-                                                        ? JSON.parse(room.last_message).sender
-                                                        : 'You' : null
-                                            }
-                                            name={room.groupName}
-                                            avt={room.avt}
-                                            time={timePassed(room.update_time)}
-                                            mess={
-                                                JSON.parse(room.last_message) &&
-                                                JSON.parse(room.last_message).content
-                                            }
-                                            friendId={room.otherUserId}
-                                        />
-                                    ))
-                                ) : (
-                                    <div>No new messages</div>
-                                );
+                                return <ChatList chatRoom={chatRoom} currUser={currUser} />;
                             case 'friend':
-                                return friend && friend.length > 0 ? (
-                                    friend.map((friend) => (
-                                        <ChatRoom
-                                            key={friend.id}
-                                            id={friend.id}
-                                            name={`${friend.firstname} ${friend.lastname}`}
-                                            avt={friend.avatar}
-                                            time={timePassed(friend.last_message_time)}
-                                            friendId={friend.id}
-
-                                        />
-                                    ))
-                                ) : (
-                                    <div>寂し犬</div>
-                                );
+                                return <FriendList friend={friend} />;
                             case 'search':
                                 return (
-                                    <div>
-                                        <div className={cx('searchData')}>
-                                            {findData &&
-                                                findData.map((item) =>
-                                                    item.loai === 'nguoidung' ? (
-                                                        <ChatRoom
-                                                            key={item.id}
-                                                            id={item.id}
-                                                            name={
-                                                                item.firstname + ' ' + item.lastname
-                                                            }
-                                                            avt={item.avatar}
-                                                            friendId={item.id}
-                                                            isFriend={item.isFriend}
-
-                                                        />
-                                                    ) : (
-                                                        <ChatRoom
-                                                            key={item.id}
-                                                            id={item.id}
-                                                            name={item.groupname}
-                                                            avt={item.avatar}
-                                                            friendId={item.id}
-                                                            isFriend={item.isFriend}
-
-
-                                                        />
-                                                    ),
-                                                )}
-                                        </div>
-                                        <Search
-                                            className={cx('search')}
-                                            value={searchData}
-                                            onChange={handleSearchChange}
-                                        ></Search>
-                                        ;
-                                    </div>
+                                    <SearchResults
+                                        findData={findData}
+                                        searchData={searchData}
+                                        handleSearchChange={handleSearchChange}
+                                    />
                                 );
-                            case 'archive':
-                                return <div style={{ color: 'white' }}>Archive Page</div>;
+                            case 'block':
+                                return <BlockList blocklist={blocklist} />;
                             default:
                                 return null;
                         }
