@@ -33,7 +33,7 @@ const ChatPage = () => {
 
     const state = useSelector(offsetSelector);
     const dispatch = useDispatch();
-       
+
 
 
 
@@ -57,7 +57,7 @@ const ChatPage = () => {
                     }
                 });
                 setCurChatData(data);
-                dispatch(setOffset(state+ 50));
+                dispatch(setOffset(state + 50));
             }
         } catch (error) {
             console.error('Error fetching new messages:', error);
@@ -67,10 +67,10 @@ const ChatPage = () => {
         console.log('offset', state);
         console.log('curChatData', curChatData);
     }, [state]);
-        
+
     const lazyLoad = async () => {
         try {
-            const response = await getChat({ userId: currUser.id, roomId: ChatData, offset:state });
+            const response = await getChat({ userId: currUser.id, roomId: ChatData, offset: state });
             if (response && response.EC === 0) {
                 let data = response.DT;
                 data.forEach((item) => {

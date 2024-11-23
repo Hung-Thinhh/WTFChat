@@ -1,1 +1,1 @@
-export {default} from './LeftSiedbar'
+export { default } from './LeftSiedbar'

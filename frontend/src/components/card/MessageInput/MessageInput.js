@@ -1,7 +1,14 @@
-import "./MessageInput.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleXmark, faFileImage, faPaperPlane, faReply, faX, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { useRef, useCallback, useState } from "react";
+import './MessageInput.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    faCircleXmark,
+    faFileImage,
+    faPaperPlane,
+    faReply,
+    faX,
+    faXmark,
+} from '@fortawesome/free-solid-svg-icons';
+import { useRef, useCallback, useState } from 'react';
 
 const MessageInput = ({ value, isReply, onReply }) => {
     const inputRef = useRef(null);
@@ -49,31 +56,33 @@ const MessageInput = ({ value, isReply, onReply }) => {
         onReply('');
     }, []);
     const handleReply = () => {
-        handlePropReply()
-    }
+        handlePropReply();
+    };
     return (
         <div className="input_container">
             <div className="input_container_wrap">
-                {isReply && <div className="input_container_reply">
-                    <div className="icon_reply">
-                        <span><FontAwesomeIcon icon={faReply} /></span>
-
-                    </div>
-                    <div className="content_reply">
-                        <div className="reply-content">
-                            <div className="reply-title">
-                                <span>Reply to {isReply.sender}</span>
-                            </div>
-                            <div className="reply-subtitle">
-                                {isReply.content}
+                {isReply && (
+                    <div className="input_container_reply">
+                        <div className="icon_reply">
+                            <span>
+                                <FontAwesomeIcon icon={faReply} />
+                            </span>
+                        </div>
+                        <div className="content_reply">
+                            <div className="reply-content">
+                                <div className="reply-title">
+                                    <span>Reply to {isReply.sender}</span>
+                                </div>
+                                <div className="reply-subtitle">{isReply.content}</div>
                             </div>
                         </div>
+                        <div className="icon_cancel">
+                            <span onClick={handleReply}>
+                                <FontAwesomeIcon icon={faXmark} />
+                            </span>
+                        </div>
                     </div>
-                    <div className="icon_cancel">
-                        <span onClick={handleReply}>
-                            <FontAwesomeIcon icon={faXmark} /></span>
-                    </div>
-                </div>}
+                )}
                 <div className="input_container_sub">
                     <div className="input_container">
                         <input
@@ -87,21 +96,30 @@ const MessageInput = ({ value, isReply, onReply }) => {
                             onChange={(e) => setInputValue(e.target.value)}
                         />
                     </div>
-                    
+
                     {isPopupVisible && selectedImage && (
                         <div className="img_popup">
-                            <div className="close" onClick={() => {
-                                setInputValue('');
-                                setIsPopupVisible(false); // Hide the popup
-                                fileInputRef.current.value = ''; // Clear the file input
-                                setSelectedImage(null);
-                            }}>
+                            <div
+                                className="close"
+                                onClick={() => {
+                                    setInputValue('');
+                                    setIsPopupVisible(false); // Hide the popup
+                                    fileInputRef.current.value = ''; // Clear the file input
+                                    setSelectedImage(null);
+                                }}
+                            >
                                 <FontAwesomeIcon icon={faCircleXmark} />
                             </div>
-                            <img src={URL.createObjectURL(selectedImage)} alt="Selected" className="selected_image" />
+                            <img
+                                src={URL.createObjectURL(selectedImage)}
+                                alt="Selected"
+                                className="selected_image"
+                            />
                             <div className="caption">
                                 <input type="text" placeholder="thêm ghi chú" />
-                                <button className="sendimg" onClick={handleSentChat}>gửi</button>
+                                <button className="sendimg" onClick={handleSentChat}>
+                                    gửi
+                                </button>
                             </div>
                         </div>
                     )}
@@ -119,14 +137,11 @@ const MessageInput = ({ value, isReply, onReply }) => {
                     </label>
                 </div>
             </div>
-            <button
-                className="chatPage_chat_btn"
-                onClick={handleSentChat}
-            >
+            <button className="chatPage_chat_btn" onClick={handleSentChat}>
                 <FontAwesomeIcon icon={faPaperPlane} />
             </button>
         </div>
     );
-}
+};
 
 export default MessageInput;
