@@ -9,17 +9,20 @@ document.addEventListener('click', function (event) {
         const button = event.target.closest('.BanUserButton');
 
         // Fetch dữ liệu user theo ID
-        fetch(`/api/banUserById/${userId}`)
+        fetch(`/api/banReportById/${userId}`)
             .then((response) => response.json())
             .then((data) => {
                 if (data.EC == 0) {
                     $(document).ready(function () {
-                        $('.toast .toast-body').html('Ban user success !');
+                        $('.toast .toast-body').html('Ban report success !');
                         $('.toast').toast('show');
                         button.classList.remove('BanUserButton');
                         button.classList.add('UnBanUserButton');
                         $(button).html('<i class="fa fa-unlock" aria-hidden="true"></i>');
                     });
+                } else {
+                    $('.toast .toast-body').html('Ban report failed !');
+                        $('.toast').toast('show');
                 }
 
                 // ...
@@ -38,17 +41,20 @@ document.addEventListener('click', function (event) {
         const userId = event.target.id || event.target.parentElement.id;
 
         // Fetch dữ liệu user theo ID
-        fetch(`/api/unbanUserById/${userId}`)
+        fetch(`/api/unbanReportById/${userId}`)
             .then((response) => response.json())
             .then((data) => {
                 if (data.EC == 0) {
                     $(document).ready(function () {
-                        $('.toast .toast-body').html('Unban user success !');
+                        $('.toast .toast-body').html('Unban report success !');
                         $('.toast').toast('show');
                         button.classList.remove('UnBanUserButton');
                         button.classList.add('BanUserButton');
                         $(button).html('<i class="fas fa-times-circle"></i>');
                     });
+                } else {
+                    $('.toast .toast-body').html('Ban report failed !');
+                        $('.toast').toast('show');
                 }
 
                 // ...
@@ -57,7 +63,75 @@ document.addEventListener('click', function (event) {
                 console.error('Lỗi khi fetch dữ liệu:', error);
             });
     }
-}); // Call the dataTables jQuery plugin
+    if (event.target.classList.contains('img_mess')) {
+        console.log('okkkkkkkkkk');
+        $('#myimage').attr('src', event.target.src);
+        magnify("myimage", 3);
+        
+    }
+});
+//zoom img 
+function magnify(imgID, zoom) {
+    let img, glass, w, h, bw;
+    img = document.getElementById(imgID);
+  
+    /* Create magnifier glass: */
+    glass = document.createElement("DIV");
+    glass.setAttribute("class", "img-magnifier-glass");
+  
+    /* Insert magnifier glass: */
+    img.parentElement.insertBefore(glass, img);
+  
+    /* Set background properties for the magnifier glass: */
+    glass.style.backgroundImage = "url('" + img.src + "')";
+    glass.style.backgroundRepeat = "no-repeat";
+    glass.style.backgroundSize = (img.width * zoom) + "px " + (img.height * zoom) + "px";
+    bw = 3;
+    w = glass.offsetWidth / 2;
+    h = glass.offsetHeight / 2;
+  
+    /* Execute a function when someone moves the magnifier glass over the image: */
+    glass.addEventListener("mousemove", moveMagnifier);
+    img.addEventListener("mousemove", moveMagnifier);
+  
+    /*and also for touch screens:*/
+    glass.addEventListener("touchmove", moveMagnifier);
+    img.addEventListener("touchmove", moveMagnifier);
+    function moveMagnifier(e) {
+      let pos, x, y;
+      /* Prevent any other actions that may occur when moving over the image */
+      e.preventDefault();
+      /* Get the cursor's x and y positions: */
+      pos = getCursorPos(e);
+      x = pos.x;
+      y = pos.y;
+      /* Prevent the magnifier glass from being positioned outside the image: */
+      if (x > img.width - (w / zoom)) {x = img.width - (w / zoom);}
+      if (x < w / zoom) {x = w / zoom;}
+      if (y > img.height - (h / zoom)) {y = img.height - (h / zoom);}
+      if (y < h / zoom) {y = h / zoom;}
+      /* Set the position of the magnifier glass: */
+      glass.style.left = (x - w) + "px";
+      glass.style.top = (y - h) + "px";
+      /* Display what the magnifier glass "sees": */
+      glass.style.backgroundPosition = "-" + ((x * zoom) - w + bw) + "px -" + ((y * zoom) - h + bw) + "px";
+    }
+  
+    function getCursorPos(e) {
+      var a, x = 0, y = 0;
+      e = e || window.event;
+      /* Get the x and y positions of the image: */
+      a = img.getBoundingClientRect();
+      /* Calculate the cursor's x and y coordinates, relative to the image: */
+      x = e.pageX - a.left;
+      y = e.pageY - a.top;
+      /* Consider any page scrolling: */
+      x = x - window.pageXOffset;
+      y = y - window.pageYOffset;
+      return {x : x, y : y};
+    }
+}
+
 // Hàm tạo pagination
 let currentPage = 1;
 function createPagination() {
@@ -166,12 +240,12 @@ function renderUsersTable(users) {
         let img_text = ''
         if (JSON.parse(user.content).img) {
             img_text=`<td class="username">
-            <img src="${JSON.parse(user.content).img}" alt="" />}
-            ${JSON.parse(user.content).content}
+            <img class="img_mess"  data-toggle="modal" data-target="#exampleModal" src="${JSON.parse(user.content).img}" alt="" />
+            <span>${JSON.parse(user.content).content}</span>
           </td>`
         } else {
             img_text=`<td class="username">
-            ${JSON.parse(user.content).content}
+            <span>${JSON.parse(user.content).content}</span>
           </td>`
         }
         console.log(img_text);
@@ -207,3 +281,4 @@ function renderUsersTable(users) {
 
 // Hiển thị trang đầu tiên
 createPagination();
+

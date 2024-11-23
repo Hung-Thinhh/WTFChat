@@ -2,6 +2,8 @@ import styles from "./ChatRoomComponent.module.scss";
 import ChatDataContext from 'lib/Context/ChatContext';
 import { useContext, useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
+import { setOffset } from '../../LeftSidebar/sidebarSlide';
+import { useDispatch } from 'react-redux';
 import { addFriendCtrl, delFriendCtrl } from "controller/FriendStuff";
 import blockFriend from "services/blockFriend";
 import Avatar from './Avatar';
@@ -14,6 +16,7 @@ const cx = classNames.bind(styles);
 export default function ChatRoom({ onClick = () => { }, choosedMember, id, avt, name, time, mess, sender, friendId, isFriend, isBlock, type = 'chatroom' }) {
     const { ChatData, setChatData } = useContext(ChatDataContext);
     const { setRoomInfo } = useContext(ChatDataContext);
+    const dispatch = useDispatch();
     const [insFriend, setInsFriend] = useState(isFriend);
     const [isnBlock, setIsnBlock] = useState(isBlock);
     const [isChoose, setIsChoose] = useState(choosedMember?.some((item) => item.id === id));
@@ -26,6 +29,7 @@ export default function ChatRoom({ onClick = () => { }, choosedMember, id, avt, 
             setIsChoose(!isChoose);
             return;
         }
+        dispatch(setOffset(0));
         setChatData(id);
         setRoomInfo({ id, avt, name, friendId });
     };

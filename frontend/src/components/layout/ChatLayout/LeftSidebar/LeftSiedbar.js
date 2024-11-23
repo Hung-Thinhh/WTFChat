@@ -1,12 +1,12 @@
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import "./LeftSidebar.scss";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { showMenuSelector } from '../../../../redux/selectors';
-import { setShowMenu } from './sidebarSlide';
-import { useDispatch, useSelector } from 'react-redux';
 import getRoomInfoService from 'services/getRoomInfoService';
 import { useContext, useEffect, useState } from 'react';
 import ChatDataContext from 'lib/Context/ChatContext';
+import { showMenuSelector } from '../../../../redux/selectors';
+import { setShowMenu } from './sidebarSlide';
+import { useDispatch, useSelector } from 'react-redux';
 
 const LeftSiedbar = () => {
     const { ChatData } = useContext(ChatDataContext);
@@ -14,9 +14,9 @@ const LeftSiedbar = () => {
     const [roomInfo, setRoomInfo] = useState(null);    
     const state = useSelector(showMenuSelector);
     const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(setShowMenu(true));
-    }, [])
+    // useEffect(() => {
+    //     dispatch(setShowMenu(true));
+    // }, [])
     useEffect(() => {
         const fetchInfo = async () => {
             const data = await getRoomInfoService({ roomId: ChatData });

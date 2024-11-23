@@ -10,7 +10,15 @@ window.env = {
   "CONDA_PROMPT_MODIFIER": "False",
   "DriverData": "C:\\Windows\\System32\\Drivers\\DriverData",
   "EDITOR": "C:\\Windows\\notepad.exe",
+<<<<<<< HEAD
   "HOME": "C:\\Users\\rurim",
+=======
+  "EFC_2684": "1",
+  "FPS_BROWSER_APP_PROFILE_STRING": "Internet Explorer",
+  "FPS_BROWSER_USER_PROFILE_STRING": "Default",
+  "GIT_LFS_PATH": "C:\\Program Files\\Git LFS",
+  "HOME": "C:\\Users\\nguye",
+>>>>>>> 19b53c579e753a776813c7bcf74a3e3b89da5c10
   "HOMEDRIVE": "C:",
   "HOMEPATH": "\\Users\\rurim",
   "INIT_CWD": "D:\\RuriPersonalFile\\Desktop\\WTFChat\\frontend",
@@ -83,8 +91,11 @@ window.env = {
   "USERPROFILE": "C:\\Users\\rurim",
   "VBOX_MSI_INSTALL_PATH": "C:\\Program Files\\Oracle\\VirtualBox\\",
   "windir": "C:\\Windows",
+<<<<<<< HEAD
   "WSLENV": "WT_SESSION:WT_PROFILE_ID:",
   "WT_PROFILE_ID": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
   "WT_SESSION": "a9ecda0a-d495-4da6-9fb9-eadb91b8b37c",
+=======
+>>>>>>> 19b53c579e753a776813c7bcf74a3e3b89da5c10
   "ZES_ENABLE_SYSMAN": "1"
 };

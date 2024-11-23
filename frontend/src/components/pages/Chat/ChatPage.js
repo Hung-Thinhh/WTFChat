@@ -11,6 +11,10 @@ import Modal from 'react-modal';
 import song from '../../../notify.mp3';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { offsetSelector } from '../../../redux/selectors';
+import { setOffset } from '../../layout/ChatLayout/LeftSidebar/sidebarSlide';
+import { useDispatch, useSelector } from 'react-redux';
+
 
 Modal.setAppElement('#root');
 
@@ -23,13 +27,23 @@ const ChatPage = () => {
     const [report, setReport] = useState('');
     const [tempId, setTempId] = useState(null);
     const chatWindowRef = useRef(null);
-    const [offset, setOffset] = useState(0);
+    // const [offset, setOffset] = useState(0);
     const [audio] = useState(new Audio(song));
     const [modalIsOpen, setIsOpen] = useState(false);
 
+    const state = useSelector(offsetSelector);
+    const dispatch = useDispatch();
+       
+
+
+
+
+
+
+
     const fetchNewMessages = async () => {
         try {
-            const response = await getChat({ userId: currUser.id, roomId: ChatData, offset });
+            const response = await getChat({ userId: currUser.id, roomId: ChatData, offset: state });
             if (response && response.EC === 0) {
                 socket.emit('join_room', ChatData);
                 setRoom(ChatData);
@@ -43,16 +57,20 @@ const ChatPage = () => {
                     }
                 });
                 setCurChatData(data);
-                setOffset((prevOffset) => prevOffset + 50);
+                dispatch(setOffset(state+ 50));
             }
         } catch (error) {
             console.error('Error fetching new messages:', error);
         }
     };
-
+    useEffect(() => {
+        console.log('offset', state);
+        console.log('curChatData', curChatData);
+    }, [state]);
+        
     const lazyLoad = async () => {
         try {
-            const response = await getChat({ userId: currUser.id, roomId: ChatData, offset });
+            const response = await getChat({ userId: currUser.id, roomId: ChatData, offset:state });
             if (response && response.EC === 0) {
                 let data = response.DT;
                 data.forEach((item) => {
@@ -73,7 +91,7 @@ const ChatPage = () => {
                     newData.sort((a, b) => new Date(a.time) - new Date(b.time));
                     return newData;
                 });
-                setOffset((prevOffset) => prevOffset + 50);
+                dispatch(setOffset(state + 50));
             }
         } catch (error) {
             console.error('Error fetching new messages:', error);
@@ -194,10 +212,10 @@ const ChatPage = () => {
                 chatWindow.removeEventListener('scroll', handleScroll);
             }
         };
-    }, [offset]);
+    }, [state]);
 
     useEffect(() => {
-        if (chatWindowRef.current && offset <= 50) {
+        if (chatWindowRef.current && state <= 50) {
             chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
         }
     }, [curChatData]);
