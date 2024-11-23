@@ -11,7 +11,7 @@ const cx = classNames.bind(styles);
 
 const SearchResults = ({ findData, searchData, handleSearchChange }) => {
     return (
-        <div>
+        <div className={cx('containerChatRoom')}>
             <div className={cx('searchData')}>
                 {findData && findData.length > 0 ? (
                     <>

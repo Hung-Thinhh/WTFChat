@@ -10,21 +10,25 @@ const cx = classNames.bind(styles);
 
 const BlockList = ({ blocklist }) => {
     return blocklist && blocklist.length > 0 ? (
-        blocklist.map((item) => (
-            <ChatRoom
-                type='friend'
-                key={item.id}
-                id={item.id}
-                name={item.firstname + ' ' + item.lastname}
-                isBlock={true}
-                avt={item.avatar}
-                friendId={item.id}
-                isFriend={item.isFriend}
-            />
-        ))
-    ) : (
-        <div className={cx('nonePage')}>楽しい犬 <FontAwesomeIcon icon={faDog} /> <FontAwesomeIcon icon={faSmile} /><br />You are good, you love everyone, keep going</div>
-    );
+        <div className={cx('containerChatRoom')}>
+            {blocklist.map((item) => (
+                <ChatRoom
+                    type='friend'
+                    key={item.id}
+                    id={item.id}
+                    name={item.firstname + ' ' + item.lastname}
+                    isBlock={true}
+                    avt={item.avatar}
+                    friendId={item.id}
+                    isFriend={false}
+                />
+            ))}
+        </div>
+    )
+
+        : (
+            <div className={cx('nonePage')}>楽しい犬 <FontAwesomeIcon icon={faDog} /> <FontAwesomeIcon icon={faSmile} /><br />You are good, you love everyone, keep going</div>
+        );
 };
 
 export default BlockList;

@@ -146,6 +146,7 @@
         border-radius: 10px;
         padding: 10px 5px;
         backdrop-filter: blur(50px);
+        padding: 1rem;
         min-width: 150px;
     }
 
@@ -155,7 +156,8 @@
         gap: 2rem;
         border-radius: 6px;
         font-size: 15px;
-        padding: 5px 10px;
+        top: 0;
+        left: 0;
 
         &.szh-menu__item--submenu {
             padding: 0;

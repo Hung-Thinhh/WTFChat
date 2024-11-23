@@ -13,7 +13,9 @@
     box-shadow: 9px 9px 1px 1px #3b3b3b;
     position: relative;
     padding: 6rem 0 0 0;
-
+    .containerChatRoom {
+        min-height: 10rem;
+    }
     .page {
         border-radius: 1rem;
     }

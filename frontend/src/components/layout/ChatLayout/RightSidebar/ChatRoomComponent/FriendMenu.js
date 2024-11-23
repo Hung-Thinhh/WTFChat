@@ -17,9 +17,7 @@ export default function FriendMenu({ isnBlock, insFriend, handleUnBlockFriend, h
             }
             {isnBlock ? null :
                 insFriend ?
-                    (<>
-                        <MenuItem className={cx("menu_item", "deleteUser")} onClick={handleDelFriend}><FontAwesomeIcon icon={faTrash} />Xóa bạn</MenuItem>
-                    </>) :
+                    (<MenuItem className={cx("menu_item", "deleteUser")} onClick={handleDelFriend}><FontAwesomeIcon icon={faTrash} />Xóa bạn</MenuItem>) :
                     (<MenuItem className={cx("menu_item", "addFUser")} onClick={handleAddFriend}><FontAwesomeIcon icon={faPlus} />Thêm bạn</MenuItem>)
             }
         </Menu>

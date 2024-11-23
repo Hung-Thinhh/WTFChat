@@ -121,17 +121,33 @@ export const blockFriend = async (userId, friendId, status) => {
         );
 
         if (existingFriendRows.length > 0) {
-            // Update the block status if the relationship exists
-            const [delRows] = await pool.query(
-                "DELETE FROM `banbe` WHERE usertwoid = ? OR useroneid = ?",
-                [friendId, friendId]
-            );
-            if (delRows.affectedRows === 0) {
-                return {
-                    EM: 'Error updating block status',
-                    EC: 0,
-                    DT: []
-                };
+            if (status === false) {
+                // Update the block status if the relationship exists
+                const [delRows] = await pool.query(
+                    "DELETE FROM `banbe` WHERE usertwoid = ? OR useroneid = ?",
+                    [friendId, friendId]
+                );
+                if (delRows.affectedRows === 0) {
+                    return {
+                        EM: 'Error updating block status',
+                        EC: 0,
+                        DT: []
+                    };
+                }
+            } else {
+                // Update the block status if the relationship exists
+                const [updateRows] = await pool.query(
+                    "UPDATE `banbe` SET block = ? WHERE (useroneid = ? AND usertwoid = ?) OR (useroneid = ? AND usertwoid = ?)",
+                    [status, userId, friendId, friendId, userId]
+                );
+
+                if (updateRows.affectedRows === 0) {
+                    return {
+                        EM: 'Error updating block status',
+                        EC: 0,
+                        DT: []
+                    };
+                }
             }
         } else {
             // Insert a new friend relationship if it does not exist
@@ -149,7 +165,7 @@ export const blockFriend = async (userId, friendId, status) => {
             }
         }
 
-      
+
 
         await pool.query('COMMIT');
 
