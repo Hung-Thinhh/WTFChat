@@ -88,7 +88,7 @@ const HeaderChatPage = ({ RoomInfo }) => {
                         className="btn_more" onlyIcon={true}
                         rightIcon={<FontAwesomeIcon icon={faEllipsisVertical} />}
                     >
-                        // thằng nào xoá của t v
+                         {/* thằng nào xoá của t v */}
                     </Button>
                     <Menu menuButton={<MenuButton className="btn_more"><FontAwesomeIcon icon={faEllipsisVertical} /></MenuButton>} transition className="my-menu">
                         <MenuItem className="menu_item"><FontAwesomeIcon icon={faBellSlash} />Mute</MenuItem>
