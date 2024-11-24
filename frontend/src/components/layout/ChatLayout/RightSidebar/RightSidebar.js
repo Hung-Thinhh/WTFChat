@@ -33,7 +33,6 @@ const RightSidebar = () => {
     };
 
     const handleAdd = (data) => {
-        
         socket.emit('newRoom', data);
     }
 
@@ -44,7 +43,8 @@ const RightSidebar = () => {
 
     useEffect(() => {
         socket.on('newRoom', (data) => {
-            setRoomData((prev) => [data, ...prev]);
+            if (!chatRoom.some(room => room.id === data.id))
+                setRoomData((prev) => [data, ...prev]);
         });
         return () => {
             socket.off('newRoom'); // Hủy đăng ký sự kiện khi component unmount
