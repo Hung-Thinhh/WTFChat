@@ -1,7 +1,8 @@
 import './App.css';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Routes, Route } from 'react-router-dom';
-
+import { useSelector, useDispatch } from "react-redux";
+import { fetchReportType,setReportType } from "./redux/reportType_Slide";
 // routes
 import { publicRoutes, privateRoutes } from 'routes';
 import { PrivateRoutes } from 'router/privateRoutes';
@@ -12,16 +13,57 @@ import ChatDataContext from 'lib/Context/ChatContext';
 import { socket } from 'socket';
 
 function App(props) {
+    const dispatch = useDispatch();
     // const location = useLocation();
     // const prevPath = localStorage.getItem('prevPath') || '/';
-    const { setCurrUser } = useContext(ChatDataContext);
+    const { currUser,setCurrUser } = useContext(ChatDataContext);
     const { setlistStatus } = useContext(ChatDataContext);
     const [checkAcc, setCheckAcc] = useState(false);
     const [pageProps, setPageProps] = useState({}); // những props muốn chuyền vào pages để sữ dụng
 
     // Thêm những giá trị muốn thêm vào page đặc biệt nếu có
     // setPageProps(prev => {...prev, newProps: value})
-
+    useEffect(() => {
+        // check account whenever go to page
+        const checkAccount = async () => {
+            const res = await checkaccount();
+            if (res.EC === '200') {
+                setCurrUser(res.DT);
+                console.log(res.DT);
+                
+                socket.emit('authenticate', res.DT.id);
+            } else if (res.EC === '400') {
+                alert('Tài khoản đang bị khoá');
+                await logout();
+            } else if (res.EC === '403') {
+                alert('Xác thực thất bại');
+                await logout();
+            } else if (res.EC === '500') {
+                alert(
+                    'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
+                );
+            }
+            setCheckAcc(true);
+        };
+        checkAccount();
+    }, []);
+    const typeReport = useSelector((state) => state.typeReport.reportType);
+    useEffect(() => {
+        if (typeReport.data.length === 0) {
+            dispatch(fetchReportType());
+        }
+    }, []);
+    const handleGetReportType = (data) => {
+        console.log(data);
+        
+        dispatch(setReportType(data.report))
+    };
+    useEffect(() => {
+        socket.on('delete_report_type', handleGetReportType);
+        return () => {
+            socket.off('delete_report_type', handleGetReportType);
+        };
+    }, []);
     const logout = async () => {
         // logout
         const logoutRes = await logout();
@@ -41,30 +83,22 @@ function App(props) {
             socket.off('user_status_update', handleListStatus);
         };
     }, []);
-    useEffect(() => {
-        // check account whenever go to page
-        const checkAccount = async () => {
-            const res = await checkaccount();
-            if (res.EC === '200') {
-                setCurrUser(res.DT);
-                socket.emit('authenticate', res.DT.id);
-                // setCurrUser(res.DT)
-            } else if (res.EC === '400') {
-                alert('Tài khoản đang bị khoá');
-                await logout();
-            } else if (res.EC === '403') {
-                alert('Xác thực thất bại');
-                await logout();
-            } else if (res.EC === '500') {
-                alert(
-                    'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
-                );
-            }
-            setCheckAcc(true);
-        };
-        checkAccount();
-    }, []);
+  
 
+    const handleBanUser = async(data) => {
+        console.log(data.id,currUser);
+        // if (data.id === currUser.id) {
+        //     alert('Tài khoản đang bị khoá');
+        //     await logout();
+        // }
+        
+    };
+    useEffect(() => {
+        socket.on('ban_user', handleBanUser);
+        return () => {
+            socket.off('ban_user', handleBanUser);
+        };
+    }, []);
     // getPublicKey - use when update key pair to daly change
     // useEffect(() => {
     //     const getPublicKey = async () => {

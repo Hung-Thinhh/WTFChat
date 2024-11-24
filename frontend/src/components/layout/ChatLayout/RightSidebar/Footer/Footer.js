@@ -38,7 +38,12 @@ const Footer = ({ pageState, setPageData, onClickNewChat }) => {
                     <FontAwesomeIcon icon={faUserSlash} />
                 </div>
             </div>
-            <Button onClick={onClickNewChat} className={cx('btnAddChat')} rightIcon={<FontAwesomeIcon icon={faPlus} />} onlyIcon={true} />
+            <Button className={cx('btnAddChat')}
+                rightIcon={<FontAwesomeIcon icon={faPlus} />}
+                onlyIcon={true}
+            >
+                
+            </Button>
         </div>
 
 

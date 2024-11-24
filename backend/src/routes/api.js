@@ -6,7 +6,11 @@ import {
     deletaChatController,
 } from '../controllers/chatController';
 import { getFriendController, addFriendController, delFriendController, blockFriendController, getBlockFriendController } from '../controllers/FriendController.js';
-import { getReportType, sendReport, getReportAPI ,banReportById,unbanReportById} from "../controllers/AdminReportController.js";
+import {
+    getReportType, sendReport, getReportAPI,
+    banReportById, unbanReportById, editReportType,
+    addReportType,banReportType,unbanReportType
+} from "../controllers/AdminReportController.js";
 import { getRoomController } from '../controllers/getChatRoomCtrl.js';
 import GetInfoRoom from '../controllers/GetInfoRoom.js';
 import createRoomController from '../controllers/CreateRoomController.js';
@@ -93,6 +97,10 @@ const initApiRouter = (app) => {
     router.post('/sendReport', sendReport);
     router.get('/banReportById/:id', banReportById);
     router.get('/unbanReportById/:id', unbanReportById);
+    router.get('/banReportType/:id', banReportType);
+    router.get('/unbanReportType/:id', unbanReportType);
+    router.post('/edit-reportType', editReportType);
+    router.post('/add-reportType', addReportType);
 
     //admin
     router.get('/getUserById/:id', getUserById);

@@ -1,7 +1,7 @@
 import express from 'express'
 import {HomeController} from "../controllers/AdminHomeController"
 import {getListUser} from "../controllers/AdminUserController"
-import {getReport} from "../controllers/AdminReportController"
+import {getReport,getReportTypeAPI} from "../controllers/AdminReportController"
 const router = express.Router();
 
 const initWebRouter = (app) => {
@@ -27,6 +27,14 @@ const initWebRouter = (app) => {
             sidebar: 'rightSidebar',
             header: "header",
             reports: await getReport(req,res)
+        });
+    });
+    router.get("/report-type", async (req, res) => {
+        
+        return res.render('report_type', {
+            sidebar: 'rightSidebar',
+            header: "header",
+            report_type: await getReportTypeAPI(req,res)
         });
     });
 

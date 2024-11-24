@@ -50,7 +50,7 @@ function Button({
     return (
         <Comp className={classes} {...props}>
             {leftIcon && <span className={cx(onlyIcon ? 'onlyIcon' : 'icon')}>{leftIcon}</span>}
-            <span className={cx('title')}>{children}</span>
+            {children&&<span className={cx('title')}>{children}</span>}
             {rightIcon && <span className={cx(onlyIcon ? 'onlyIcon' : 'icon')}>{rightIcon}</span>}
         </Comp>
     );
@@ -62,7 +62,8 @@ Button.propTypes = {
     type: PropTypes.oneOf(['primary', 'outline', 'text', 'rounded']),
     size: PropTypes.oneOf(['small', 'large', 'medium']),
     disabled: PropTypes.bool,
-    children: PropTypes.node.isRequired,
+    // children: PropTypes.node.isRequired,
+    children: PropTypes.node,
     className: PropTypes.string,
     leftIcon: PropTypes.node,
     rightIcon: PropTypes.node,

@@ -1,4 +1,6 @@
 import pool from '../connectDB.js';
+import { getIO } from '../socket/socketConfig.js';
+
 const getUsers = async (page) => {
     try {
         const usersPerPage = 5;
@@ -9,12 +11,12 @@ const getUsers = async (page) => {
             [usersPerPage, (currentPage - 1) * usersPerPage],
         );
         const CountUser = await pool.query('SELECT COUNT(*) FROM nguoidung');
-        
+
         const totalPages = CountUser[0][0]['COUNT(*)'];
 
         return {
             user: users[0],
-            totalPages: Math.ceil(totalPages / usersPerPage)
+            totalPages: Math.ceil(totalPages / usersPerPage),
         };
     } catch (error) {
         console.log(error);
@@ -77,15 +79,14 @@ const editUserById = async (data) => {
 };
 const banUserById = async (id) => {
     try {
-        const [users] = await pool.query(
-            `UPDATE xacthuc SET status=? WHERE id=?`,
-            [0,id],
-        );
+        const [users] = await pool.query(`UPDATE xacthuc SET status=? WHERE id=?`, [0, id]);
 
         // Sử dụng then() trên Promise được trả về bởi pool.query()
         // Kiểm tra kết quả của câu lệnh UPDATE
         if (users.affectedRows > 0) {
             console.log('Cập nhật thành công!');
+            const io = getIO();
+            io.emit('ban_user', { id });
             return {
                 EM: 'Success',
                 EC: 0,
@@ -110,10 +111,7 @@ const banUserById = async (id) => {
 };
 const unbanUserById = async (id) => {
     try {
-        const [users] = await pool.query(
-            `UPDATE xacthuc SET status=? WHERE id=?`,
-            [1,id],
-        );
+        const [users] = await pool.query(`UPDATE xacthuc SET status=? WHERE id=?`, [1, id]);
 
         // Sử dụng then() trên Promise được trả về bởi pool.query()
         // Kiểm tra kết quả của câu lệnh UPDATE
@@ -144,5 +142,7 @@ const unbanUserById = async (id) => {
 export const adminUser = {
     getUsers,
     getUserByID,
-    editUserById,banUserById,unbanUserById
+    editUserById,
+    banUserById,
+    unbanUserById,
 };

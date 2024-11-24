@@ -36,7 +36,9 @@ const chatController = async (req, res) => {
 const getChatController = async (req, res) => {
     try {
         const { userId, roomId ,offset} = req.body;
-        const data = await getChat(userId, roomId,offset);
+        const data = await getChat(userId, roomId, offset);
+        console.log(data);
+        
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,
