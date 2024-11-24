@@ -19,7 +19,7 @@ import BlockList from './BlockList';
 const cx = classNames.bind(styles);
 
 const RightSidebar = () => {
-    const {currUser } = useContext(ChatDataContext);
+    const { currUser } = useContext(ChatDataContext);
     const [chatRoom, setRoomData] = useState([]);
     const [pageState, setPageData] = useState('chat');
     const [friend, setFriend] = useState([]);
@@ -32,11 +32,8 @@ const RightSidebar = () => {
         setStateNewChatPopUp(true);
     };
 
-    const handleAdd = (e) => {
-        // if (e) {
-        //     setPageData('chat');
-            
-        // }
+    const handleAdd = (data) => {
+        setRoomData((prev) => [data, ...prev]);
     }
 
     const fetchChatRoom = useCallback(async () => {
