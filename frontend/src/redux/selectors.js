@@ -54,3 +54,11 @@ export const showMenu1Selector = createSelector(
         offset,
     }),
 );
+
+// chatRoom
+export const chatRoomSelector = (state) => state.chatRoom.rooms;
+
+export const chatRoomListSelector = createSelector(
+    chatRoomSelector,
+    (rooms) => rooms
+);

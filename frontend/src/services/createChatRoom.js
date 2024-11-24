@@ -1,5 +1,5 @@
 import { createChatRoomCtrl } from '../controller/createChatRoom';
-const addFriend = async (data) => {
+const createChatRoom = async (data) => {
     try {
         const datas = await createChatRoomCtrl(data)
         return datas
@@ -9,4 +9,4 @@ const addFriend = async (data) => {
     }
 };
 
-export default addFriend
+export default createChatRoom

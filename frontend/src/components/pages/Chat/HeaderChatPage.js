@@ -28,13 +28,13 @@ const HeaderChatPage = ({ RoomInfo }) => {
 
         return () => clearInterval(intervalId);
     }, [listStatus, RoomInfo.friendId]);
-    console.log(RoomInfo.friendId.length > 1 ? "group" : "private");
+    console.log(RoomInfo);
 
     return (
         <div className="chatpage_header">
             <div className="header_wrap">
                 <UserInfo RoomInfo={RoomInfo} listStatus={listStatus} status={status} />
-                <MoreOptions dispatch={dispatch} state={state} />
+                <MoreOptions RoomInfo={RoomInfo} dispatch={dispatch} state={state} />
             </div>
         </div>
     );

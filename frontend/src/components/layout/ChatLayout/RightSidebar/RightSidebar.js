@@ -16,17 +16,21 @@ import FriendList from './FriendList';
 import SearchResults from './SearchResults';
 import BlockList from './BlockList';
 import { socket } from '../../../../socket';
+import { useDispatch, useSelector } from 'react-redux';
+import { setChatRooms } from '../../../../redux/chatRoomSlice';
+import { chatRoomListSelector } from '../../../../redux/selectors';
 const cx = classNames.bind(styles);
 
 const RightSidebar = () => {
     const { currUser } = useContext(ChatDataContext);
-    const [chatRoom, setRoomData] = useState([]);
     const [pageState, setPageData] = useState('chat');
     const [friend, setFriend] = useState([]);
     const [findData, setFindData] = useState([]);
     const [searchData, setSearchData] = useState('');
     const [stateNewChatPopUp, setStateNewChatPopUp] = useState(false);
     const [blocklist, setBlockList] = useState([]);
+    const dispatch = useDispatch();
+    const chatRoom = useSelector(chatRoomListSelector);
 
     const handleNewChat = (e) => {
         setStateNewChatPopUp(true);
@@ -36,15 +40,10 @@ const RightSidebar = () => {
         socket.emit('newRoom', data);
     }
 
-
-
-
-
-
     useEffect(() => {
         socket.on('newRoom', (data) => {
             if (!chatRoom.some(room => room.id === data.id))
-                setRoomData((prev) => [data, ...prev]);
+                dispatch(setChatRooms((prev) => [data, ...prev]));
         });
         return () => {
             socket.off('newRoom'); // Hủy đăng ký sự kiện khi component unmount
@@ -54,11 +53,11 @@ const RightSidebar = () => {
     const fetchChatRoom = useCallback(async () => {
         try {
             const response = await getChatRoom({ id: currUser.id });
-            setRoomData(response.DT);
+            dispatch(setChatRooms(response.DT));
         } catch (error) {
             console.error('Error fetching new messages:', error);
         }
-    }, [currUser]);
+    }, [currUser, dispatch]);
 
     const fetchFriendList = useCallback(async () => {
         try {

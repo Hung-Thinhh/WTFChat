@@ -13,6 +13,7 @@ const ChatList = ({ chatRoom, currUser }) => {
                 <ChatRoom
                     key={room.id}
                     id={room.id}
+                    chattype={room.type}
                     sender={
                         JSON.parse(room.last_message) ?
                             JSON.parse(room.last_message).idUser !== currUser.id

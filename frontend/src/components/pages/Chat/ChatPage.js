@@ -5,7 +5,7 @@ import MessageInput from '../../card/MessageInput';
 import React, { useContext, useEffect, useState, useRef } from 'react';
 import ChatDataContext from 'lib/Context/ChatContext';
 import getChat from 'services/getChat';
-import {sendReport } from 'controller/report';
+import { sendReport } from 'controller/report';
 import { socket } from '../../../socket';
 import Modal from 'react-modal';
 import song from '../../../notify.mp3';
@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 Modal.setAppElement('#root');
 
 const ChatPage = () => {
-    const { currUser, ChatData, RoomInfo } = useContext(ChatDataContext);
+    const { currUser, ChatData, RoomInfo, setRoomInfo } = useContext(ChatDataContext);
     const [curChatData, setCurChatData] = useState([]);
     const [isSending, setIsSending] = useState(false);
     const [isReply, setIsReply] = useState('');
@@ -43,6 +43,7 @@ const ChatPage = () => {
 
     const fetchNewMessages = async () => {
         try {
+            
             const response = await getChat({ userId: currUser.id, roomId: ChatData, offset: state });
             if (response && response.EC === 0) {
                 socket.emit('join_room', ChatData);
@@ -98,7 +99,7 @@ const ChatPage = () => {
         }
     };
 
-    
+
 
     const handleDataReply = (data) => {
         setIsReply(data);
@@ -250,29 +251,29 @@ const ChatPage = () => {
     }, []);
     useEffect(() => {
         socket.on('return_res', (data) => {
-          console.log('cooooooooooooooooooooo');
-          console.log(data);
-      
-          setCurChatData((prevMessages) => {
-            return prevMessages.reduce((acc, msg) => {
-              if (msg.id > data.delete_mess.id) {
-                // Kiểm tra xem `data.delete_mess` đã có trong `acc` chưa
-                if (!acc.some(item => item.id === data.delete_mess.id)) {
-                  return [...acc, data.delete_mess, msg];
-                } else {
-                  return [...acc, msg];
-                }
-              } else {
-                return [...acc, msg];
-              }
-            }, []); // Khởi tạo mảng rỗng cho `acc`
-          });
+            console.log('cooooooooooooooooooooo');
+            console.log(data);
+
+            setCurChatData((prevMessages) => {
+                return prevMessages.reduce((acc, msg) => {
+                    if (msg.id > data.delete_mess.id) {
+                        // Kiểm tra xem `data.delete_mess` đã có trong `acc` chưa
+                        if (!acc.some(item => item.id === data.delete_mess.id)) {
+                            return [...acc, data.delete_mess, msg];
+                        } else {
+                            return [...acc, msg];
+                        }
+                    } else {
+                        return [...acc, msg];
+                    }
+                }, []); // Khởi tạo mảng rỗng cho `acc`
+            });
         });
-      
+
         return () => {
-          socket.off('return_res'); // Hủy đăng ký sự kiện khi component unmount
+            socket.off('return_res'); // Hủy đăng ký sự kiện khi component unmount
         };
-      }, []);
+    }, []);
     if (!currUser) return null;
 
     return (
@@ -342,7 +343,7 @@ const ChatPage = () => {
 
                     {chatWindowRef.current &&
                         chatWindowRef.current.scrollHeight - chatWindowRef.current.scrollTop !==
-                            chatWindowRef.current.clientHeight && (
+                        chatWindowRef.current.clientHeight && (
                             <button
                                 className="go-down"
                                 onClick={() => {

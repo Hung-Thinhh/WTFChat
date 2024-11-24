@@ -193,36 +193,36 @@ const sendOTP = async (email) => {
 
 
 
-        // // Lấy AccessToken
-        // const myAccessTokenObject = await myOAuth2Client.getAccessToken();
-        // // Access Token sẽ nằm trong property 'token'
-        // const myAccessToken = myAccessTokenObject?.token;
+        // Lấy AccessToken
+        const myAccessTokenObject = await myOAuth2Client.getAccessToken();
+        // Access Token sẽ nằm trong property 'token'
+        const myAccessToken = myAccessTokenObject?.token;
 
-        // // Check if access token needs refresh
-        // if (Date.now() >= myAccessTokenObject.expiry_date - 5 * 60 * 1000) {
-        //     // Token is expiring soon, refresh it
-        //     const newAccessTokenObject = await myOAuth2Client.refreshToken(
-        //         GOOGLE_MAILER_REFRESH_TOKEN,
-        //     );
-        //     myAccessToken = newAccessTokenObject.token;
-        // }
+        // Check if access token needs refresh
+        if (Date.now() >= myAccessTokenObject.expiry_date - 5 * 60 * 1000) {
+            // Token is expiring soon, refresh it
+            const newAccessTokenObject = await myOAuth2Client.refreshToken(
+                GOOGLE_MAILER_REFRESH_TOKEN,
+            );
+            myAccessToken = newAccessTokenObject.token;
+        }
 
-        // // Tạo một biến Transport từ Nodemailer với đầy đủ cấu hình, dùng để gọi hành động gửi mail
-        // const transport = nodemailer.createTransport({
-        //     service: 'gmail',
-        //     auth: {
-        //         type: 'OAuth2',
-        //         user: ADMIN_EMAIL_ADDRESS,
-        //         clientId: GOOGLE_MAILER_CLIENT_ID,
-        //         clientSecret: GOOGLE_MAILER_CLIENT_SECRET,
-        //         refresh_token: GOOGLE_MAILER_REFRESH_TOKEN,
-        //         accessToken: myAccessToken,
-        //     },
-        // });
+        // Tạo một biến Transport từ Nodemailer với đầy đủ cấu hình, dùng để gọi hành động gửi mail
+        const transport = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                type: 'OAuth2',
+                user: ADMIN_EMAIL_ADDRESS,
+                clientId: GOOGLE_MAILER_CLIENT_ID,
+                clientSecret: GOOGLE_MAILER_CLIENT_SECRET,
+                refresh_token: GOOGLE_MAILER_REFRESH_TOKEN,
+                accessToken: myAccessToken,
+            },
+        });
 
 
-        // // Gọi hành động gửi email
-        // await transport.sendMail(mailOptions);
+        // Gọi hành động gửi email
+        await transport.sendMail(mailOptions);
 
         // Không có lỗi gì thì trả về success
         return {
