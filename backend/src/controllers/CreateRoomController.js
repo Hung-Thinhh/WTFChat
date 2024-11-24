@@ -1,9 +1,9 @@
-import { getChatRoom } from "../services/getChatRom.js";
+import { createChatRoom } from "../services/chatRoomStuff";
 
-const getRoomController = async (req, res) => {
+const createRoomController = async (req, res) => {
     try {
-        const id = req.body.id;
-        const data = await getChatRoom(id);
+        const { chatRoomName, choosedMember } = req.body;
+        const data = await createChatRoom(chatRoomName, choosedMember);
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,
@@ -20,4 +20,4 @@ const getRoomController = async (req, res) => {
 };
 
 
-export default getRoomController;
+export default createRoomController;
