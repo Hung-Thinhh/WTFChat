@@ -33,10 +33,10 @@ const RightSidebar = () => {
     };
 
     const handleAdd = (e) => {
-        if (e) {
-            setPageData('chat');
+        // if (e) {
+        //     setPageData('chat');
             
-        }
+        // }
     }
 
     const fetchChatRoom = useCallback(async () => {

@@ -39,6 +39,7 @@ const Footer = ({ pageState, setPageData, onClickNewChat }) => {
                 </div>
             </div>
             <Button className={cx('btnAddChat')}
+                onClick={onClickNewChat}
                 rightIcon={<FontAwesomeIcon icon={faPlus} />}
                 onlyIcon={true}
             >
