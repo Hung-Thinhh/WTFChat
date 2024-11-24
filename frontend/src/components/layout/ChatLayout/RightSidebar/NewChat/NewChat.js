@@ -18,6 +18,7 @@ const NewChat = ({ callBack, active, setActive }) => {
     const refInput = useRef(null);
     useEffect(() => { refInput.current.focus() }, []);
     const handleNewChat = async () => {
+        if (choosedMember.length === 0) return alert('Chưa chọn thành viên');
         const data = await createChatRoom({ choosedMember, chatRoomName });
         if (data.EC !== 1) {
             alert(data.EM);
