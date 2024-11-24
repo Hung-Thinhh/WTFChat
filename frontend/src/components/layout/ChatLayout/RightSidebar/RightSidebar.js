@@ -15,7 +15,7 @@ import ChatList from './ChatList';
 import FriendList from './FriendList';
 import SearchResults from './SearchResults';
 import BlockList from './BlockList';
-
+import { socket } from '../../../../socket';
 const cx = classNames.bind(styles);
 
 const RightSidebar = () => {
@@ -33,8 +33,23 @@ const RightSidebar = () => {
     };
 
     const handleAdd = (data) => {
-        setRoomData((prev) => [data, ...prev]);
+        
+        socket.emit('newRoom', data);
     }
+
+
+
+
+
+
+    useEffect(() => {
+        socket.on('newRoom', (data) => {
+            setRoomData((prev) => [data, ...prev]);
+        });
+        return () => {
+            socket.off('newRoom'); // Hủy đăng ký sự kiện khi component unmount
+        };
+    }, []);
 
     const fetchChatRoom = useCallback(async () => {
         try {

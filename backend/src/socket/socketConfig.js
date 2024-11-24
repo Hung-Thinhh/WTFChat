@@ -24,9 +24,11 @@ const setupWebSocket = (server) => {
         socket.on('authenticate', async (id) => {
             try {
                 const user = id;
+                socket.join(user);
 
                 if (user) {
                     socket.userId = user;
+
                     //lấy danh sách status_users
                     const resdis_online_users = await redisClient.get('online_users');
                     const online_users = JSON.parse(resdis_online_users);
@@ -52,7 +54,9 @@ const setupWebSocket = (server) => {
                             await redisClient.set('online_users', JSON.stringify(online_users));
                             // console.log(online_users);
                         }
+
                     }
+
                     io.emit('user_status_update', JSON.parse(await redisClient.get('online_users')));
                 } else {
                     console.log('SOCKET | ERROR | Xác thực thất bại cho websocket không có id');
@@ -63,6 +67,8 @@ const setupWebSocket = (server) => {
                 socket.disconnect();
             }
         });
+
+
         // Tham gia phòng chat
         socket.on('join_room', (room) => {
             socket.join(room);
@@ -71,6 +77,15 @@ const setupWebSocket = (server) => {
         // Rời phòng chat
         socket.on('leave_room', (room) => {
             socket.leave(room);
+        });
+
+        socket.on('newRoom', async (roominfo) => {
+            roominfo.otherUserId.forEach((element) => {
+                // Phát sự kiện tới phòng cụ thể
+                console.log(element);
+                
+                io.to(element).emit('newRoom', roominfo);
+            });
         });
 
         // Xử lý sự kiện gửi tin nhắn
@@ -110,16 +125,19 @@ const setupWebSocket = (server) => {
             try {
                 const delete_mess = await deletaChat(data.id);
                 delete_mess.id = data.id;
-                io.to(data.roomid).emit('delete_res', {delete_mess}); // Phát sự kiện tới phòng cụ thể
+                io.to(data.roomid).emit('delete_res', { delete_mess }); // Phát sự kiện tới phòng cụ thể
             } catch (error) {
                 console.error('Error creating chat:', error);
             }
         });
 
+
         socket.on('disconnect', async () => {
             const resdis_online_users = await redisClient.get('online_users');
             const online_users = JSON.parse(resdis_online_users);
             const user = socket.userId;
+            socket.leave(user);
+
             if (!online_users.some((userObj) => userObj.userId === user)) {
                 online_users.push({ userId: user, time: Date.now(), status: 'offline' });
                 await redisClient.set('online_users', JSON.stringify(online_users));
