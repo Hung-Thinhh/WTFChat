@@ -1,4 +1,4 @@
-import { getFriendListCtrl } from '../controller/getFriendList';
+import { getFriendListCtrl } from '../controller/FriendStuff';
 const getFriendList = async (data) => {
     try {
         const datas = await getFriendListCtrl(data)

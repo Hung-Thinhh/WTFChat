@@ -1,43 +1,73 @@
-import './ChatRoomComponent.scss';
+import styles from "./ChatRoomComponent.module.scss";
 import ChatDataContext from 'lib/Context/ChatContext';
-import { useContext } from 'react';
-import classNames from 'classnames';
+import { useContext, useEffect, useState } from 'react';
+import classNames from 'classnames/bind';
+import { setOffset } from '../../LeftSidebar/sidebarSlide';
+import { useDispatch } from 'react-redux';
+import { addFriendCtrl, delFriendCtrl } from "controller/FriendStuff";
+import blockFriend from "services/blockFriend";
+import Avatar from './Avatar';
+import RoomInfo from './RoomInfo';
+import FriendMenu from './FriendMenu';
+import NewRoomCheckbox from './NewRoomCheckbox';
 
-export default function ChatRoom({ id, avt, name, time, mess, sender, friendId }) {
+const cx = classNames.bind(styles);
+
+export default function ChatRoom({ onClick = () => { }, choosedMember, id, avt, name, time, mess, sender, friendId, isFriend, isBlock, type = 'chatroom' }) {
     const { ChatData, setChatData } = useContext(ChatDataContext);
     const { setRoomInfo } = useContext(ChatDataContext);
-    const handleClick = () => {
+    const dispatch = useDispatch();
+    const [insFriend, setInsFriend] = useState(isFriend);
+    const [isnBlock, setIsnBlock] = useState(isBlock);
+    const [isChoose, setIsChoose] = useState(choosedMember?.some((item) => item.id === id));
+
+    useEffect(() => { setIsChoose(choosedMember?.some((item) => item.id === id)) }, [choosedMember]);
+
+    const handleClick = (e) => {
+        if (type === 'new') {
+            onClick({ id, name, checked: isChoose });
+            setIsChoose(!isChoose);
+            return;
+        }
+        dispatch(setOffset(0));
         setChatData(id);
         setRoomInfo({ id, avt, name, friendId });
     };
+
+    const handleAddFriend = (e) => {
+        addFriendCtrl({ friendId });
+        setInsFriend(true);
+    }
+    const handleDelFriend = (e) => {
+        delFriendCtrl({ friendId });
+        setInsFriend(false);
+    }
+    const handleBlockFriend = (e) => {
+        blockFriend({ friendId, status: true });
+        setIsnBlock(true);
+    }
+    const handleUnBlockFriend = (e) => {
+        blockFriend({ friendId, status: false });
+        setIsnBlock(false);
+    }
+
     return (
-        <div
-            className={classNames('main_container', { active: ChatData === id })}
-            key={id}
-            onClick={handleClick}
-        >
-            <div className="CR_avt">
-                <img
-                    src={
-                        avt && avt !== '/'
-                            ? avt
-                            : 'https://static3.bigstockphoto.com/9/1/3/large1500/31903202.jpg'
-                    }
-                    alt="avt"
+        <div className={cx("main_container", { "active": ChatData === id })} key={id} onClick={handleClick}>
+            <Avatar avt={avt} />
+            <RoomInfo name={name} mess={mess} sender={sender} id={id} type={type} time={time} />
+            {type === 'friend' && (
+                <FriendMenu
+                    isnBlock={isnBlock}
+                    insFriend={insFriend}
+                    handleUnBlockFriend={handleUnBlockFriend}
+                    handleBlockFriend={handleBlockFriend}
+                    handleAddFriend={handleAddFriend}
+                    handleDelFriend={handleDelFriend}
                 />
-            </div>
-            <div className="CR_info">
-                <div className="CR_left">
-                    <div className="CR_room_name">
-                        <h3>{name}</h3>
-                    </div>
-                    <div className="CR_mess">
-                        {sender && <span className="Sender">{sender}:</span>}
-                        {mess && <span className="content">{mess}</span>}
-                    </div>
-                </div>
-                <div className="CR_right">{time}</div>
-            </div>
+            )}
+            {type === 'new' && (
+                <NewRoomCheckbox isChoose={isChoose} id={id} />
+            )}
         </div>
     );
 }

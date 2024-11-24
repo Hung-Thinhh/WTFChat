@@ -1,6 +1,6 @@
 .rightsidebar {
     width: 24%;
-    min-width:300px;
+    min-width: 300px;
     height: 90%;
     margin: 30px;
     display: flex;
@@ -9,9 +9,13 @@
     align-items: center;
     background-color: #1c1b1c;
     z-index: 1;
-    border-radius: 15px;
-    box-shadow: 9px 9px 1px 1px #3b3b3b;
-
+    border-radius: 1rem;
+    // box-shadow: 9px 9px 1px 1px #3b3b3b;
+    position: relative;
+    padding: 6rem 0 0 0;
+    .containerChatRoom {
+        min-height: 10rem;
+    }
     .page {
         border-radius: 1rem;
     }
@@ -22,27 +26,45 @@
         max-height: 100%;
 
         .searchData {
-            padding: 0 0 10% 0;
+            padding: 0 0 6rem 0;
             overflow-y: auto;
             height: 100%;
         }
 
         .sidebar_header {
-            width: 100%;
-            padding: 1.5rem;
+            padding: 1.7rem;
+            display: flex;
+            gap: 1rem;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            position: absolute;
+            background-color: #1a1a1a46;
+            backdrop-filter: blur(1rem);
+            border-radius: 1rem 1rem 0 0;
+            text-transform: capitalize;
+            text-decoration: underline;
+            font-size: 2rem;
+            text-shadow: 0.1rem 0.1rem 0 #ffffff80;
+            font-weight: bold;
+            align-items: center;
             width: 100%;
             color: aliceblue;
-            font-size: 1.5rem;
         }
+        // .search {
+        //     width: 90%;
+        //     padding: 1rem;
+        //     border-radius: 1rem;
+        //     margin: 1rem;
+        //     background: #3b3b3b;
+        //     color: aliceblue;
+        //     font-size: 1.5rem;
+        //     animation: slideInFromLeft 0.2s ease-in-out;
+        // }
         .search {
-            width: 90%;
-            padding: 1rem;
-            border-radius: 1rem;
-            margin: 1rem;
-            background: #3b3b3b;
-            color: aliceblue;
-            font-size: 1.5rem;
-            animation: slideInFromLeft 0.2s ease-in-out;
+            position: absolute;
+            bottom: 0;
+            left: 0;
         }
     }
 
@@ -93,7 +115,7 @@
         text-decoration: none;
         color: white;
         text-align: justify;
-        /* margin      : 15px; */
+        /* margin      : 1rem; */
         text-align: center;
     }
 
@@ -290,7 +312,7 @@
                 }
 
                 .content_cate {
-                    font-size: 15px;
+                    font-size: 1rem;
                 }
             }
         }
@@ -378,4 +400,16 @@
         transform: translateX(0);
         opacity: 1;
     }
+}
+
+.nonePage {
+    color: yellow;
+    padding: 1rem;
+    text-shadow: 0.1rem 0.1rem 0rem red;
+}
+
+.label {
+    color: white;
+    font-size: 1.5rem;
+    margin: 1rem 0 1rem 0;
 }
