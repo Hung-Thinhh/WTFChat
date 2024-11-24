@@ -9,7 +9,7 @@ import createChatRoom from 'services/createChatRoom';
 import { useState, useEffect, useCallback, useRef } from "react";
 const cx = classNames.bind(styles);
 
-const NewChat = ({ callback, active, setActive }) => {
+const NewChat = ({ callBack, active, setActive }) => {
     const [searchData, setSearchData] = useState('');
     const [findData, setFindData] = useState([]);
     const [choosedMember, setChoosedMember] = useState([]);
@@ -21,7 +21,7 @@ const NewChat = ({ callback, active, setActive }) => {
         const data = await createChatRoom({ choosedMember, chatRoomName });
         if (data.EC !== 1) {
             alert(data.EM);
-            return callback(false);
+            return callBack(false);
         }
         setActive(false);
         setChoosedMember([]);
@@ -29,7 +29,7 @@ const NewChat = ({ callback, active, setActive }) => {
         setFindData([]);
         setChatRoomName("");
         setActive(false);
-        return callback(true);
+        return callBack(true);
     };
 
     const handleClickMember = useCallback(({ name, id, checked }) => {
