@@ -32,6 +32,13 @@ const RightSidebar = () => {
         setStateNewChatPopUp(true);
     };
 
+    const handleAdd = (e) => {
+        if (e) {
+            setPageData('chat');
+            
+        }
+    }
+
     const fetchChatRoom = useCallback(async () => {
         try {
             const response = await getChatRoom({ id: currUser.id });
@@ -119,7 +126,7 @@ const RightSidebar = () => {
 
     return (
         <div className={cx('rightsidebar')}>
-            <NewChat active={stateNewChatPopUp} setActive={setStateNewChatPopUp} />
+            <NewChat callBack={handleAdd} active={stateNewChatPopUp} setActive={setStateNewChatPopUp} />
             <div className={cx('me-auto', 'list_nav')}>
                 <div className={cx('sidebar_header')}>
                     <FontAwesomeIcon icon={faUser} />{pageState}

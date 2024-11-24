@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 const LeftSiedbar = () => {
     const { ChatData } = useContext(ChatDataContext);
     const { RoomInfo } = useContext(ChatDataContext);
-    const [roomInfo, setRoomInfo] = useState(null);    
+    const [roomInfo, setRoomInfo] = useState(null);
     const state = useSelector(showMenuSelector);
     const dispatch = useDispatch();
     // useEffect(() => {
@@ -23,10 +23,11 @@ const LeftSiedbar = () => {
             setRoomInfo(data.DT);
         }
         if (ChatData) {
-          fetchInfo();
+            fetchInfo();
         }
     }, [ChatData])
-    
+    // console.log(RoomInfo);
+
     return (
         <div className={`leftSidebar ${state ? 'hide' : 'show'}`}>
             <div className="btn_ctn" onClick={() => dispatch(setShowMenu(!state))}>
@@ -36,13 +37,13 @@ const LeftSiedbar = () => {
                 <div className="avt_ctn">
                     <img src={RoomInfo.avt ? RoomInfo.avt : "https://static3.bigstockphoto.com/9/1/3/large1500/31903202.jpg"} alt="avt" />
                 </div>
-                <div className="mail">ng@gmail.com</div>
+                <div className="mail">@{RoomInfo.friendId?.length === 1 ? RoomInfo.friendId : RoomInfo.id}</div>
                 <div className="name">{RoomInfo.name}</div>
             </div>
             <div className="media">
                 {roomInfo && roomInfo.map((item, index) => (
                     <div className="img_ctn" key={index}>
-                        <img src={item.image} alt="img" />
+                        <img src={item.image || "https://static3.bigstockphoto.com/9/1/3/large1500/31903202.jpg"} alt="img" />
                     </div>
                 ))}
             </div>

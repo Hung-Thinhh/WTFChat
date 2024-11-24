@@ -29,8 +29,10 @@ export default function ChatRoom({ onClick = () => { }, choosedMember, id, avt, 
             setIsChoose(!isChoose);
             return;
         }
+        
         dispatch(setOffset(0));
         setChatData(id);
+        if (isBlock) return;
         setRoomInfo({ id, avt, name, friendId });
     };
 

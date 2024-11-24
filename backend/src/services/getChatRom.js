@@ -14,7 +14,12 @@ const getChatRoom = async (id) => {
                 ELSE p.avt
             END AS avt,
             p.update_time,
-            otherUser.id AS otherUserId,
+            (
+                SELECT GROUP_CONCAT(u.id)
+                FROM thanhvien tv
+                JOIN nguoidung u ON tv.userid = u.id
+                WHERE tv.idRoom = p.id AND u.id != ?
+            ) AS otherUserId,
             (
                 SELECT 
                 JSON_OBJECT(
@@ -39,17 +44,19 @@ const getChatRoom = async (id) => {
             WHERE tv.userid != ?
             ) AS otherUser ON p.id = otherUser.idRoom
             WHERE tv.userid = ?
-            GROUP BY p.id, p.groupName, p.avt, p.update_time, otherUser.id
+            GROUP BY p.id, p.groupName, p.avt, p.update_time
             ORDER BY p.update_time DESC;
             `,
-            [id, id],
+            [id, id, id],
         );
-
 
         return {
             EM: 'Success',
             EC: 1,
-            DT: rows,
+            DT: rows.map((row) => {
+                row.otherUserId = row.otherUserId.split(',');
+                return { ...row };
+            }),
         };
     } catch (error) {
         console.log('SERVICE | GET CHAT ROOM SERVICE | ERROR | ', error);
