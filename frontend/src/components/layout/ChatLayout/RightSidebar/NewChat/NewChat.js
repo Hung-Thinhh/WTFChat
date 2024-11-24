@@ -6,24 +6,30 @@ import MemberList from "./MemberList";
 import ChoosedMemberList from "./ChoosedMemberList";
 import ButtonGroup from "./ButtonGroup";
 import createChatRoom from 'services/createChatRoom';
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 const cx = classNames.bind(styles);
 
-const NewChat = ({ active, setActive }) => {
+const NewChat = ({ callback, active, setActive }) => {
     const [searchData, setSearchData] = useState('');
     const [findData, setFindData] = useState([]);
     const [choosedMember, setChoosedMember] = useState([]);
     const [step, setStep] = useState(1); // Step state to manage form steps
     const [chatRoomName, setChatRoomName] = useState(''); // State to store chat room name
-
+    const refInput = useRef(null);
+    useEffect(() => { refInput.current.focus() }, []);
     const handleNewChat = async () => {
         const data = await createChatRoom({ choosedMember, chatRoomName });
-        setActive(true);
+        if (data.EC !== 1) {
+            alert(data.EM);
+            return callback(false);
+        }
+        setActive(false);
         setChoosedMember([]);
         setSearchData('');
         setFindData([]);
         setChatRoomName("");
-        alert('Tạo phòng chat mới thành công');
+        setActive(false);
+        return callback(true);
     };
 
     const handleClickMember = useCallback(({ name, id, checked }) => {
@@ -45,6 +51,7 @@ const NewChat = ({ active, setActive }) => {
                     <div className={cx('initialForm')}>
                         <h3 className={cx('title')}>Nhập tên phòng chat</h3>
                         <input
+                            ref={refInput}
                             type="text"
                             value={chatRoomName}
                             onChange={(e) => setChatRoomName(e.target.value)}
