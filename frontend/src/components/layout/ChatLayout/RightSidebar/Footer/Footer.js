@@ -38,7 +38,12 @@ const Footer = ({ pageState, setPageData }) => {
                     <FontAwesomeIcon icon={faBoxArchive} />
                 </div>
             </div>
-            <Button className={cx('btnAddChat')} rightIcon={<FontAwesomeIcon icon={faPlus} />} onlyIcon={true} />
+            <Button className={cx('btnAddChat')}
+                rightIcon={<FontAwesomeIcon icon={faPlus} />}
+                onlyIcon={true}
+            >
+                
+            </Button>
         </div>
 
 

@@ -18,13 +18,12 @@ import OpengraphReactComponent from 'opengraph-react';
 import { ControlledMenu, MenuItem, SubMenu, MenuHeader } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 import '@szhsin/react-menu/dist/transitions/zoom.css';
+import { useSelector } from "react-redux";
 
-
-import ChatDataContext from 'lib/Context/ChatContext';
 
 
 const MessageBubble = (data) => {
-    const { reportType } = useContext(ChatDataContext);
+    const reportType = useSelector((state) => state.typeReport.reportType);
     const [status, setStatus] = useState('sending');
     const userClass = data.data.user;
     // truyền data lên component cha
@@ -204,8 +203,8 @@ const MessageBubble = (data) => {
                 >
                     {/* <MenuDivider /> */}
                     <MenuHeader>Report</MenuHeader>
-                    {reportType &&
-                        reportType.map((report) => {
+                    {reportType && reportType.data &&
+                        reportType.data.map((report) => {
                             return (
                                 <MenuItem
                                     key={report.id}

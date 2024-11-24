@@ -81,7 +81,7 @@ backend
 
 
 
-	sau khi check report tin nhắn bị ban sẽ kh dc hiển thị Websocket
 	làm trang home (dữ liệu user mới 5 đứa,biểu đồ)
+	sroll
 	mute chat
 	block user

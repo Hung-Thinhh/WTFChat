@@ -17,7 +17,7 @@ import useDebounce from 'hooks/useDebounce';
 const cx = classNames.bind(styles);
 
 const RightSidebar = () => {
-    const { currUser } = useContext(ChatDataContext);
+    const {currUser } = useContext(ChatDataContext);
     const [chatRoom, setRoomData] = useState([]);
     const [pageState, setPageData] = useState('chat');
     const [friend, setFriend] = useState('chat');

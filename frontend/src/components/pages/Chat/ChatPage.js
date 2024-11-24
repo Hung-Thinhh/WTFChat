@@ -5,17 +5,17 @@ import MessageInput from '../../card/MessageInput';
 import React, { useContext, useEffect, useState, useRef } from 'react';
 import ChatDataContext from 'lib/Context/ChatContext';
 import getChat from 'services/getChat';
-import { getReportType, sendReport } from 'controller/report';
+import {sendReport } from 'controller/report';
 import { socket } from '../../../socket';
 import Modal from 'react-modal';
 import song from '../../../notify.mp3';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 Modal.setAppElement('#root');
 
 const ChatPage = () => {
-    const { currUser, ChatData, RoomInfo, reportType, setReportType } = useContext(ChatDataContext);
+    const { currUser, ChatData, RoomInfo } = useContext(ChatDataContext);
     const [curChatData, setCurChatData] = useState([]);
     const [isSending, setIsSending] = useState(false);
     const [isReply, setIsReply] = useState('');
@@ -80,16 +80,7 @@ const ChatPage = () => {
         }
     };
 
-    const fetchReportType = async () => {
-        try {
-            const response = await getReportType();
-            if (response && response.EC === 0) {
-                setReportType(response.DT);
-            }
-        } catch (error) {
-            console.error('Error fetching report types:', error);
-        }
-    };
+    
 
     const handleDataReply = (data) => {
         setIsReply(data);
@@ -140,7 +131,6 @@ const ChatPage = () => {
     useEffect(() => {
         if (RoomInfo) {
             fetchNewMessages();
-            fetchReportType();
         }
     }, [RoomInfo]);
 
@@ -207,7 +197,8 @@ const ChatPage = () => {
         if (messageElement && chatWindowRef.current) {
             const chatWindowHeight = chatWindowRef.current.clientHeight;
             const messageElementOffset = messageElement.offsetTop;
-            chatWindowRef.current.scrollTop = messageElementOffset - (chatWindowHeight / 2) + (messageElement.clientHeight / 2) - 50;
+            chatWindowRef.current.scrollTop =
+                messageElementOffset - chatWindowHeight / 2 + messageElement.clientHeight / 2 - 50;
         }
     };
 
@@ -219,18 +210,51 @@ const ChatPage = () => {
         setIsOpen(false);
     }
 
-    socket.on('delete_res', (data) => {
-        setCurChatData((prevMessages) => {
-            const index = prevMessages.findIndex((msg) => msg.id === data.delete_mess.id);
-            if (index !== -1) {
-                const updatedMessages = [...prevMessages];
-                updatedMessages.splice(index, 1);
-                return updatedMessages;
-            }
-            return prevMessages;
-        });
-    });
+    useEffect(() => {
+        socket.on('delete_res', (data) => {
+            console.log('cooooooooooooooooooooo');
+            console.log(data);
 
+            setCurChatData((prevMessages) => {
+                const index = prevMessages.findIndex((msg) => msg.id === data.delete_mess.id);
+                if (index !== -1) {
+                    const updatedMessages = [...prevMessages];
+                    updatedMessages.splice(index, 1);
+                    return updatedMessages;
+                }
+                return prevMessages;
+            });
+        });
+
+        return () => {
+            socket.off('delete_res'); // Hủy đăng ký sự kiện khi component unmount
+        };
+    }, []);
+    useEffect(() => {
+        socket.on('return_res', (data) => {
+          console.log('cooooooooooooooooooooo');
+          console.log(data);
+      
+          setCurChatData((prevMessages) => {
+            return prevMessages.reduce((acc, msg) => {
+              if (msg.id > data.delete_mess.id) {
+                // Kiểm tra xem `data.delete_mess` đã có trong `acc` chưa
+                if (!acc.some(item => item.id === data.delete_mess.id)) {
+                  return [...acc, data.delete_mess, msg];
+                } else {
+                  return [...acc, msg];
+                }
+              } else {
+                return [...acc, msg];
+              }
+            }, []); // Khởi tạo mảng rỗng cho `acc`
+          });
+        });
+      
+        return () => {
+          socket.off('return_res'); // Hủy đăng ký sự kiện khi component unmount
+        };
+      }, []);
     if (!currUser) return null;
 
     return (
@@ -298,16 +322,21 @@ const ChatPage = () => {
                         </div>
                     </Modal>
 
-                    {chatWindowRef.current && chatWindowRef.current.scrollHeight - chatWindowRef.current.scrollTop !== chatWindowRef.current.clientHeight && (
-                        <button className='go-down' onClick={() => {
-                            if (chatWindowRef.current) {
-                                chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
-                            }
-                        }}>
-                            <FontAwesomeIcon icon={faChevronDown} />
-                        </button>
-                    )}
-
+                    {chatWindowRef.current &&
+                        chatWindowRef.current.scrollHeight - chatWindowRef.current.scrollTop !==
+                            chatWindowRef.current.clientHeight && (
+                            <button
+                                className="go-down"
+                                onClick={() => {
+                                    if (chatWindowRef.current) {
+                                        chatWindowRef.current.scrollTop =
+                                            chatWindowRef.current.scrollHeight;
+                                    }
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faChevronDown} />
+                            </button>
+                        )}
                 </div>
             ) : (
                 <h1>CHỌN MỘT CUỘC TRÒ TRUYỆN ĐỂ BẮT ĐẦU</h1>
