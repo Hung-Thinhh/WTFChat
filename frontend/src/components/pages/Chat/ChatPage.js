@@ -1,7 +1,7 @@
 import './ChatPage.scss';
 import HeaderChatPage from './HeaderChatPage';
 import MessageBubble from '../../card/MessageBubble';
-import MessageInput from '../../card/MessageInput';
+import MessageInput from '../../card/MessageInput/MessageInput';
 import React, { useContext, useEffect, useState, useRef } from 'react';
 import ChatDataContext from 'lib/Context/ChatContext';
 import getChat from 'services/getChat';
@@ -14,7 +14,8 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { currUserSelector, offsetSelector } from '../../../redux/selectors';
 import { setOffset } from '../../layout/ChatLayout/LeftSidebar/sidebarSlide';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { setNewMessage } from '../../../components/layout/ChatLayout/LeftSidebar/sidebarSlide';
+import { setChatRooms } from '../../../redux/chatRoomSlice';
 Modal.setAppElement('#root');
 
 const ChatPage = () => {
@@ -41,6 +42,7 @@ const ChatPage = () => {
                 roomId: ChatData,
                 offset: state,
             });
+
             if (response && response.EC === 0) {
                 socket.emit('join_room', ChatData);
                 setRoom(ChatData);
@@ -60,10 +62,6 @@ const ChatPage = () => {
             console.error('Error fetching new messages:', error);
         }
     };
-    useEffect(() => {
-        console.log('offset', state);
-        console.log('curChatData', curChatData);
-    }, [state]);
 
     const lazyLoad = async () => {
         try {
@@ -155,6 +153,7 @@ const ChatPage = () => {
         const handleNewChat = (data) => {
             audio.play();
             setCurChatData((prevMessages) => {
+                dispatch(setNewMessage(data));
                 if (data.traloi) {
                     const replyMessage = prevMessages.find((msg) => msg.id === data.traloi);
                     if (replyMessage) {
@@ -162,7 +161,11 @@ const ChatPage = () => {
                     }
                 }
 
-                const index = prevMessages.findIndex((msg) => msg.id === tempId);
+                const index = prevMessages.findIndex((msg) => {
+                    scrollToMessage(`message${data.id}`);
+                    return msg.id === tempId;
+                });
+
                 if (index !== -1) {
                     const updatedMessages = [...prevMessages];
                     updatedMessages[index] = { ...updatedMessages[index], ...data, status: 'done' };
@@ -229,9 +232,6 @@ const ChatPage = () => {
 
     useEffect(() => {
         socket.on('delete_res', (data) => {
-            console.log('cooooooooooooooooooooo');
-            console.log(data);
-
             setCurChatData((prevMessages) => {
                 const index = prevMessages.findIndex((msg) => msg.id === data.delete_mess.id);
                 if (index !== -1) {
@@ -249,9 +249,6 @@ const ChatPage = () => {
     }, []);
     useEffect(() => {
         socket.on('return_res', (data) => {
-            console.log('cooooooooooooooooooooo');
-            console.log(data);
-
             setCurChatData((prevMessages) => {
                 return prevMessages.reduce((acc, msg) => {
                     if (msg.id > data.delete_mess.id) {
