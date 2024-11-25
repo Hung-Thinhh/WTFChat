@@ -41,7 +41,6 @@ export const forgetPassSelector = createSelector(
     }),
 );
 
-
 // sideBar
 export const showMenuSelector = (state) => state.sidebar.showMenu;
 export const offsetSelector = (state) => state.sidebar.offset;
@@ -49,7 +48,7 @@ export const offsetSelector = (state) => state.sidebar.offset;
 export const showMenu1Selector = createSelector(
     showMenuSelector,
     offsetSelector,
-    (showMenu,offset) => ({
+    (showMenu, offset) => ({
         showMenu,
         offset,
     }),
@@ -58,7 +57,36 @@ export const showMenu1Selector = createSelector(
 // chatRoom
 export const chatRoomSelector = (state) => state.chatRoom.rooms;
 
-export const chatRoomListSelector = createSelector(
-    chatRoomSelector,
-    (rooms) => rooms
+export const chatRoomListSelector = createSelector(chatRoomSelector, (rooms) => rooms);
+
+// profile
+export const profileInitInputSelector = (state) => state.profile.initInput;
+export const profileInputSelector = (state) => state.profile.input;
+export const profileErrorSelector = (state) => state.profile.err;
+export const profileLoadingSelector = (state) => state.profile.loading;
+
+export const profileSelector = createSelector(
+    profileInitInputSelector,
+    profileInputSelector,
+    profileErrorSelector,
+    profileLoadingSelector,
+    (initInput, input, err, loading) => ({
+        initInput,
+        input,
+        err,
+        loading,
+    }),
+);
+
+// current user
+export const currUserSelector = (state) => state.user.currUser;
+export const checkAccountSelector = (state) => state.user.checkAccount;
+
+export const userSelector = createSelector(
+    currUserSelector,
+    checkAccountSelector,
+    (currUser, checkAccount) => ({
+        currUser,
+        checkAccount,
+    }),
 );

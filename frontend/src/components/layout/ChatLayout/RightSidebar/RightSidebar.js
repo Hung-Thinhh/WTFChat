@@ -17,12 +17,11 @@ import SearchResults from './SearchResults';
 import BlockList from './BlockList';
 import { socket } from '../../../../socket';
 import { useDispatch, useSelector } from 'react-redux';
-import { setChatRooms } from '../../../../redux/chatRoomSlice';
-import { chatRoomListSelector } from '../../../../redux/selectors';
+import { setChatRooms } from '../../../../redux//globalSlice/chatRoomSlice';
+import { chatRoomListSelector, currUserSelector } from '../../../../redux/selectors';
 const cx = classNames.bind(styles);
 
 const RightSidebar = () => {
-    const { currUser } = useContext(ChatDataContext);
     const [pageState, setPageData] = useState('chat');
     const [friend, setFriend] = useState([]);
     const [findData, setFindData] = useState([]);
@@ -31,6 +30,7 @@ const RightSidebar = () => {
     const [blocklist, setBlockList] = useState([]);
     const dispatch = useDispatch();
     const chatRoom = useSelector(chatRoomListSelector);
+    const currUser = useSelector(currUserSelector);
 
     const handleNewChat = (e) => {
         setStateNewChatPopUp(true);
@@ -38,11 +38,11 @@ const RightSidebar = () => {
 
     const handleAdd = (data) => {
         socket.emit('newRoom', data);
-    }
+    };
 
     useEffect(() => {
         socket.on('newRoom', (data) => {
-            if (!chatRoom.some(room => room.id === data.id))
+            if (!chatRoom.some((room) => room.id === data.id))
                 dispatch(setChatRooms((prev) => [data, ...prev]));
         });
         return () => {
@@ -137,35 +137,43 @@ const RightSidebar = () => {
 
     return (
         <div className={cx('rightsidebar')}>
-            <NewChat callBack={handleAdd} active={stateNewChatPopUp} setActive={setStateNewChatPopUp} />
+            <NewChat
+                callBack={handleAdd}
+                active={stateNewChatPopUp}
+                setActive={setStateNewChatPopUp}
+            />
             <div className={cx('me-auto', 'list_nav')}>
                 <div className={cx('sidebar_header')}>
-                    <FontAwesomeIcon icon={faUser} />{pageState}
+                    <FontAwesomeIcon icon={faUser} />
+                    {pageState}
                 </div>
-                {
-                    (() => {
-                        switch (pageState) {
-                            case 'chat':
-                                return <ChatList chatRoom={chatRoom} currUser={currUser} />;
-                            case 'friend':
-                                return <FriendList friend={friend} />;
-                            case 'search':
-                                return (
-                                    <SearchResults
-                                        findData={findData}
-                                        searchData={searchData}
-                                        handleSearchChange={handleSearchChange}
-                                    />
-                                );
-                            case 'block':
-                                return <BlockList blocklist={blocklist} />;
-                            default:
-                                return null;
-                        }
-                    })()
-                }
+                {(() => {
+                    switch (pageState) {
+                        case 'chat':
+                            return <ChatList chatRoom={chatRoom} currUser={currUser} />;
+                        case 'friend':
+                            return <FriendList friend={friend} />;
+                        case 'search':
+                            return (
+                                <SearchResults
+                                    findData={findData}
+                                    searchData={searchData}
+                                    handleSearchChange={handleSearchChange}
+                                />
+                            );
+                        case 'block':
+                            return <BlockList blocklist={blocklist} />;
+                        default:
+                            return null;
+                    }
+                })()}
             </div>
-            <Footer onClickNewChat={handleNewChat} key={pageState} pageState={pageState} setPageData={setPageData} />
+            <Footer
+                onClickNewChat={handleNewChat}
+                key={pageState}
+                pageState={pageState}
+                setPageData={setPageData}
+            />
         </div>
     );
 };

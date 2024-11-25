@@ -8,6 +8,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRotateLeft, faCamera, faPen } from '@fortawesome/free-solid-svg-icons';
 import { getUserInfo, updateUserInfo } from 'controller/profile';
 import { getAge } from 'lib/function/function';
+import { useDispatch, useSelector } from 'react-redux';
+import { profileSelector } from '../../../redux/selectors';
+import { fetchUser, setError, setInitInput, setInput, setLoading } from './profileSlice';
 
 const cx = classNames.bind(styles);
 
@@ -16,63 +19,12 @@ const genderList = ['Nam', 'Nữ', 'Khác'];
 function Profile() {
     const fileInput = useRef(null);
 
-    const [initInput, setInitInput] = useState({
-        email: '',
-        username: '',
-        birthdate: '',
-        gender: 0,
-        avatar: '',
-    });
-    const [input, setInput] = useState({
-        email: '',
-        username: '',
-        birthdate: '',
-        gender: 0,
-        avatar: '',
-    });
-    const [file, setFile] = useState();
-    const [err, setErr] = useState('');
-    const [loading, setLoading] = useState(false);
-
-    const logout = async () => {
-        // logout
-        const logoutRes = await logout();
-
-        if (logoutRes.EC === '200') {
-            window.location.reload();
-        } else if (logoutRes.EC === '500') {
-            alert('Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com');
-        }
-    };
+    const dispatch = useDispatch();
+    const state = useSelector(profileSelector);
 
     useEffect(() => {
         const getCurrUserInfo = async () => {
-            const res = await getUserInfo();
-            if (res.EC === '200') {
-                const { avatar, birthdate, email, firstname, lastname, gender } = res.DT;
-                const dateObject = new Date(birthdate);
-                const formatBirthdate = dateObject.toLocaleDateString('en-CA');
-
-                const newInput = {
-                    email,
-                    username: firstname + ' ' + lastname,
-                    birthdate: formatBirthdate,
-                    gender,
-                    avatar,
-                };
-                setInput(newInput);
-                setInitInput(newInput);
-            } else if (res.EC === '400') {
-                alert('Tài khoản đang bị khoá');
-                await logout();
-            } else if (res.EC === '403') {
-                alert('Xác thực thất bại');
-                await logout();
-            } else if (res.EC === '500') {
-                alert(
-                    'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
-                );
-            }
+            dispatch(fetchUser());
         };
         getCurrUserInfo();
     }, []);
@@ -82,16 +34,19 @@ function Profile() {
     };
 
     const handleBack = () => {
-        if (input.avatar) {
-            URL.revokeObjectURL(input.avatar); // clear prev url
+        if (state.input.avatar) {
+            URL.revokeObjectURL(state.input.avatar); // clear prev url
         }
 
-        setInput(initInput);
+        dispatch(setInput(state.initInput));
     };
 
     const handleChange = (event) => {
-        setInput((prev) => ({ ...prev, [event.target.name]: event.target.value }));
-        if (err) setErr('');
+        console.log(state);
+        console.log(state.input);
+
+        dispatch(setInput({ ...state.input, [event.target.name]: event.target.value }));
+        if (state.err) dispatch(setError(''));
     };
 
     const handleChangeImage = (event) => {
@@ -101,35 +56,37 @@ function Profile() {
         const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
 
         if (!allowedTypes.includes(newFile.type)) {
-            setErr('Hãy chọn thư mục có đuổi .png, .jpg hoặc .jpeg.');
+            dispatch(setError('Hãy chọn thư mục có đuổi .png, .jpg hoặc .jpeg.'));
         }
 
-        if (input.avatar) {
-            URL.revokeObjectURL(input.avatar); // clear prev url
+        if (state.input.avatar) {
+            URL.revokeObjectURL(state.input.avatar); // clear prev url
         }
 
-        setInput((prev) => ({ ...prev, avatar: URL.createObjectURL(newFile) }));
-        if (err) setErr('');
+        dispatch(setInput({ ...state.input, avatar: URL.createObjectURL(newFile) }));
+        // setFile(newFile);
+        if (state.err) dispatch(setError(''));
     };
 
     const handleRatio = (event, value) => {
         event.preventDefault();
-        setInput((prev) => ({ ...prev, gender: value }));
+        dispatch(setInput({ ...state.input, gender: value }));
     };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setLoading(true);
+        dispatch(setLoading(true));
 
         // for avaiable input
-        if (JSON.stringify(input) === JSON.stringify(initInput))
-            setErr('Không có thay đổi được thực hiện');
-        else if (!input.email) setErr('Email không thể để trống');
-        else if (!input.username) setErr('Họ và tên không thể để trống');
-        else if (input.username.length > 100) setErr('Tên của bạn quá dài');
-        else if (!input.birthdate) setErr('Ngày sinh không thể để trống');
-        else if (getAge(input.birthdate) <= 13) setErr('Độ tuổi tối thiểu là 13');
-        else if (input.gender < 0 || input.gender > 3) setErr('Giới tính không tồn tại');
+        if (JSON.stringify(state.input) === JSON.stringify(state.initInput))
+            setError('Không có thay đổi được thực hiện');
+        else if (!state.input.email) setError('Email không thể để trống');
+        else if (!state.input.username) setError('Họ và tên không thể để trống');
+        else if (state.input.username.length > 100) setError('Tên của bạn quá dài');
+        else if (!state.input.birthdate) setError('Ngày sinh không thể để trống');
+        else if (getAge(state.input.birthdate) <= 13) setError('Độ tuổi tối thiểu là 13');
+        else if (state.input.gender < 0 || state.input.gender > 3)
+            setError('Giới tính không tồn tại');
         else {
             const formData = new FormData();
             // Add image data
@@ -137,9 +94,9 @@ function Profile() {
             if (avatar) formData.append('avatar', avatar, avatar.name);
 
             // Add user data
-            formData.append('username', input.username);
-            formData.append('birthdate', input.birthdate);
-            formData.append('gender', input.gender);
+            formData.append('username', state.input.username);
+            formData.append('birthdate', state.input.birthdate);
+            formData.append('gender', state.input.gender);
             for (const [key, value] of formData.entries()) {
                 console.log(`${key}: ${value}`);
             }
@@ -147,19 +104,19 @@ function Profile() {
             const res = await updateUserInfo(formData);
             if (res.EC === '200') {
                 // set mặc định thành input
-                setInitInput(input);
+                dispatch(setInitInput(state.input));
             } else if (res.EC === '400') {
-                setErr(res.EM);
-                setInput(initInput);
+                dispatch(setError(res.EM));
+                dispatch(setInput(state.initInput));
             } else if (res.EC === '500') {
                 alert(
                     'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
                 );
-                setErr('');
-                setInput(initInput);
+                dispatch(setError(''));
+                dispatch(setInput(state.initInput));
             }
         }
-        setLoading(false);
+        dispatch(setLoading(false));
     };
 
     return (
@@ -174,7 +131,7 @@ function Profile() {
                                 name="email"
                                 id="email"
                                 placeholder="Email"
-                                value={input.email}
+                                value={state.input.email}
                                 onChange={handleChange}
                                 disabled
                             />
@@ -185,7 +142,7 @@ function Profile() {
                                 name="username"
                                 id="username"
                                 placeholder="Họ và tên"
-                                value={input.username}
+                                value={state.input.username}
                                 onChange={handleChange}
                             />
                         </div>
@@ -197,7 +154,7 @@ function Profile() {
                                 type="date"
                                 name="birthdate"
                                 id="birthdate"
-                                value={input.birthdate}
+                                value={state.input.birthdate}
                                 onChange={handleChange}
                             />
                         </div>
@@ -210,7 +167,7 @@ function Profile() {
                                     <Button
                                         key={index}
                                         className={cx('gender', {
-                                            'gender-selected': index === input.gender,
+                                            'gender-selected': index === state.input.gender,
                                         })}
                                         type="primary"
                                         size="medium"
@@ -221,15 +178,15 @@ function Profile() {
                                 ))}
                             </div>
                         </div>
-                        {!!err && <div className={cx('err-tag')}>* {err}</div>}
+                        {!!state.err && <div className={cx('err-tag')}>* {state.err}</div>}
                     </form>
                     <div className={cx('avatar-form')}>
-                        <Avatar alt="avatar" src={input.avatar} size="ultra-lg" />
+                        <Avatar alt="avatar" src={state.input.avatar} size="ultra-lg" />
                         <input
                             className={cx('file-input')}
                             ref={fileInput}
                             type="file"
-                            value={file}
+                            // value={file}
                             accept="image/png, image/jpeg, image/jpg"
                             onChange={handleChangeImage}
                         />
@@ -239,12 +196,12 @@ function Profile() {
                     </div>
                 </div>
                 <div className={cx('button-group')}>
-                    {JSON.stringify(input) !== JSON.stringify(initInput) && (
+                    {JSON.stringify(state.input) !== JSON.stringify(state.initInput) && (
                         <Button
                             className={cx('sign')}
                             type="rounded"
                             size="medium"
-                            disabled={!!err || loading}
+                            disabled={!!state.err || state.loading}
                             onClick={handleBack}
                         >
                             Trở lại
@@ -255,7 +212,9 @@ function Profile() {
                         type="rounded"
                         size="medium"
                         disabled={
-                            !!err || loading || JSON.stringify(input) === JSON.stringify(initInput)
+                            !!state.err ||
+                            state.loading ||
+                            JSON.stringify(state.input) === JSON.stringify(state.initInput)
                         }
                         onClick={handleSubmit}
                     >
