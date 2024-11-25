@@ -28,7 +28,6 @@ const HeaderChatPage = ({ RoomInfo }) => {
 
         return () => clearInterval(intervalId);
     }, [listStatus, RoomInfo.friendId]);
-    console.log(RoomInfo);
 
     return (
         <div className="chatpage_header">

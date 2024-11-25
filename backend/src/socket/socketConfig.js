@@ -82,7 +82,7 @@ const setupWebSocket = (server) => {
         socket.on('newRoom', async (roominfo) => {
             roominfo.otherUserId.forEach((element) => {
                 // Phát sự kiện tới phòng cụ thể
-                console.log(element);
+                // console.log(element);
                 
                 io.to(element).emit('newRoom', roominfo);
             });

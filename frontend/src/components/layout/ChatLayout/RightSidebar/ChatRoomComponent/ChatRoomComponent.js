@@ -11,6 +11,7 @@ import RoomInfo from './RoomInfo';
 import FriendMenu from './FriendMenu';
 import NewRoomCheckbox from './NewRoomCheckbox';
 import createChatRoom from "services/createChatRoom";
+import { socket } from "socket";
 const cx = classNames.bind(styles);
 
 export default function ChatRoom({ onClick = () => { }, choosedMember, chattype, id, avt, name, time, mess, sender, friendId, isFriend, isBlock, type = 'chatroom' }) {
@@ -23,7 +24,6 @@ export default function ChatRoom({ onClick = () => { }, choosedMember, chattype,
     useEffect(() => { setIsChoose(choosedMember?.some((item) => item.id === id)) }, [choosedMember]);
     let offChat = false;
     const handleClick = async (e) => {
-        // setClick(!click);
         if (type === 'new') {
             onClick({ id, name, checked: isChoose });
             setIsChoose(!isChoose);
@@ -31,6 +31,7 @@ export default function ChatRoom({ onClick = () => { }, choosedMember, chattype,
         }
         if (type === "friend") {
             const data = await createChatRoom({ choosedMember: [id], type: 'private' });
+            socket.emit('newRoomAdded', data);
             if (data.EC !== 1) {
                 alert(data.EM);
                 return;
