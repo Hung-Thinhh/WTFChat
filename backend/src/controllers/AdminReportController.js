@@ -245,6 +245,56 @@ const unbanReportType = async (req, res) => {
         };
     }
 };
+const getReportByIdUser = async (req, res) => {
+    try {
+        const page = req.params.id;
+        const result = await reportService.getReportByIdUser(page);
+        if (result) {
+            console.log(result);
+            
+            return res.status(200).json(result);
+        } else {
+            return res.status(200).json({
+                EM: error.message,
+                EC: 1,
+                DT: [],
+            });
+        }
+    } catch (error) {
+        console.log(error);
+
+        return {
+            EM: error.message,
+            EC: 1,
+            DT: [],
+        };
+    }
+};
+const getReportByIdGroup = async (req, res) => {
+    try {
+        const page = req.params.id;
+        const result = await reportService.getReportByIdGroup(page);
+        if (result) {
+            console.log(result);
+            
+            return res.status(200).json(result);
+        } else {
+            return res.status(200).json({
+                EM: error.message,
+                EC: 1,
+                DT: [],
+            });
+        }
+    } catch (error) {
+        console.log(error);
+
+        return {
+            EM: error.message,
+            EC: 1,
+            DT: [],
+        };
+    }
+};
 export {
     getReportType,
     getReportTypeAPI,
@@ -256,5 +306,7 @@ export {
     editReportType,
     addReportType,
     banReportType,
-    unbanReportType
+    unbanReportType,
+    getReportByIdUser,
+    getReportByIdGroup
 };

@@ -1,6 +1,7 @@
 import express from 'express'
 import {HomeController} from "../controllers/AdminHomeController"
 import {getListUser} from "../controllers/AdminUserController"
+import {getListGroup} from "../controllers/AdminGroupController"
 import {getReport,getReportTypeAPI} from "../controllers/AdminReportController"
 const router = express.Router();
 
@@ -19,6 +20,14 @@ const initWebRouter = (app) => {
             sidebar: 'rightSidebar',
             header: "header",
             users: await getListUser(req,res)
+        });
+    });
+    router.get("/group", async (req, res) => {
+        
+        return res.render('group', {
+            sidebar: 'rightSidebar',
+            header: "header",
+            users: await getListGroup(req,res)
         });
     });
     router.get("/report", async (req, res) => {
