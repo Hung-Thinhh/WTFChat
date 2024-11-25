@@ -73,7 +73,6 @@ const createChat = async (senderid, roomid, content, time, media, traloi) => {
         WHERE u.id = ? AND tv.idRoom = ?;
         `,
         [content, roomid, time, fileId, traloi ? traloi : null, senderid, roomid]); // thêm một tin nhắn mới
-      console.log('SERVICE | CREATE CHAT SERVICE | NEW MESSAGE | ', content, roomid, time, fileId, traloi, senderid, roomid);
       await pool.query(`UPDATE phongchat SET update_time = ? WHERE id = ?`, [time, roomid]);
       if (result.affectedRows > 0) {
         const [newMessage] = await pool.query(`SELECT tinnhan.*, thanhvien.userid FROM tinnhan, thanhvien WHERE tinnhan.id = ? AND tinnhan.idThanhvien = thanhvien.id AND tinnhan.status = 0`, [result.insertId]);
@@ -90,7 +89,6 @@ const createChat = async (senderid, roomid, content, time, media, traloi) => {
         };
       }
     } else { // nếu không có tệp đính kèm
-      console.log('SERVICE | CREATE CHAT SERVICE | NO MEDIA | ');
       const [result] = await pool.query(`
         INSERT INTO tinnhan (content, idThanhvien, idRoom, time, traloi) 
         SELECT 
@@ -100,7 +98,6 @@ const createChat = async (senderid, roomid, content, time, media, traloi) => {
         WHERE u.id = ? AND tv.idRoom = ?;
         `,
         [content, roomid, time, traloi ? traloi : null, senderid, roomid]); // thêm một tin nhắn mới
-      console.log('SERVICE | CREATE CHAT SERVICE | NEW MESSAGE | ', content, roomid, time, fileId, traloi, senderid, roomid);
       await pool.query(`UPDATE phongchat SET update_time = ? WHERE id = ?`, [time, roomid]);
       if (result.affectedRows > 0) {
         const [newMessage] = await pool.query(`SELECT tinnhan.*, thanhvien.userid FROM tinnhan, thanhvien WHERE tinnhan.id = ? AND tinnhan.idThanhvien = thanhvien.id AND tinnhan.status = 0`, [result.insertId]);

@@ -34,7 +34,7 @@ const LeftSiedbar = () => {
     useEffect(() => {
         const fetchInfo = async () => {
             const data = await getRoomInfoService({ roomId: ChatData });
-            console.log('xxx', data);
+            // console.log('xxx', data);
 
             setCurrroomInfo(data.DT);
         }

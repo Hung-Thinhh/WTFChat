@@ -18,7 +18,9 @@ import BlockList from './BlockList';
 import { socket } from '../../../../socket';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChatRooms } from '../../../../redux/chatRoomSlice';
-import { chatRoomListSelector } from '../../../../redux/selectors';
+import { chatRoomListSelector, showMenu1Selector } from '../../../../redux/selectors';
+
+
 const cx = classNames.bind(styles);
 
 const RightSidebar = () => {
@@ -31,15 +33,51 @@ const RightSidebar = () => {
     const [blocklist, setBlockList] = useState([]);
     const dispatch = useDispatch();
     const chatRoom = useSelector(chatRoomListSelector);
+    const newMess = useSelector(showMenu1Selector);
 
-    const handleNewChat = (e) => {
+    const handleNewChat = () => {
         setStateNewChatPopUp(true);
     };
 
     const handleAdd = (data) => {
         socket.emit('newRoom', data);
     }
+    useEffect(() => {
 
+        if (newMess && newMess.newMessage.idRoom) {
+            const updatedRooms = chatRoom.map(room =>
+            room.id === newMess.newMessage.idRoom ? { 
+                ...room, 
+                last_message: JSON.stringify({
+                ...JSON.parse(room.last_message),
+                content: newMess.newMessage.content
+                }) 
+            } : room
+            );
+
+            const updatedRoomIndex = updatedRooms.findIndex(room => room.id === newMess.newMessage.idRoom);
+            if (updatedRoomIndex !== 0) {
+            const [updatedRoom] = updatedRooms.splice(updatedRoomIndex, 1);
+            updatedRooms.unshift(updatedRoom);
+            }
+
+            dispatch(setChatRooms(updatedRooms));
+        } else {
+            const friendIndex = friend.findIndex(f => f.id === newMess.newMessage.idRoom);
+            if (friendIndex !== -1) {
+            const updatedFriends = friend.map(f =>
+                f.id === newMess.newMessage.idRoom ? { 
+                ...f, 
+                last_message: JSON.stringify({
+                    ...JSON.parse(f.last_message),
+                    content: newMess.newMessage.content
+                }) 
+                } : f
+            );
+            setFriend(updatedFriends);
+            }
+        }
+    }, [newMess])
     useEffect(() => {
         socket.on('newRoom', (data) => {
             if (!chatRoom.some(room => room.id === data.id))
@@ -126,7 +164,7 @@ const RightSidebar = () => {
                 case 'block':
                     return fetchBlockList();
                 default:
-                    return null;
+                    return fetchChatRoom();
             }
         })();
         setFindData([]);

@@ -45,13 +45,16 @@ export const forgetPassSelector = createSelector(
 // sideBar
 export const showMenuSelector = (state) => state.sidebar.showMenu;
 export const offsetSelector = (state) => state.sidebar.offset;
+export const setNewMessageSelector = (state) => state.sidebar.newMessage;
 
 export const showMenu1Selector = createSelector(
     showMenuSelector,
     offsetSelector,
-    (showMenu,offset) => ({
+    setNewMessageSelector,
+    (showMenu,offset,newMessage) => ({
         showMenu,
         offset,
+        newMessage
     }),
 );
 

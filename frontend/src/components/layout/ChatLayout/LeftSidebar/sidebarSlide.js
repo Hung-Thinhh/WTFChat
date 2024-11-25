@@ -5,6 +5,7 @@ export const sidebarSlice = createSlice({
     initialState: {
         showMenu: true,
         offset: 0,
+        newMessage: {}
     },
     reducers: {
         setShowMenu: (state, action) => {
@@ -12,10 +13,13 @@ export const sidebarSlice = createSlice({
         },
         setOffset: (state, action) => {
             state.offset = action.payload;
+        },        
+        setNewMessage: (state, action) => {
+            state.newMessage = action.payload;
         }
     },
 });
 
-export const {setShowMenu,setOffset} = sidebarSlice.actions;
+export const {setShowMenu,setOffset,setNewMessage} = sidebarSlice.actions;
 
 export default sidebarSlice.reducer;
