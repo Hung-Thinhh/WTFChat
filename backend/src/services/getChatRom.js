@@ -13,6 +13,7 @@ const getChatRoom = async (id) => {
                 WHEN p.type = 0 THEN otherUser.avatar
                 ELSE p.avt
             END AS avt,
+            p.type,
             p.update_time,
             (
                 SELECT GROUP_CONCAT(u.id)
@@ -54,6 +55,7 @@ const getChatRoom = async (id) => {
             EM: 'Success',
             EC: 1,
             DT: rows.map((row) => {
+                row.type = row.type === 1 ? "group" : "private";
                 row.otherUserId = row.otherUserId.split(',');
                 return { ...row };
             }),

@@ -1,25 +1,25 @@
 import './ChatPage.scss';
 import HeaderChatPage from './HeaderChatPage';
 import MessageBubble from '../../card/MessageBubble';
-import MessageInput from '../../card/MessageInput';
+import MessageInput from '../../card/MessageInput/MessageInput';
 import React, { useContext, useEffect, useState, useRef } from 'react';
 import ChatDataContext from 'lib/Context/ChatContext';
 import getChat from 'services/getChat';
-import {sendReport } from 'controller/report';
+import { sendReport } from 'controller/report';
 import { socket } from '../../../socket';
 import Modal from 'react-modal';
 import song from '../../../notify.mp3';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { offsetSelector } from '../../../redux/selectors';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { currUserSelector, offsetSelector } from '../../../redux/selectors';
 import { setOffset } from '../../layout/ChatLayout/LeftSidebar/sidebarSlide';
 import { useDispatch, useSelector } from 'react-redux';
-
-
+import { setNewMessage } from '../../../components/layout/ChatLayout/LeftSidebar/sidebarSlide';
+import { setChatRooms } from '../../../redux/globalSlice/chatRoomSlice';
 Modal.setAppElement('#root');
 
 const ChatPage = () => {
-    const { currUser, ChatData, RoomInfo } = useContext(ChatDataContext);
+    const { ChatData, RoomInfo, setRoomInfo } = useContext(ChatDataContext);
     const [curChatData, setCurChatData] = useState([]);
     const [isSending, setIsSending] = useState(false);
     const [isReply, setIsReply] = useState('');
@@ -31,19 +31,18 @@ const ChatPage = () => {
     const [audio] = useState(new Audio(song));
     const [modalIsOpen, setIsOpen] = useState(false);
 
-    const state = useSelector(offsetSelector);
     const dispatch = useDispatch();
-
-
-
-
-
-
-
+    const state = useSelector(offsetSelector);
+    const currUser = useSelector(currUserSelector);
 
     const fetchNewMessages = async () => {
         try {
-            const response = await getChat({ userId: currUser.id, roomId: ChatData, offset: state });
+            const response = await getChat({
+                userId: currUser.id,
+                roomId: ChatData,
+                offset: state,
+            });
+
             if (response && response.EC === 0) {
                 socket.emit('join_room', ChatData);
                 setRoom(ChatData);
@@ -63,14 +62,14 @@ const ChatPage = () => {
             console.error('Error fetching new messages:', error);
         }
     };
-    useEffect(() => {
-        console.log('offset', state);
-        console.log('curChatData', curChatData);
-    }, [state]);
 
     const lazyLoad = async () => {
         try {
-            const response = await getChat({ userId: currUser.id, roomId: ChatData, offset: state });
+            const response = await getChat({
+                userId: currUser.id,
+                roomId: ChatData,
+                offset: state,
+            });
             if (response && response.EC === 0) {
                 let data = response.DT;
                 data.forEach((item) => {
@@ -97,8 +96,6 @@ const ChatPage = () => {
             console.error('Error fetching new messages:', error);
         }
     };
-
-    
 
     const handleDataReply = (data) => {
         setIsReply(data);
@@ -156,6 +153,7 @@ const ChatPage = () => {
         const handleNewChat = (data) => {
             audio.play();
             setCurChatData((prevMessages) => {
+                dispatch(setNewMessage(data));
                 if (data.traloi) {
                     const replyMessage = prevMessages.find((msg) => msg.id === data.traloi);
                     if (replyMessage) {
@@ -163,7 +161,11 @@ const ChatPage = () => {
                     }
                 }
 
-                const index = prevMessages.findIndex((msg) => msg.id === tempId);
+                const index = prevMessages.findIndex((msg) => {
+                    scrollToMessage(`message${data.id}`);
+                    return msg.id === tempId;
+                });
+
                 if (index !== -1) {
                     const updatedMessages = [...prevMessages];
                     updatedMessages[index] = { ...updatedMessages[index], ...data, status: 'done' };
@@ -230,9 +232,6 @@ const ChatPage = () => {
 
     useEffect(() => {
         socket.on('delete_res', (data) => {
-            console.log('cooooooooooooooooooooo');
-            console.log(data);
-
             setCurChatData((prevMessages) => {
                 const index = prevMessages.findIndex((msg) => msg.id === data.delete_mess.id);
                 if (index !== -1) {
@@ -250,29 +249,26 @@ const ChatPage = () => {
     }, []);
     useEffect(() => {
         socket.on('return_res', (data) => {
-          console.log('cooooooooooooooooooooo');
-          console.log(data);
-      
-          setCurChatData((prevMessages) => {
-            return prevMessages.reduce((acc, msg) => {
-              if (msg.id > data.delete_mess.id) {
-                // Kiểm tra xem `data.delete_mess` đã có trong `acc` chưa
-                if (!acc.some(item => item.id === data.delete_mess.id)) {
-                  return [...acc, data.delete_mess, msg];
-                } else {
-                  return [...acc, msg];
-                }
-              } else {
-                return [...acc, msg];
-              }
-            }, []); // Khởi tạo mảng rỗng cho `acc`
-          });
+            setCurChatData((prevMessages) => {
+                return prevMessages.reduce((acc, msg) => {
+                    if (msg.id > data.delete_mess.id) {
+                        // Kiểm tra xem `data.delete_mess` đã có trong `acc` chưa
+                        if (!acc.some((item) => item.id === data.delete_mess.id)) {
+                            return [...acc, data.delete_mess, msg];
+                        } else {
+                            return [...acc, msg];
+                        }
+                    } else {
+                        return [...acc, msg];
+                    }
+                }, []); // Khởi tạo mảng rỗng cho `acc`
+            });
         });
-      
+
         return () => {
-          socket.off('return_res'); // Hủy đăng ký sự kiện khi component unmount
+            socket.off('return_res'); // Hủy đăng ký sự kiện khi component unmount
         };
-      }, []);
+    }, []);
     if (!currUser) return null;
 
     return (

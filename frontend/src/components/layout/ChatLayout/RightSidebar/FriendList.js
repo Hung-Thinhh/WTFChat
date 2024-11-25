@@ -14,6 +14,8 @@ const FriendList = ({ friend }) => {
             {friend.map((item) => (
                 <ChatRoom
                     type='friend'
+                    chattype={'private'}
+
                     key={item.id}
                     id={item.id}
                     name={item.firstname + ' ' + item.lastname}

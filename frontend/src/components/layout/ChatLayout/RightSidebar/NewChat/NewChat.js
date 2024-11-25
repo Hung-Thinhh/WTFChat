@@ -30,6 +30,7 @@ const NewChat = ({ callBack, active, setActive }) => {
         setFindData([]);
         setChatRoomName("");
         setActive(false);
+        setStep(1);
         return callBack(data.DT);
     };
 
@@ -61,7 +62,7 @@ const NewChat = ({ callBack, active, setActive }) => {
                         />
                         <div className={cx('btnGr')}>
                             <Button onClick={() => setActive(false)}>Hủy</Button>
-                            <Button onClick={() => setStep(2)}>Tiếp theo</Button>
+                            <Button onClick={() => { if (chatRoomName) setStep(2); else alert("Vui lòng nhập tên phòng") }}>Tiếp theo</Button>
                         </div>
                     </div>
                 ) : (

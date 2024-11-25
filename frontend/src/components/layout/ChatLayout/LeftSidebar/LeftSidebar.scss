@@ -2,7 +2,7 @@
     width: 24%;
     min-width: 300px;
     height: 90%;
-    margin: 30px 30px 30px 15px ;
+    margin: 30px 30px 30px 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -20,8 +20,17 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 100%;
+
         justify-content: center;
         .avt_ctn {
+            transition: all 0.5s ease;
+
+            &:hover {
+                cursor: pointer;
+                transform: scale(1.1);
+                filter: drop-shadow(0 0 0.75rem #fff);
+            }
             width: 6rem;
             height: 6rem;
             border-radius: 50%;
@@ -32,11 +41,30 @@
                 object-fit: cover;
             }
         }
-        .name {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: #fff;
-            margin-top: 1rem;
+        .nameEditor {
+            width: 100%;
+            position: relative;
+            .btn{
+                position: absolute;
+                right: -2.5rem;
+                top: 0;
+                min-height: 0;
+                min-width: 0;
+                font-size: small;
+                color: white;
+            }
+            .name {
+                user-select: none;
+
+                padding: 0 2rem 0 1rem;
+                font-size: 1.8rem;
+                font-weight: 600;
+                color: #fff;
+                margin-top: 1rem;
+                background: transparent;
+                text-align: center;
+                border-bottom: #ffffff 1px solid;
+            }
         }
         .mail {
             font-size: 1.5rem;

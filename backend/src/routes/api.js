@@ -42,6 +42,9 @@ import {
 } from '../controllers/AdminGroupController.js';
 import { getUserInfo, updateUserInfo } from '../controllers/ProfileController.js';
 import multer from 'multer';
+import leaveRoomController from '../controllers/LeaveRoomController.js';
+import { changeRoomAvtController, changeRoomNameController } from '../controllers/changeRoomInfoController.js';
+
 
 const router = express.Router();
 
@@ -99,6 +102,10 @@ const initApiRouter = (app) => {
     router.post('/getchatroom', getRoomController); // api lấy phòng chat
     router.post('/createroom', createRoomController); // api tạo phòng chat
     router.post('/finduser', findUserController); // api tìm người dùng
+    router.post('/leaveroom', leaveRoomController); // api tìm người dùng
+    router.post('/changeAvtGr', upload.single('avatar'), changeRoomAvtController); // api tìm người dùng
+    router.post('/changeNameGr', changeRoomNameController); // api tìm người dùng
+
 
     //report 
     router.get('/getReportType', getReportType);

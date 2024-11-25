@@ -5,17 +5,19 @@ import styles from './HomeHeader.module.scss';
 import Button from 'components/Button';
 import { faArrowLeft, faArrowRightToBracket, faPen } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from 'react-router-dom';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Avatar from 'components/Avatar';
 import ChatDataContext from 'lib/Context/ChatContext';
 import config from 'config';
 import AvatarMenu from 'components/AvatarMenu';
+import { currUserSelector } from '../../../../redux/selectors';
+import { useSelector } from 'react-redux';
 
 const cx = classNames.bind(styles);
 
 function HomeHeader() {
     const location = useLocation(); // to get current route
-    const { currUser } = useContext(ChatDataContext); // get current user data from global state
+    const currUser = useSelector(currUserSelector); // get current user data from global state
     const defaultData = {
         to: '',
         icon: '',
