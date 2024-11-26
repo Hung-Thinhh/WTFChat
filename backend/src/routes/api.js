@@ -6,11 +6,14 @@ import {
     deletaChatController,
     getNotifyController
 } from '../controllers/chatController';
-import { getFriendController, addFriendController, delFriendController, blockFriendController, getBlockFriendController } from '../controllers/FriendController.js';
+import {
+    getFriendController, addFriendController, delFriendController,
+    blockFriendController, getBlockFriendController
+} from '../controllers/FriendController.js';
 import {
     getReportType, sendReport, getReportAPI,
     banReportById, unbanReportById, editReportType,
-    addReportType, banReportType, unbanReportType
+    addReportType,banReportType,unbanReportType,getReportByIdUser,getReportByIdGroup
 } from "../controllers/AdminReportController.js";
 import { getRoomController,muteCtrl } from '../controllers/getChatRoomCtrl.js';
 import GetInfoRoom from '../controllers/GetInfoRoom.js';
@@ -33,6 +36,11 @@ import {
     banUserById,
     unbanUserById,
 } from '../controllers/AdminUserController.js';
+import {
+    getListGroupAPI,
+    banGroupById,
+    unbanGroupById,
+} from '../controllers/AdminGroupController.js';
 import { getUserInfo, updateUserInfo } from '../controllers/ProfileController.js';
 import multer from 'multer';
 import leaveRoomController from '../controllers/LeaveRoomController.js';
@@ -111,14 +119,20 @@ const initApiRouter = (app) => {
     router.get('/unbanReportType/:id', unbanReportType);
     router.post('/edit-reportType', editReportType);
     router.post('/add-reportType', addReportType);
+    router.get('/getReportByIdUser/:id', getReportByIdUser);
+    router.get('/getReportByIdGroup/:id', getReportByIdGroup);
+    router.get('/getReport/:page', getReportAPI);
 
     //admin
     router.get('/getUserById/:id', getUserById);
     router.get('/banUserById/:id', banUserById);
     router.get('/unbanUserById/:id', unbanUserById);
     router.get('/getUser/:page', getListUserAPI);
-    router.get('/getReport/:page', getReportAPI);
     router.post('/edit-user', editUser);
+
+    router.get('/getGroupById/:id', getListGroupAPI);
+    router.get('/banGroupById/:id', banGroupById);
+    router.get('/unbanGroupById/:id', unbanGroupById);
 
     return app.use('/api', router);
 };

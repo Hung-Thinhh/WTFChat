@@ -17,7 +17,7 @@ export const createChatRoom = async (userid, name, choosedMember) => {
         for (const member of ids) {
             await pool.query(
                 "INSERT INTO `thanhvien`(`userid`, `idRoom`, `role`, `notify`) VALUES (?,?,?,?)",
-                [member, chatRoomId, 1, 1]
+                [member, chatRoomId, userid == member ? 1 : 0, 1]
             );
         }
 

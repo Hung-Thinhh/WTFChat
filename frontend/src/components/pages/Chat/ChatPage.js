@@ -9,17 +9,18 @@ import { sendReport } from 'controller/report';
 import { socket } from '../../../socket';
 import Modal from 'react-modal';
 import song from '../../../notify.mp3';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { offsetSelector } from '../../../redux/selectors';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { currUserSelector, offsetSelector } from '../../../redux/selectors';
 import { setOffset } from '../../layout/ChatLayout/LeftSidebar/sidebarSlide';
 import { useDispatch, useSelector } from 'react-redux';
 import { setNewMessage } from '../../../components/layout/ChatLayout/LeftSidebar/sidebarSlide';
+import { setChatRooms } from '../../../redux/globalSlice/chatRoomSlice';
 Modal.setAppElement('#root');
 
 const ChatPage = () => {
+    const { ChatData, RoomInfo, setRoomInfo } = useContext(ChatDataContext);
     const notify = useSelector((state) => state.notify.notify.data);
-    const { currUser, ChatData, RoomInfo, setRoomInfo } = useContext(ChatDataContext);
     const [curChatData, setCurChatData] = useState([]);
     const [isSending, setIsSending] = useState(false);
     const [isReply, setIsReply] = useState('');
@@ -30,10 +31,10 @@ const ChatPage = () => {
     // const [offset, setOffset] = useState(0);
     const [audio] = useState(new Audio(song));
     const [modalIsOpen, setIsOpen] = useState(false);
-    
-    const state = useSelector(offsetSelector);
-    const dispatch = useDispatch();
 
+    const dispatch = useDispatch();
+    const state = useSelector(offsetSelector);
+    const currUser = useSelector(currUserSelector);
 
 
 
@@ -44,8 +45,12 @@ const ChatPage = () => {
 
     const fetchNewMessages = async () => {
         try {
+            const response = await getChat({
+                userId: currUser.id,
+                roomId: ChatData,
+                offset: state,
+            });
 
-            const response = await getChat({ userId: currUser.id, roomId: ChatData, offset: state });
             if (response && response.EC === 0) {
                 socket.emit('join_room', ChatData);
                 setRoom(ChatData);
@@ -68,7 +73,11 @@ const ChatPage = () => {
 
     const lazyLoad = async () => {
         try {
-            const response = await getChat({ userId: currUser.id, roomId: ChatData, offset: state });
+            const response = await getChat({
+                userId: currUser.id,
+                roomId: ChatData,
+                offset: state,
+            });
             if (response && response.EC === 0) {
                 let data = response.DT;
                 data.forEach((item) => {
@@ -95,8 +104,6 @@ const ChatPage = () => {
             console.error('Error fetching new messages:', error);
         }
     };
-
-
 
     const handleDataReply = (data) => {
         setIsReply(data);
@@ -151,10 +158,7 @@ const ChatPage = () => {
     }, [RoomInfo]);
 
     useEffect(() => {
-       console.log(notify);
-    }, [notify]);
 
-    useEffect(() => {
         const handleNewChat = (data) => {
             const notification = notify.find((item) => item.idRoom === data.roomid);
             if (notification && notification.notify === 1) {
@@ -171,7 +175,7 @@ const ChatPage = () => {
 
                 const index = prevMessages.findIndex((msg) => {
                     scrollToMessage(`message${data.id}`);
-                    return msg.id === tempId
+                    return msg.id === tempId 
                 });
 
                 if (index !== -1) {
@@ -186,9 +190,7 @@ const ChatPage = () => {
                     } else {
                         return [...prevMessages, { ...data, status: 'done' }];
                     }
-
                 }
-
             });
         };
 
@@ -267,7 +269,7 @@ const ChatPage = () => {
                 return prevMessages.reduce((acc, msg) => {
                     if (msg.id > data.delete_mess.id) {
                         // Kiểm tra xem `data.delete_mess` đã có trong `acc` chưa
-                        if (!acc.some(item => item.id === data.delete_mess.id)) {
+                        if (!acc.some((item) => item.id === data.delete_mess.id)) {
                             return [...acc, data.delete_mess, msg];
                         } else {
                             return [...acc, msg];
@@ -352,7 +354,7 @@ const ChatPage = () => {
 
                     {chatWindowRef.current &&
                         chatWindowRef.current.scrollHeight - chatWindowRef.current.scrollTop !==
-                        chatWindowRef.current.clientHeight && (
+                            chatWindowRef.current.clientHeight && (
                             <button
                                 className="go-down"
                                 onClick={() => {

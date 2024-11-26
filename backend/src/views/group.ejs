@@ -58,10 +58,10 @@
                                         <thead class="table-dark">
                                             <tr>
                                                 <th scope="col">#</th>
-                                                <th scope="col">Name</th>
-                                                <th scope="col">Date Created</th>
-                                                <th scope="col">Role</th>
-                                                <th scope="col">Status</th>
+                                                <th scope="col">User created</th>
+                                                <th scope="col">Group name</th>
+                                                <th scope="col">Create at</th>
+                                                <th scope="col">Total Members</th>
                                                 <th scope="col">Action</th>
                                             </tr>
                                         </thead>
@@ -75,32 +75,25 @@
                                                         alt=""
                                                     />
                                                     <%= users.user[i].firstname %> <%=
-                                                    users.user[i].lastname %>
+                                                    users.user[i].lastname %> 
                                                 </td>
                                                 <td>
-                                                    <% if (users.user[i].time) { %> <% let date =
-                                                    new Date(users.user[i].time); %> <%=
+                                                    <%= users.user[i].groupName %>
+                                                </td>
+                                                <td>
+                                                    <% if (users.user[i].createdAt) { %> <% let date =
+                                                    new Date(users.user[i].createdAt); %> <%=
                                                     date.getDate().toString().padStart(2, '0')
                                                     %>/<%= (date.getMonth() +
                                                     1).toString().padStart(2, '0') %>/<%=
                                                     date.getFullYear() %> <% } else { %> -- <% } %>
                                                 </td>
                                                 <td>
-                                                    <% if (users.user[i].role ==1) { %> User <% }
-                                                    else { %> Admin <% } %>
+                                                    <%= users.user[i].total_members %>
                                                 </td>
-                                                <td>
-                                                    <span class="status <%= users.user[i].checkin==0?'text-success':'text-err' %>">•</span>Active
-                                                </td>
+                                              
                                                 <td class="action">
-                                                    <button
-                                                        data-toggle="modal"
-                                                        data-target="#editModal"
-                                                        id="<%= users.user[i].id %>"
-                                                        class="editUserButton"
-                                                    >
-                                                        <i class="fas fa-cog"></i>
-                                                    </button>
+                                                    
                                                     <button
                                                     
                                                         data-toggle="modal"
@@ -110,7 +103,7 @@
                                                     >
                                                         <i class="fas fa-flag"></i>
                                                     </button>
-                                                    <% if (users.user[i].status ==1) {%>
+                                                    <% if (users.user[i].status ==0) {%>
                                                     <button
                                                         class="BanUserButton"
                                                         id="<%= users.user[i].id %>"
@@ -425,11 +418,9 @@
 
         <!-- Page level custom scripts -->
         <script>
-             let totalPages = <%-JSON.stringify(users.totalPages) %>;
-             let listStatus = <%-JSON.stringify(users.listStatus) %>;
-            console.log(listStatus);
+             let totalPages = <%-JSON.stringify(users.totalPages) %>;   
         </script>
-        <script src="js/user.js"></script>
+        <script src="js/group.js"></script>
         <script>
             $(document).ready(function () {
                 $('[data-toggle="tooltip"]').tooltip();

@@ -1,75 +1,6 @@
 // Lắng nghe sự kiện click cho tất cả các button có class "editUserButton"
 document.addEventListener('click', function (event) {
-    if (
-        event.target.classList.contains('editUserButton') ||
-        (event.target.classList.contains('fas') &&
-            event.target.parentElement.classList.contains('editUserButton'))
-    ) {
-        // Lấy ID của user từ button
-        console.log('haaaaaaaaaaaaaaa');
-        $('#editModal .form-loading').removeClass('hidden');
-        $('#editModal .form-loaded').addClass('hidden');
-        const userId = event.target.id || event.target.parentElement.id;
-        console.log(userId);
-        $('.saveChangeBtn').attr('id', userId);
-        const handleDate = (day) => {
-            const birthdateString = day;
-            const date = new Date(birthdateString); // Tạo đối tượng Date từ chuỗi thời gian
-            // Sử dụng Date.prototype.toISOString() để định dạng lại chuỗi thời gian theo định dạng ISO 8601
-            const formattedDateString = date.toISOString().split('T')[0]; // Lấy phần ngày tháng
-            return formattedDateString;
-        };
-        // Fetch dữ liệu user theo ID
-        fetch(`/api/getUserById/${userId}`)
-            .then((response) => response.json())
-            .then((data) => {
-                const user = data.DT[0];
-                console.log(user);
-                $(document).ready(function () {
-                    $('#editModal .form-loading').addClass('hidden');
-                    $('#editModal .form-loaded').removeClass('hidden');
-                    console.log($('#editModal .form-loaded'));
-                    console.log($('#editModal .form-loaded').classList);
-                });
-
-                $('#editModal #inputFirstname').val(user.firstname);
-                $('#editModal #inputLastName').val(user.lastname);
-                $('#editModal #inputEmail').val(user.email);
-                switch (user.role) {
-                    case 0:
-                        $('#editModal #inputRole').val('Admin');
-                        break;
-                    case 1:
-                        $('#editModal #inputRole').val('User');
-                        break;
-                    default:
-                        // Nếu giá trị user.gender không hợp lệ, đặt giá trị mặc định cho select
-                        $('#editModal #inputRole').val('User'); // Hoặc bạn có thể đặt "Other"
-                        break;
-                }
-                $('#editModal #inputBirthday').val(handleDate(user.birthdate));
-                $('#editModal #inputDateCreate').val(handleDate(user.time));
-                switch (user.gender) {
-                    case 0:
-                        $('#editModal #inputGender').val('0');
-                        break;
-                    case 1:
-                        $('#editModal #inputGender').val('1');
-                        break;
-                    case 2:
-                        $('#editModal #inputGender').val('2');
-                        break;
-                    default:
-                        // Nếu giá trị user.gender không hợp lệ, đặt giá trị mặc định cho select
-                        $('#editModal #inputGender').val('Male'); // Hoặc bạn có thể đặt "Other"
-                        break;
-                }
-                // ...
-            })
-            .catch((error) => {
-                console.error('Lỗi khi fetch dữ liệu:', error);
-            });
-    }
+    
     if (
         event.target.classList.contains('reportUserButton') ||
         (event.target.classList.contains('fas') &&
@@ -90,7 +21,7 @@ document.addEventListener('click', function (event) {
             return formattedDateString;
         };
         // Fetch dữ liệu user theo ID
-        fetch(`/api/getReportByIdUser/${userId}`)
+        fetch(`/api/getReportByIdGroup/${userId}`)
             .then((response) => response.json())
             .then((data) => {
                 $(document).ready(function () {
@@ -164,61 +95,6 @@ document.addEventListener('click', function (event) {
             });
     }
 
-    if (event.target.classList.contains('saveChangeBtn')) {
-        $(event.target).prop('disabled', true);
-        $(event.target).html(
-            '<span style="margin-right:10px" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Loading...',
-        );
-        const inputFirstname = $('#inputFirstname').val().trim();
-        const inputLastName = $('#inputLastName').val().trim();
-        const inputBirthday = $('#inputBirthday').val();
-        const inputGender = $('#inputGender').val();
-        let isValid = false;
-        if (!inputFirstname && !inputLastName) {
-            $('#inputFirstname').addClass('is-invalid');
-            $('#inputLastName').addClass('is-invalid');
-            isValid = true;
-        }
-        $('#editModal').on('focus', '#inputFirstname, #inputLastname', function () {
-            $('#editModal #inputFirstname').removeClass('is-invalid');
-            $('#editModal #inputLastName').removeClass('is-invalid');
-        });
-        if (!isValid) {
-            fetch('/api/edit-user', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    firstName: inputFirstname,
-                    lastName: inputLastName,
-                    birthday: inputBirthday,
-                    gender: inputGender,
-                    id: event.target.id,
-                    // ... các giá trị khác
-                }),
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    console.log(data);
-                    $(event.target).prop('disabled', false);
-                    $(event.target).html('Save changes');
-                    if (data.EC == 0) {
-                        $('#editModal').modal('hide');
-                        $('.toast .toast-body').html('Save changes successfully');
-                    } else {
-                        $('.toast .toast-body').html('Update failed !');
-                    }
-                    $('.toast').toast('show');
-                })
-                .catch((error) => {
-                    $(event.target).prop('disabled', false);
-                    $(event.target).html('Save changes');
-                    $('.toast .toast-body').html('Update failed !');
-                    $('.toast').toast('show');
-                });
-        }
-    }
     if (
         event.target.classList.contains('BanUserButton') ||
         (event.target.classList.contains('fas') &&
@@ -228,7 +104,7 @@ document.addEventListener('click', function (event) {
         const button = event.target.closest('.BanUserButton');
 
         // Fetch dữ liệu user theo ID
-        fetch(`/api/banUserById/${userId}`)
+        fetch(`/api/banGroupById/${userId}`)
             .then((response) => response.json())
             .then((data) => {
                 if (data.EC == 0) {
@@ -257,7 +133,7 @@ document.addEventListener('click', function (event) {
         const userId = event.target.id || event.target.parentElement.id;
 
         // Fetch dữ liệu user theo ID
-        fetch(`/api/unbanUserById/${userId}`)
+        fetch(`/api/unbanGroupById/${userId}`)
             .then((response) => response.json())
             .then((data) => {
                 if (data.EC == 0) {
@@ -343,7 +219,7 @@ $('#pagination').on('click', '.page-link', function (e) {
                             <span class="sr-only">Loading...</span>
                         </div>
                     </div></td>`;
-    fetch(`/api/getUser/${page}`)
+    fetch(`/api/getGroup/${page}`)
         .then((response) => {
             // Xử lý phản hồi từ server
             if (response.ok) {

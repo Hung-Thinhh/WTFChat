@@ -19,12 +19,17 @@ import { socket } from '../../../../socket';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChatRooms } from '../../../../redux/chatRoomSlice';
 import { chatRoomListSelector, showMenu1Selector } from '../../../../redux/selectors';
+import { setChatRooms } from '../../../../redux//globalSlice/chatRoomSlice';
+import {
+    chatRoomListSelector,
+    currUserSelector,
+    showMenu1Selector,
+} from '../../../../redux/selectors';
 import { setNotify, fetchgNotify } from "../../../../redux/notifySlide";
 
 const cx = classNames.bind(styles);
 
 const RightSidebar = () => {
-    const { currUser } = useContext(ChatDataContext);
     const [pageState, setPageData] = useState('chat');
     const [friend, setFriend] = useState([]);
     const [findData, setFindData] = useState([]);
@@ -33,6 +38,7 @@ const RightSidebar = () => {
     const [blocklist, setBlockList] = useState([]);
     const dispatch = useDispatch();
     const chatRoom = useSelector(chatRoomListSelector);
+    const currUser = useSelector(currUserSelector);
     const newMess = useSelector(showMenu1Selector);
     
     const handleNewChat = () => {
@@ -42,22 +48,21 @@ const RightSidebar = () => {
     const handleAdd = (data) => {
         socket.emit('newRoom', data);
     }
-   
-
     useEffect(() => {
-
         if (newMess && newMess.newMessage.idRoom) {
             const updatedRooms = chatRoom.map(room =>
-                room.id === newMess.newMessage.idRoom ? {
-                    ...room,
-                    last_message: JSON.stringify({
-                        ...JSON.parse(room.last_message),
-                        content: newMess.newMessage.content
-                    })
-                } : room
+            room.id === newMess.newMessage.idRoom ? { 
+                ...room, 
+                last_message: JSON.stringify({
+                ...JSON.parse(room.last_message),
+                content: newMess.newMessage.content
+                }) 
+            } : room
             );
 
-            const updatedRoomIndex = updatedRooms.findIndex(room => room.id === newMess.newMessage.idRoom);
+            const updatedRoomIndex = updatedRooms.findIndex(
+                (room) => room.id === newMess.newMessage.idRoom,
+            );
             if (updatedRoomIndex !== 0) {
                 const [updatedRoom] = updatedRooms.splice(updatedRoomIndex, 1);
                 updatedRooms.unshift(updatedRoom);
@@ -65,26 +70,27 @@ const RightSidebar = () => {
 
             dispatch(setChatRooms(updatedRooms));
         } else {
-            const friendIndex = friend.findIndex(f => f.id === newMess.newMessage.idRoom);
+            const friendIndex = friend.findIndex((f) => f.id === newMess.newMessage.idRoom);
             if (friendIndex !== -1) {
-                const updatedFriends = friend.map(f =>
-                    f.id === newMess.newMessage.idRoom ? {
-                        ...f,
-                        last_message: JSON.stringify({
-                            ...JSON.parse(f.last_message),
-                            content: newMess.newMessage.content
-                        })
-                    } : f
+                const updatedFriends = friend.map((f) =>
+                    f.id === newMess.newMessage.idRoom
+                        ? {
+                              ...f,
+                              last_message: JSON.stringify({
+                                  ...JSON.parse(f.last_message),
+                                  content: newMess.newMessage.content,
+                              }),
+                          }
+                        : f,
                 );
                 setFriend(updatedFriends);
             }
         }
-    }, [newMess])
+    }, [newMess]);
     useEffect(() => {
         dispatch(fetchgNotify({ userId: currUser.id }))
         socket.on('newRoom', (data) => {
             if (!chatRoom.some(room => room.id === data.id))
-                console.log(chatRoom);
             dispatch(setChatRooms([data, ...chatRoom]));
         });
         return () => {
@@ -181,35 +187,43 @@ const RightSidebar = () => {
 
     return (
         <div className={cx('rightsidebar')}>
-            <NewChat callBack={handleAdd} active={stateNewChatPopUp} setActive={setStateNewChatPopUp} />
+            <NewChat
+                callBack={handleAdd}
+                active={stateNewChatPopUp}
+                setActive={setStateNewChatPopUp}
+            />
             <div className={cx('me-auto', 'list_nav')}>
                 <div className={cx('sidebar_header')}>
-                    <FontAwesomeIcon icon={faUser} />{pageState}
+                    <FontAwesomeIcon icon={faUser} />
+                    {pageState}
                 </div>
-                {
-                    (() => {
-                        switch (pageState) {
-                            case 'chat':
-                                return <ChatList chatRoom={chatRoom} currUser={currUser} />;
-                            case 'friend':
-                                return <FriendList friend={friend} />;
-                            case 'search':
-                                return (
-                                    <SearchResults
-                                        findData={findData}
-                                        searchData={searchData}
-                                        handleSearchChange={handleSearchChange}
-                                    />
-                                );
-                            case 'block':
-                                return <BlockList blocklist={blocklist} />;
-                            default:
-                                return null;
-                        }
-                    })()
-                }
+                {(() => {
+                    switch (pageState) {
+                        case 'chat':
+                            return <ChatList chatRoom={chatRoom} currUser={currUser} />;
+                        case 'friend':
+                            return <FriendList friend={friend} />;
+                        case 'search':
+                            return (
+                                <SearchResults
+                                    findData={findData}
+                                    searchData={searchData}
+                                    handleSearchChange={handleSearchChange}
+                                />
+                            );
+                        case 'block':
+                            return <BlockList blocklist={blocklist} />;
+                        default:
+                            return null;
+                    }
+                })()}
             </div>
-            <Footer onClickNewChat={handleNewChat} key={pageState} pageState={pageState} setPageData={setPageData} />
+            <Footer
+                onClickNewChat={handleNewChat}
+                key={pageState}
+                pageState={pageState}
+                setPageData={setPageData}
+            />
         </div>
     );
 };

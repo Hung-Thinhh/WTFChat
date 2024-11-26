@@ -1,9 +1,9 @@
-import { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
-import ChatDataContext from 'lib/Context/ChatContext';
+import { useSelector } from 'react-redux';
+import { currUserSelector } from '../redux/selectors';
 
 const PrivateRoutes = ({ component }, props) => {
-    const { currUser } = useContext(ChatDataContext); // get current user data from global state
+    const currUser = useSelector(currUserSelector); // get current user data from global state
 
     if (currUser) {
         return component;
