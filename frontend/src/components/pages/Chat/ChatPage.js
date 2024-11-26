@@ -15,7 +15,6 @@ import { currUserSelector, offsetSelector } from '../../../redux/selectors';
 import { setOffset } from '../../layout/ChatLayout/LeftSidebar/sidebarSlide';
 import { useDispatch, useSelector } from 'react-redux';
 import { setNewMessage } from '../../../components/layout/ChatLayout/LeftSidebar/sidebarSlide';
-import { setChatRooms } from '../../../redux/globalSlice/chatRoomSlice';
 Modal.setAppElement('#root');
 
 const ChatPage = () => {

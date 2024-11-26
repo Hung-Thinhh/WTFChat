@@ -6,18 +6,20 @@ import '@szhsin/react-menu/dist/index.css';
 import '@szhsin/react-menu/dist/transitions/zoom.css';
 import { setShowMenu } from '../../layout/ChatLayout/LeftSidebar/sidebarSlide';
 import leaveChatRoomCtrl from 'services/leaveChatRoom';
-import { removeChatRoom } from '../../../redux/chatRoomSlice';
+import { removeChatRoom } from '../../../redux/globalSlice/chatRoomSlice';
 import { setNotify } from "../../../redux/notifySlide";
 import { socket } from '../../../socket';
 import { useSelector } from 'react-redux';
-import ChatDataContext from 'lib/Context/ChatContext';
-import { useContext, useState, useEffect } from 'react';
+import {useState, useEffect } from 'react';
+import {
+    currUserSelector,
+} from '../../../redux/selectors';
 const MoreOptions = ({ RoomInfo, dispatch, state }) => {
     // const handleBlockFriend = async (e) => {
     //     const data = await blockFriend({ friendId: RoomInfo.friendId[0], status: true });
     // }
     const [mute, setMute] = useState(1);
-    const { currUser } = useContext(ChatDataContext);
+    const currUser = useSelector(currUserSelector);
     const notify = useSelector((state) => state.notify?.notify?.data);
     const handleoutGr = async () => {
         const userAction = window.confirm('B���n có chắc chắn muốn rời nhóm?');

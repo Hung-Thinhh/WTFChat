@@ -17,9 +17,7 @@ import SearchResults from './SearchResults';
 import BlockList from './BlockList';
 import { socket } from '../../../../socket';
 import { useDispatch, useSelector } from 'react-redux';
-import { setChatRooms } from '../../../../redux/chatRoomSlice';
-import { chatRoomListSelector, showMenu1Selector } from '../../../../redux/selectors';
-import { setChatRooms } from '../../../../redux//globalSlice/chatRoomSlice';
+import { setChatRooms } from '../../../../redux/globalSlice/chatRoomSlice';
 import {
     chatRoomListSelector,
     currUserSelector,
