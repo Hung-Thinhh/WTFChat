@@ -15,10 +15,10 @@ import { offsetSelector } from '../../../redux/selectors';
 import { setOffset } from '../../layout/ChatLayout/LeftSidebar/sidebarSlide';
 import { useDispatch, useSelector } from 'react-redux';
 import { setNewMessage } from '../../../components/layout/ChatLayout/LeftSidebar/sidebarSlide';
-import { setChatRooms } from '../../../redux/chatRoomSlice';
 Modal.setAppElement('#root');
 
 const ChatPage = () => {
+    const notify = useSelector((state) => state.notify.notify.data);
     const { currUser, ChatData, RoomInfo, setRoomInfo } = useContext(ChatDataContext);
     const [curChatData, setCurChatData] = useState([]);
     const [isSending, setIsSending] = useState(false);
@@ -30,9 +30,10 @@ const ChatPage = () => {
     // const [offset, setOffset] = useState(0);
     const [audio] = useState(new Audio(song));
     const [modalIsOpen, setIsOpen] = useState(false);
-
+    
     const state = useSelector(offsetSelector);
     const dispatch = useDispatch();
+
 
 
 
@@ -150,9 +151,15 @@ const ChatPage = () => {
     }, [RoomInfo]);
 
     useEffect(() => {
+       console.log(notify);
+    }, [notify]);
 
+    useEffect(() => {
         const handleNewChat = (data) => {
-            audio.play();
+            const notification = notify.find((item) => item.idRoom === data.roomid);
+            if (notification && notification.notify === 1) {
+                audio.play();
+            }
             setCurChatData((prevMessages) => {
                 dispatch(setNewMessage(data));
                 if (data.traloi) {
@@ -162,9 +169,9 @@ const ChatPage = () => {
                     }
                 }
 
-                const index = prevMessages.findIndex((msg) => {  
+                const index = prevMessages.findIndex((msg) => {
                     scrollToMessage(`message${data.id}`);
-                    return msg.id === tempId 
+                    return msg.id === tempId
                 });
 
                 if (index !== -1) {
@@ -250,6 +257,10 @@ const ChatPage = () => {
             socket.off('delete_res'); // Hủy đăng ký sự kiện khi component unmount
         };
     }, []);
+    // socket.on('muted', (data) => {
+    //    console.log(data);
+    // })
+
     useEffect(() => {
         socket.on('return_res', (data) => {
             setCurChatData((prevMessages) => {

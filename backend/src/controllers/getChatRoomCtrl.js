@@ -18,8 +18,23 @@ const getRoomController = async (req, res) => {
         });
     }
 };
-
+const muteCtrl = async (req,res) => {
+    // try {
+    //     const id = req.body.id;
+    //     const state = req.body.state;
+    //     const data = await mute(id,state);
+    //     return data;
+    // } catch (error) {
+    //     console.log(error);
+    //     return {
+    //         EM: "SERVICE | MUTE CHAT CONTROLLER | ERROR | ",
+    //         EC: error,
+    //         DT: "",
+    //     };
+    // }
+}
 
 export {
     getRoomController,
+    muteCtrl
 };

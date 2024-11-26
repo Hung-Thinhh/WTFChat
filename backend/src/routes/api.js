@@ -4,6 +4,7 @@ import {
     chatController,
     getChatController,
     deletaChatController,
+    getNotifyController
 } from '../controllers/chatController';
 import { getFriendController, addFriendController, delFriendController, blockFriendController, getBlockFriendController } from '../controllers/FriendController.js';
 import {
@@ -11,7 +12,7 @@ import {
     banReportById, unbanReportById, editReportType,
     addReportType, banReportType, unbanReportType
 } from "../controllers/AdminReportController.js";
-import { getRoomController } from '../controllers/getChatRoomCtrl.js';
+import { getRoomController,muteCtrl } from '../controllers/getChatRoomCtrl.js';
 import GetInfoRoom from '../controllers/GetInfoRoom.js';
 import createRoomController from '../controllers/CreateRoomController.js';
 import {
@@ -82,6 +83,8 @@ const initApiRouter = (app) => {
     router.post('/chat', chatController); // api gửi tin nhắn
     router.post('/getchat', getChatController); // api lấy tin nhắn
     router.post('/getroominfo', GetInfoRoom); // api lấy tin nhắn
+    router.post('/mute', muteCtrl); // api lấy tin nhắn
+    router.post('/getnotify', getNotifyController); // api lấy tin nhắn
 
     // friend
     router.post('/friendList', getFriendController); // api lấy tin nhắn
