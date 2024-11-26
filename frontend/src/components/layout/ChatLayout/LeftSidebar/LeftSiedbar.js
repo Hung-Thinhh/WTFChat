@@ -137,7 +137,7 @@ const LeftSiedbar = () => {
             <div className="media">
                 {currroomInfo &&
                     currroomInfo.map((item, index) => (
-                        item.img != null ?
+                        item.image ?
                         <div className="img_ctn" key={index}>
                             <img
                                 src={
