@@ -2,11 +2,13 @@ import express from 'express'
 import {HomeController} from "../controllers/AdminHomeController"
 import {getListUser} from "../controllers/AdminUserController"
 import {getListGroup} from "../controllers/AdminGroupController"
-import {getReport,getReportTypeAPI} from "../controllers/AdminReportController"
+import { getReport, getReportTypeAPI } from "../controllers/AdminReportController"
+import {checkUserPermission,checkUserJWT } from '../middleware/jwt.js';
 const router = express.Router();
 
 const initWebRouter = (app) => {
-    router.get("/", async(req, res) => {
+    router.all('*', checkUserJWT);
+    router.get("/admin",checkUserPermission, async(req, res) => {
         return res.render('index', {
             sidebar: 'rightSidebar',
             header: "header",
@@ -14,7 +16,7 @@ const initWebRouter = (app) => {
             
         });
     });
-    router.get("/user", async (req, res) => {
+    router.get("/user",checkUserPermission, async (req, res) => {
         
         return res.render('user', {
             sidebar: 'rightSidebar',
@@ -22,7 +24,7 @@ const initWebRouter = (app) => {
             users: await getListUser(req,res)
         });
     });
-    router.get("/group", async (req, res) => {
+    router.get("/group",checkUserPermission, async (req, res) => {
         
         return res.render('group', {
             sidebar: 'rightSidebar',
@@ -30,7 +32,7 @@ const initWebRouter = (app) => {
             users: await getListGroup(req,res)
         });
     });
-    router.get("/report", async (req, res) => {
+    router.get("/report",checkUserPermission, async (req, res) => {
         
         return res.render('report', {
             sidebar: 'rightSidebar',
@@ -38,7 +40,7 @@ const initWebRouter = (app) => {
             reports: await getReport(req,res)
         });
     });
-    router.get("/report-type", async (req, res) => {
+    router.get("/report-type",checkUserPermission, async (req, res) => {
         
         return res.render('report_type', {
             sidebar: 'rightSidebar',

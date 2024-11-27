@@ -32,13 +32,13 @@ const extractToken = (req) => {
     return null;
 };
 
-const SecurePaths = ['/checkaccount','/register','/login','/sendOTP','/searchMail',];
+const SecurePaths = [ '/api/register', '/api/login', '/api/sendOTP', '/api/searchMail'];
 
 export const checkUserJWT = async (req, res, next) => {
     if (SecurePaths.includes(req.path)) return next();
-    console.log(session);
     let session = req.session;
-    
+    console.log(session);
+
     let tokenFromHeader = extractToken(req);
     const token = session && session.userId ? session.userId : tokenFromHeader;
 
@@ -88,28 +88,16 @@ export const checkUserJWT = async (req, res, next) => {
 
 export const checkUserPermission = async (req, res, next) => {
     if (req.user) {
-        next();
-
-        // const email = req.user.email;
-        // const roles = req.user.groupWithRole.Roles;
-        // const currUrl = req.path;
-        // if (!roles || roles.length === 0) {
-        //     return res.status(403).json({
-        //         EC: '-1',
-        //         DT: '',
-        //         EM: `You don't have permission to access this resource...`,
-        //     });
-        // }
-        // let canAccess = roles.some((item) => item.url === currUrl || currUrl.includes(item.url));
-        // if (canAccess) {
-        //     next();
-        // } else {
-        //     return res.status(403).json({
-        //         EC: '-1',
-        //         DT: '',
-        //         EM: `You don't have permission to access this resource...`,
-        //     });
-        // }
+        const user = req.user;
+        if (user.role == 0) {
+            return next();
+        } else {
+            return res.status(403).json({
+                        EC: 403,
+                        DT: '',
+                        EM: `You don't have permission to access this resource...`,
+                    });
+        }
     } else {
         return res.status(401).json({
             EC: '-1',

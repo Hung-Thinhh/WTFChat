@@ -71,7 +71,6 @@ const upload = multer({
 });
 
 const initApiRouter = (app) => {
-    router.all('*', checkUserJWT);
 
     // authen
     router.get('/checkaccount', checkAccount);
@@ -113,26 +112,27 @@ const initApiRouter = (app) => {
     //report 
     router.get('/getReportType', getReportType);
     router.post('/sendReport', sendReport);
-    router.get('/banReportById/:id', banReportById);
-    router.get('/unbanReportById/:id', unbanReportById);
-    router.get('/banReportType/:id', banReportType);
-    router.get('/unbanReportType/:id', unbanReportType);
-    router.post('/edit-reportType', editReportType);
-    router.post('/add-reportType', addReportType);
-    router.get('/getReportByIdUser/:id', getReportByIdUser);
-    router.get('/getReportByIdGroup/:id', getReportByIdGroup);
-    router.get('/getReport/:page', getReportAPI);
+
+    router.get('/banReportById/:id',checkUserPermission, banReportById);
+    router.get('/unbanReportById/:id',checkUserPermission, unbanReportById);
+    router.get('/banReportType/:id',checkUserPermission, banReportType);
+    router.get('/unbanReportType/:id',checkUserPermission, unbanReportType);
+    router.post('/edit-reportType',checkUserPermission, editReportType);
+    router.post('/add-reportType',checkUserPermission, addReportType);
+    router.get('/getReportByIdUser/:id',checkUserPermission, getReportByIdUser);
+    router.get('/getReportByIdGroup/:id',checkUserPermission, getReportByIdGroup);
+    router.get('/getReport/:page',checkUserPermission, getReportAPI);
 
     //admin
-    router.get('/getUserById/:id', getUserById);
-    router.get('/banUserById/:id', banUserById);
-    router.get('/unbanUserById/:id', unbanUserById);
+    router.get('/getUserById/:id',checkUserPermission, getUserById);
+    router.get('/banUserById/:id',checkUserPermission, banUserById);
+    router.get('/unbanUserById/:id',checkUserPermission, unbanUserById);
     router.get('/getUser/:page',checkUserPermission, getListUserAPI);
-    router.post('/edit-user', editUser);
+    router.post('/edit-user',checkUserPermission, editUser);
 
-    router.get('/getGroupById/:id', getListGroupAPI);
-    router.get('/banGroupById/:id', banGroupById);
-    router.get('/unbanGroupById/:id', unbanGroupById);
+    router.get('/getGroupById/:id',checkUserPermission, getListGroupAPI);
+    router.get('/banGroupById/:id',checkUserPermission, banGroupById);
+    router.get('/unbanGroupById/:id',checkUserPermission, unbanGroupById);
 
     return app.use('/api', router);
 };
