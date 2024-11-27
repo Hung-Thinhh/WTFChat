@@ -50,9 +50,6 @@ const MoreOptions = ({ RoomInfo, dispatch, state }) => {
                 setMute(newMuteState);
 
                 const updatedNotify = notify.map((item) => {
-                    console.log(data.DT[0].idroom, item.idroom);
-                    console.log(notify);
-
                     return item.idroom === data.DT[0].idroom ? data.DT[0] : item;
                 });
                 dispatch(setNotify(updatedNotify));
@@ -64,7 +61,6 @@ const MoreOptions = ({ RoomInfo, dispatch, state }) => {
         };
     }, [notify, dispatch]);
 
-    console.log(mute);
 
     return (
         <div className="more">

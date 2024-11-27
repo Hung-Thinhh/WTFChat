@@ -37,7 +37,7 @@ function ForgetPass() {
 
     const handlePassShow = (event) => {
         event.preventDefault();
-        console.log(!state.showPass);
+
 
         dispatch(showPass(!state.showPass));
     };

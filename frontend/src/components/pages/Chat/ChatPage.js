@@ -126,7 +126,7 @@ const ChatPage = () => {
             scrollToMessage(scrollid);
         }, 0);
         return () => clearTimeout(timer);
-    }, [curChatData]);
+    }, [Chat]);
     const handleDataReply = (data) => {
         setIsReply(data);
     };
@@ -266,7 +266,7 @@ const ChatPage = () => {
         if (chatWindowRef.current && state <= 50) {
             chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
         }
-    }, [curChatData]);
+    }, [Chat]);
 
     const scrollToMessage = (id) => {
         const messageElement = document.getElementById(`message${id}`);
@@ -338,8 +338,8 @@ const ChatPage = () => {
                 <div className="chatPage_container">
                     <HeaderChatPage RoomInfo={RoomInfo} />
                     <div className="ChatWindow" ref={chatWindowRef}>
-                        {curChatData.length > 0 ? (
-                            curChatData.map((item, index) => (
+                        {Array.isArray(Chat) && Chat.length > 0 ? (
+                            Chat.map((item, index) => (
                                 <MessageBubble
                                     key={index}
                                     id={item.id}

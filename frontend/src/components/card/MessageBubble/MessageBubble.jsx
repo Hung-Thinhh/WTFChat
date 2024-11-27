@@ -36,7 +36,6 @@ const MessageBubble = (data) => {
     }
     const handlePropReport = useCallback((data_report) => {
         data.reportting(data_report);
-        console.log('ahahahha');
 
     }, []);
     const targets = (id) => {
