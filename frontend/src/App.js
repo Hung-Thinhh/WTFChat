@@ -8,7 +8,6 @@ import { publicRoutes, privateRoutes } from 'routes';
 import { PrivateRoutes } from 'router/privateRoutes';
 
 import { Fragment, useContext, useEffect, useState } from 'react';
-import { checkaccount, logout } from 'controller/authen';
 import ChatDataContext from 'lib/Context/ChatContext';
 import { socket } from 'socket';
 import { userSelector } from './redux/selectors';

@@ -46,7 +46,7 @@ export const userSlice = createSlice({
         // Add reducers for additional action types here, and handle loading state as needed
         builder
             .addCase(fetchCurrUser.fulfilled, (state, action) => {
-                state.currUser = action.payload || state.currUser;
+                state.currUser = action.payload || null;
                 state.checkAccount = true;
                 state.loading = false;
             })
