@@ -7,7 +7,7 @@ import chatRoomSlice from './globalSlice/chatRoomSlice';
 import notifySlice from './notifySlide';
 import profileSlice from 'components/pages/Profile/profileSlice';
 import userSlice from './globalSlice/userSlice';
-
+import chatSlide from 'components/pages/Chat/chatSlide';
 const store = configureStore({
     reducer: {
         register: registerSlice,
@@ -18,6 +18,7 @@ const store = configureStore({
         profile: profileSlice,
         user: userSlice,
         notify: notifySlice,
+        chatdata: chatSlide,
     },
 });
 
