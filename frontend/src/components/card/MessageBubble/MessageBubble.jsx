@@ -15,7 +15,7 @@ import {
 
 import OpengraphReactComponent from 'opengraph-react';
 
-import { ControlledMenu, MenuItem, SubMenu, MenuHeader } from '@szhsin/react-menu';
+import { ControlledMenu, MenuItem, SubMenu, MenuHeader,target } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 import '@szhsin/react-menu/dist/transitions/zoom.css';
 import { useSelector } from "react-redux";
@@ -38,6 +38,9 @@ const MessageBubble = (data) => {
         console.log('ahahahha');
 
     }, []);
+    const targets = (id) => {
+        data.target(id);
+    };
     const handleReport = (data_report) => {
         const newReport = {
             report_type: data_report,
@@ -127,6 +130,7 @@ const MessageBubble = (data) => {
                 setOpen(true);
             }}
             key={data.data.id}
+            onClick={()=>targets(data.data.traloi.id)}
         >
 
             <div className={`messageContent ${userClass}`}>
@@ -146,7 +150,7 @@ const MessageBubble = (data) => {
                     {/* {data.data.img && <img src={data.data.img} alt="Attached image" />} */}
                     <div className="messageText">
                         {data.data.traloi ?
-                            <div className='reply_ctn'>
+                            <div className='reply_ctn' >
                                 <div className="reply_name">Bạn</div>
                                 <div className="reply_content">{data.data.traloi.content}</div>
                             </div>
@@ -185,9 +189,6 @@ const MessageBubble = (data) => {
             >
                 <MenuItem className="menu_item" onClick={handleReply}>
                     <FontAwesomeIcon icon={faReply} /> Reply
-                </MenuItem>
-                <MenuItem className="menu_item">
-                    <FontAwesomeIcon icon={faPen} /> Edit
                 </MenuItem>
                 <MenuItem className="menu_item" onClick={handleCopy}>
                     <FontAwesomeIcon icon={faCopy} /> Copy

@@ -140,7 +140,7 @@ const ChatPage = () => {
         };
 
         setCurChatData((prevMessages) => [...prevMessages, messageData]);
-
+        console.log(messageData)
         try {
             socket.emit('send_mess', messageData);
             setIsSending(false);
@@ -168,7 +168,7 @@ const ChatPage = () => {
                 if (data.traloi) {
                     const replyMessage = prevMessages.find((msg) => msg.id === data.traloi);
                     if (replyMessage) {
-                        data.traloi = replyMessage;
+                        data = { ...data, traloi: replyMessage };
                     }
                 }
 
@@ -224,6 +224,7 @@ const ChatPage = () => {
     }, [curChatData]);
 
     const scrollToMessage = (id) => {
+        console.log("goij",id)
         const messageElement = document.getElementById(`message${id}`);
         if (messageElement && chatWindowRef.current) {
             const chatWindowHeight = chatWindowRef.current.clientHeight;
@@ -310,6 +311,7 @@ const ChatPage = () => {
                                     }}
                                     onReply={handleDataReply}
                                     reportting={handleReport}
+                                    target={scrollToMessage}
                                 />
                             ))
                         ) : (
