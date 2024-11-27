@@ -37,7 +37,7 @@ const SecurePaths = [ '/api/register', '/api/login', '/api/sendOTP', '/api/searc
 export const checkUserJWT = async (req, res, next) => {
     if (SecurePaths.includes(req.path)) return next();
     let session = req.session;
-    console.log(session);
+
 
     let tokenFromHeader = extractToken(req);
     const token = session && session.userId ? session.userId : tokenFromHeader;

@@ -6,14 +6,14 @@ document.addEventListener('click', function (event) {
             event.target.parentElement.classList.contains('editUserButton'))
     ) {
         // Lấy ID của user từ button
-        console.log('haaaaaaaaaaaaaaa');
+     
         const userId = event.target.id || event.target.parentElement.id;
-        console.log(userId);
+
         $('.saveChangeBtn').attr('id', userId);
         const found = report_type.find((item) => item.id == userId);
-        console.log(report_type);
+   
 
-        console.log(found);
+
 
         $('#inputContent').val(found.content);
         $('#inputInfor').val(found.infor);
@@ -55,16 +55,16 @@ document.addEventListener('click', function (event) {
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log(data);
+                 
                     $(event.target).prop('disabled', false);
                     $(event.target).html('Save changes');
                     if (data.EC == 0) {
-                        console.log('gg');
+                      
                         
                         $('#editModal').modal('hide');
                         $('.toast .toast-body').html('Save changes successfully');
                         let lastRow = $('table tr:last').find('th').html();
-                        console.log(lastRow);
+                     
                         
                         $('table tbody').append(`
                             <tr id=${data.DT.id}>
@@ -134,7 +134,7 @@ document.addEventListener('click', function (event) {
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log(data);
+                   
                     $(event.target).prop('disabled', false);
                     $(event.target).html('Save changes');
                     if (data.EC == 0) {
@@ -188,7 +188,7 @@ document.addEventListener('click', function (event) {
         (event.target.classList.contains('fa') &&
             event.target.parentElement.classList.contains('UnBanUserButton'))
     ) {
-        console.log('ahhaahh');
+     
         const button = event.target.closest('.UnBanUserButton');
         const userId = event.target.id || event.target.parentElement.id;
 

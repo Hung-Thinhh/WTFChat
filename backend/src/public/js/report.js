@@ -36,7 +36,7 @@ document.addEventListener('click', function (event) {
         (event.target.classList.contains('fa') &&
             event.target.parentElement.classList.contains('UnBanUserButton'))
     ) {
-        console.log('ahhaahh');
+
         const button = event.target.closest('.UnBanUserButton');
         const userId = event.target.id || event.target.parentElement.id;
 
@@ -64,7 +64,7 @@ document.addEventListener('click', function (event) {
             });
     }
     if (event.target.classList.contains('img_mess')) {
-        console.log('okkkkkkkkkk');
+      
         $('#myimage').attr('src', event.target.src);
         magnify("myimage", 3);
         
@@ -136,7 +136,7 @@ function magnify(imgID, zoom) {
 let currentPage = 1;
 function createPagination() {
     $('#pagination').empty(); // Xóa pagination hiện tại
-    console.log(totalPages); // Giả sử totalPages đã được khai báo trước đó
+ 
     // Thêm nút "Previous"
     if (currentPage > 1) {
         $('.pagination').append(
@@ -170,7 +170,7 @@ function createPagination() {
             );
         }
     }
-    console.log(currentPage);
+  
 
     // Thêm nút "Next"
     if (currentPage < totalPages) {
@@ -210,7 +210,7 @@ $('#pagination').on('click', '.page-link', function (e) {
         })
         .then((data) => {
             // Hiển thị dữ liệu trên trang web
-            console.log(data);
+     
             totalPages = data.totalPages;
             renderUsersTable(data);
             createPagination();
@@ -223,7 +223,7 @@ $('#pagination').on('click', '.page-link', function (e) {
     $(this).parent().addClass('active').siblings().removeClass('active');
 });
 function renderUsersTable(users) {
-    console.log(users);
+
     
     // Lấy phần tử bảng HTML
     const tableBody = document.querySelector('tbody');
@@ -248,7 +248,7 @@ function renderUsersTable(users) {
             <span>${JSON.parse(user.content).content}</span>
           </td>`
         }
-        console.log(img_text);
+  
         
         row.innerHTML = `
         <th scope="row">${index + 1}</th>`
