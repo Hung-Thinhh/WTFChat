@@ -11,7 +11,7 @@ import Modal from 'react-modal';
 import song from '../../../notify.mp3';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { currUserSelector, offsetSelector,chatDataSelector } from '../../../redux/selectors';
+import { currUserSelector, offsetSelector, chatDataSelector } from '../../../redux/selectors';
 import { setOffset } from '../../layout/ChatLayout/LeftSidebar/sidebarSlide';
 import { useDispatch, useSelector } from 'react-redux';
 import { setNewMessage } from '../../../components/layout/ChatLayout/LeftSidebar/sidebarSlide';
@@ -19,7 +19,7 @@ import { setChatData } from './chatSlide';
 Modal.setAppElement('#root');
 
 const ChatPage = () => {
-    const { ChatData, RoomInfo, setRoomInfo } = useContext(ChatDataContext);
+    const { ChatData, RoomInfo,setRoomInfo } = useContext(ChatDataContext);
     const notify = useSelector((state) => state.notify.notify.data);
     const [curChatData, setCurChatData] = useState([]);
     const [isSending, setIsSending] = useState(false);
@@ -31,28 +31,18 @@ const ChatPage = () => {
     // const [offset, setOffset] = useState(0);
     const [audio] = useState(new Audio(song));
     const [modalIsOpen, setIsOpen] = useState(false);
-    const [scrollid, setScrollid] = useState("");
+    const [scrollid, setScrollid] = useState('');
     const dispatch = useDispatch();
     const state = useSelector(offsetSelector);
     const currUser = useSelector(currUserSelector);
     const [showGoDown, setShowGoDown] = useState(false);
     const Chat = useSelector(chatDataSelector);
 
-
-
-
-
     useEffect(() => {
         if (Array.isArray(curChatData) && curChatData.length > 0) {
             dispatch(setChatData(curChatData));
         }
     }, [curChatData]);
-
-
-
-
-
-
 
     const fetchNewMessages = async () => {
         try {
@@ -103,7 +93,7 @@ const ChatPage = () => {
                 setCurChatData((previous) => {
                     if (previous.length > 0) {
                         const firstMessageId = previous[0].id;
-                        setScrollid(firstMessageId)
+                        setScrollid(firstMessageId);
                     }
 
                     const newData = [...previous];
@@ -179,7 +169,6 @@ const ChatPage = () => {
     }, [RoomInfo]);
 
     useEffect(() => {
-
         const handleNewChat = (data) => {
             const notification = notify.find((item) => item.idRoom === data.roomid);
             if (notification && notification.notify === 1) {
@@ -196,7 +185,7 @@ const ChatPage = () => {
 
                 const index = prevMessages.findIndex((msg) => {
                     scrollToMessage(`message${data.id}`);
-                    return msg.id === tempId
+                    return msg.id === tempId;
                 });
 
                 if (index !== -1) {
@@ -221,6 +210,22 @@ const ChatPage = () => {
             socket.off('new_chat', handleNewChat);
         };
     }, [ChatData, tempId]);
+    useEffect(() => {
+        const handleEditRoom = (data) => {
+            console.log('log',data);
+            
+            if (RoomInfo.id === parseInt(data.id)) {
+                let room = {...RoomInfo, status: data.isBan ? 1:0}
+               setRoomInfo(room)
+           }
+        };
+
+        socket.on('ban_group', handleEditRoom);
+
+        return () => {
+            socket.off('ban_group', handleEditRoom);
+        };
+    }, [ChatData, tempId]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -239,7 +244,6 @@ const ChatPage = () => {
         };
     }, [state]);
 
-
     useEffect(() => {
         const handleScroll = () => {
             if (chatWindowRef.current) {
@@ -248,19 +252,18 @@ const ChatPage = () => {
                 setShowGoDown(scrollHeight - scrollTop - clientHeight > 100);
             }
         };
-    
+
         const chatWindow = chatWindowRef.current;
         if (chatWindow) {
             chatWindow.addEventListener('scroll', handleScroll);
         }
-    
+
         return () => {
             if (chatWindow) {
                 chatWindow.removeEventListener('scroll', handleScroll);
             }
         };
     }, []);
-    
 
     useEffect(() => {
         if (chatWindowRef.current && state <= 50) {
@@ -289,7 +292,6 @@ const ChatPage = () => {
     useEffect(() => {
         socket.on('deleteres', (data) => {
             setCurChatData((prevMessages) => {
-
                 const index = prevMessages.findIndex((msg) => msg.id === data.delete_mess.id);
                 if (index !== -1) {
                     const updatedMessages = [...prevMessages];
@@ -334,7 +336,11 @@ const ChatPage = () => {
 
     return (
         <>
-            {RoomInfo ? (
+            {!RoomInfo ? (
+                 <h1>CHỌN MỘT CUỘC TRÒ TRUYỆN ĐỂ BẮT ĐẦU</h1>
+            ) : RoomInfo && RoomInfo.status ===1 ? (
+                <h1>Nhóm này đã bị khoá!</h1>
+            ) : (
                 <div className="chatPage_container">
                     <HeaderChatPage RoomInfo={RoomInfo} />
                     <div className="ChatWindow" ref={chatWindowRef}>
@@ -412,8 +418,6 @@ const ChatPage = () => {
                     )}
 
                 </div>
-            ) : (
-                <h1>CHỌN MỘT CUỘC TRÒ TRUYỆN ĐỂ BẮT ĐẦU</h1>
             )}
         </>
     );
