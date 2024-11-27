@@ -11,10 +11,11 @@ import Modal from 'react-modal';
 import song from '../../../notify.mp3';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { currUserSelector, offsetSelector } from '../../../redux/selectors';
+import { currUserSelector, offsetSelector,chatDataSelector } from '../../../redux/selectors';
 import { setOffset } from '../../layout/ChatLayout/LeftSidebar/sidebarSlide';
 import { useDispatch, useSelector } from 'react-redux';
 import { setNewMessage } from '../../../components/layout/ChatLayout/LeftSidebar/sidebarSlide';
+import { setChatData } from './chatSlide';
 Modal.setAppElement('#root');
 
 const ChatPage = () => {
@@ -35,20 +36,24 @@ const ChatPage = () => {
     const state = useSelector(offsetSelector);
     const currUser = useSelector(currUserSelector);
     const [showGoDown, setShowGoDown] = useState(false);
+    const Chat = useSelector(chatDataSelector);
 
 
 
 
 
-
-
-
+    useEffect(() => {
+        if (Array.isArray(curChatData) && curChatData.length > 0) {
+            dispatch(setChatData(curChatData));
+        }
+    }, [curChatData]);
     const fetchNewMessages = async () => {
+        console.log('offsetssssssssssss',state);
         try {
             const response = await getChat({
                 userId: currUser.id,
                 roomId: ChatData,
-                offset: state,
+                offset: 0,
             });
 
             if (response && response.EC === 0) {
@@ -63,6 +68,7 @@ const ChatPage = () => {
                         }
                     }
                 });
+                dispatch(setChatData(data));
                 setCurChatData(data);
                 dispatch(setOffset(state + 50));
             }
@@ -72,6 +78,7 @@ const ChatPage = () => {
     };
 
     const lazyLoad = async () => {
+        console.log('offsetssssssssssss',state);
         try {
             const response = await getChat({
                 userId: currUser.id,
@@ -110,6 +117,7 @@ const ChatPage = () => {
             console.error('Error fetching new messages:', error);
         }
     };
+    
     useEffect(() => {
         const timer = setTimeout(() => {
             scrollToMessage(scrollid);
@@ -328,8 +336,8 @@ const ChatPage = () => {
                 <div className="chatPage_container">
                     <HeaderChatPage RoomInfo={RoomInfo} />
                     <div className="ChatWindow" ref={chatWindowRef}>
-                        {curChatData.length > 0 ? (
-                            curChatData.map((item, index) => (
+                        {Array.isArray(Chat) && Chat.length > 0 ? (
+                            Chat.map((item, index) => (
                                 <MessageBubble
                                     key={index}
                                     id={item.id}

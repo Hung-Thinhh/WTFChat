@@ -93,3 +93,15 @@ export const userSelector = createSelector(
         checkAccount,
     }),
 );
+// chat data 
+export const chatDataSelector = (state) => state.chatdata.chatData;
+export const tempIdSelector = (state) => state.chatdata.tempId;
+
+export const chatSelector = createSelector(
+    chatDataSelector,
+    tempIdSelector,
+    (chatData, tempId) => ({
+        chatData,
+        tempId,
+    }),
+);
