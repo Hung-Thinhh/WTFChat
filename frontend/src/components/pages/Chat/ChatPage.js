@@ -47,8 +47,14 @@ const ChatPage = () => {
             dispatch(setChatData(curChatData));
         }
     }, [curChatData]);
+
+
+
+
+
+
+
     const fetchNewMessages = async () => {
-        console.log('offsetssssssssssss',state);
         try {
             const response = await getChat({
                 userId: currUser.id,
@@ -68,7 +74,6 @@ const ChatPage = () => {
                         }
                     }
                 });
-                dispatch(setChatData(data));
                 setCurChatData(data);
                 dispatch(setOffset(state + 50));
             }
@@ -78,7 +83,6 @@ const ChatPage = () => {
     };
 
     const lazyLoad = async () => {
-        console.log('offsetssssssssssss',state);
         try {
             const response = await getChat({
                 userId: currUser.id,
@@ -117,7 +121,6 @@ const ChatPage = () => {
             console.error('Error fetching new messages:', error);
         }
     };
-    
     useEffect(() => {
         const timer = setTimeout(() => {
             scrollToMessage(scrollid);
@@ -178,9 +181,7 @@ const ChatPage = () => {
     useEffect(() => {
 
         const handleNewChat = (data) => {
-            const notification = notify.find((item) => item.idroom === data.idRoom); 
-            console.log('hahahahaha',notification,data);
-            
+            const notification = notify.find((item) => item.idRoom === data.roomid);
             if (notification && notification.notify === 1) {
                 audio.play();
             }
@@ -286,8 +287,9 @@ const ChatPage = () => {
     }
 
     useEffect(() => {
-        socket.on('delete_res', (data) => {
+        socket.on('deleteres', (data) => {
             setCurChatData((prevMessages) => {
+
                 const index = prevMessages.findIndex((msg) => msg.id === data.delete_mess.id);
                 if (index !== -1) {
                     const updatedMessages = [...prevMessages];
@@ -299,7 +301,7 @@ const ChatPage = () => {
         });
 
         return () => {
-            socket.off('delete_res'); // Hủy đăng ký sự kiện khi component unmount
+            socket.off('deleteres');
         };
     }, []);
     // socket.on('muted', (data) => {
@@ -336,8 +338,8 @@ const ChatPage = () => {
                 <div className="chatPage_container">
                     <HeaderChatPage RoomInfo={RoomInfo} />
                     <div className="ChatWindow" ref={chatWindowRef}>
-                        {Array.isArray(Chat) && Chat.length > 0 ? (
-                            Chat.map((item, index) => (
+                        {curChatData.length > 0 ? (
+                            curChatData.map((item, index) => (
                                 <MessageBubble
                                     key={index}
                                     id={item.id}
