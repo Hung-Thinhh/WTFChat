@@ -3,15 +3,21 @@ import ChatDataContext from 'lib/Context/ChatContext';
 import { timePassed } from 'lib/function/formatTime';
 import { useDispatch, useSelector } from 'react-redux';
 import { showMenuSelector } from '../../../redux/selectors';
-import { setShowMenu } from '../../layout/ChatLayout/LeftSidebar/sidebarSlide';
+// import { setShowMenu } from '../../layout/ChatLayout/LeftSidebar/sidebarSlide';
+import { chatDataSelector } from '../../../redux/selectors';
 import UserInfo from './UserInfo';
 import MoreOptions from './MoreOptions';
 
-const HeaderChatPage = ({ RoomInfo }) => {
+
+
+const HeaderChatPage = ({ RoomInfo ,target}) => {
     const { listStatus } = useContext(ChatDataContext);
     const [status, setStatus] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
     const dispatch = useDispatch();
     const state = useSelector(showMenuSelector);
+    const Chat = useSelector(chatDataSelector);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -29,10 +35,37 @@ const HeaderChatPage = ({ RoomInfo }) => {
         return () => clearInterval(intervalId);
     }, [listStatus, RoomInfo.friendId]);
 
+    const handleSearch = (event) => {
+        const term = event.target.value;
+        setSearchTerm(term);
+        if (Array.isArray(Chat)) {
+            const results = Chat.filter((message) =>
+                message.content.toLowerCase().includes(term.toLowerCase())
+            );
+            setSearchResults(results);
+        }
+    };
+
     return (
         <div className="chatpage_header">
             <div className="header_wrap">
                 <UserInfo RoomInfo={RoomInfo} listStatus={listStatus} status={status} />
+                <input
+                    type="text"
+                    placeholder="Search messages..."
+                    value={searchTerm}
+                    onChange={handleSearch}
+                    className='search_input'
+                />
+                {searchResults.length > 0 && (
+                    <div className="search_results">
+                        {searchResults.map((result, index) => (
+                            <div key={index} className="search_result_item" onClick={()=>target(result.id)}>
+                                {result.content}
+                            </div>
+                        ))}
+                    </div>
+                )}
                 <MoreOptions RoomInfo={RoomInfo} dispatch={dispatch} state={state} />
             </div>
         </div>

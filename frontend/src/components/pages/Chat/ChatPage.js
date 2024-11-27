@@ -336,7 +336,7 @@ const ChatPage = () => {
         <>
             {RoomInfo ? (
                 <div className="chatPage_container">
-                    <HeaderChatPage RoomInfo={RoomInfo} />
+                    <HeaderChatPage RoomInfo={RoomInfo} target={scrollToMessage} />
                     <div className="ChatWindow" ref={chatWindowRef}>
                         {Array.isArray(Chat) && Chat.length > 0 ? (
                             Chat.map((item, index) => (
