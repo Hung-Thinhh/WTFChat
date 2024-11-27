@@ -4,6 +4,7 @@ import registerSlice from 'components/pages/Register/registerSlice';
 import sidebarSlice from 'components/layout/ChatLayout/LeftSidebar/sidebarSlide';
 import reportTypeSlice from './globalSlice/reportType_Slide';
 import chatRoomSlice from './globalSlice/chatRoomSlice';
+import notifySlice from './notifySlide';
 import profileSlice from 'components/pages/Profile/profileSlice';
 import userSlice from './globalSlice/userSlice';
 
@@ -16,6 +17,7 @@ const store = configureStore({
         chatRoom: chatRoomSlice,
         profile: profileSlice,
         user: userSlice,
+        notify: notifySlice,
     },
 });
 

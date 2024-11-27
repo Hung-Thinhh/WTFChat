@@ -80,6 +80,7 @@ const getReport = async (page) => {
         return error;
     }
 };
+// status mặc định = 0
 const banReportById = async (id) => {
     try {
         const [report] = await pool.query(`SELECT * FROM baocao WHERE id=?`, [id]);
@@ -216,6 +217,7 @@ const unbanReportById = async (id) => {
         };
     }
 };
+// status mặc định = 0
 const banReportType = async (id) => {
     try {
         const [updateReport] = await pool.query(`UPDATE report_type SET status=? WHERE id=?`, [1, id]);
@@ -347,6 +349,51 @@ const addReportType = async (data) => {
         return error;
     }
 };
+const getReportByIdUser = async (data) => {
+    try {
+        const type = await pool.query(`SELECT u.id,u.content, u.create_at,a.content as type,t.time 
+            FROM baocao u JOIN report_type a ON u.type = a.id
+            JOIN tinnhan t ON u.id_mess = t.id
+            JOIN thanhvien tv ON t.idThanhvien = tv.id
+            WHERE tv.userid = ?
+            `, [data]);
+        
+
+        return {
+            EM: 'get report user successfully',
+            EC: 0,
+            DT: type[0],
+        };
+    } catch (error) {
+        console.log(error);
+
+        return error;
+    }
+};
+const getReportByIdGroup = async (data) => {
+    try {
+        console.log(data);
+        
+        const type = await pool.query(`SELECT u.id,u.content, u.create_at,a.content as type,t.time 
+            FROM baocao u JOIN report_type a ON u.type = a.id
+            JOIN tinnhan t ON u.id_mess = t.id
+            JOIN thanhvien tv ON t.idThanhvien = tv.id
+            JOIN phongchat p ON tv.idRoom = p.id
+            WHERE p.id = ?
+            `, [data]);
+        
+
+        return {
+            EM: 'get report group successfully',
+            EC: 0,
+            DT: type[0],
+        };
+    } catch (error) {
+        console.log(error);
+
+        return error;
+    }
+};
 export const reportService = {
     TypeReport,
     TypeReportAPI,
@@ -357,5 +404,7 @@ export const reportService = {
     editReportType,
     addReportType,
     banReportType,
-    unbanReportType
+    unbanReportType,
+    getReportByIdUser,
+    getReportByIdGroup
 };

@@ -50,7 +50,7 @@ const getChatRoom = async (id) => {
             `,
             [id, id, id],
         );
-
+        console.log('SERVICE | GET CHAT ROOM SERVICE | SUCCESS | ', rows)
         return {
             EM: 'Success',
             EC: 1,
@@ -69,6 +69,34 @@ const getChatRoom = async (id) => {
         };
     }
 };
+const mute = async (id, state, idRoom) => {
+    try {
+        const [re] = await pool.query(`UPDATE thanhvien SET notify = ? WHERE userid = ? AND idRoom = ?`, [state, id, idRoom]);
+        
+        if (re.affectedRows === 0) {
+            return {
+                EM: 'No rows updated',
+                EC: 0,
+                DT: []
+            };
+        }
+        
+        const [updatedRow] = await pool.query(`SELECT  notify,idRoom FROM thanhvien WHERE userid = ? AND idRoom = ?`, [id, idRoom]);
+        return {
+            EM: 'Success',
+            EC: 0,
+            DT: updatedRow
+        };
+    } catch (error) {
+        console.log('SERVICE | MUTE CHAT SERVICE | ERROR | ', error);
+        return {
+            EM: 'Database query error',
+            EC: -1,
+            DT: []
+        };
+    }
+};
 module.exports = {
     getChatRoom,
+    mute
 };

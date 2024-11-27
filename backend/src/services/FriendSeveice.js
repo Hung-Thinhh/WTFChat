@@ -85,7 +85,6 @@ export const delFriend = async (friendId) => {
             "DELETE FROM `banbe` WHERE usertwoid = ? OR useroneid = ?",
             [friendId, friendId]
         );
-        console.log(friendRows);
 
         if (friendRows.affectedRows === 0) {
             return {

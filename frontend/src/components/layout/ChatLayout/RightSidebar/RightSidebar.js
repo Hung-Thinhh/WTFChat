@@ -17,12 +17,13 @@ import SearchResults from './SearchResults';
 import BlockList from './BlockList';
 import { socket } from '../../../../socket';
 import { useDispatch, useSelector } from 'react-redux';
-import { setChatRooms } from '../../../../redux//globalSlice/chatRoomSlice';
+import { setChatRooms } from '../../../../redux/globalSlice/chatRoomSlice';
 import {
     chatRoomListSelector,
     currUserSelector,
     showMenu1Selector,
 } from '../../../../redux/selectors';
+import { setNotify, fetchgNotify } from "../../../../redux/notifySlide";
 
 const cx = classNames.bind(styles);
 
@@ -37,26 +38,24 @@ const RightSidebar = () => {
     const chatRoom = useSelector(chatRoomListSelector);
     const currUser = useSelector(currUserSelector);
     const newMess = useSelector(showMenu1Selector);
-
+    
     const handleNewChat = () => {
         setStateNewChatPopUp(true);
     };
 
     const handleAdd = (data) => {
         socket.emit('newRoom', data);
-    };
+    }
     useEffect(() => {
         if (newMess && newMess.newMessage.idRoom) {
-            const updatedRooms = chatRoom.map((room) =>
-                room.id === newMess.newMessage.idRoom
-                    ? {
-                          ...room,
-                          last_message: JSON.stringify({
-                              ...JSON.parse(room.last_message),
-                              content: newMess.newMessage.content,
-                          }),
-                      }
-                    : room,
+            const updatedRooms = chatRoom.map(room =>
+            room.id === newMess.newMessage.idRoom ? { 
+                ...room, 
+                last_message: JSON.stringify({
+                ...JSON.parse(room.last_message),
+                content: newMess.newMessage.content
+                }) 
+            } : room
             );
 
             const updatedRoomIndex = updatedRooms.findIndex(
@@ -87,9 +86,10 @@ const RightSidebar = () => {
         }
     }, [newMess]);
     useEffect(() => {
+        dispatch(fetchgNotify({ userId: currUser.id }))
         socket.on('newRoom', (data) => {
-            if (!chatRoom.some((room) => room.id === data.id))
-                dispatch(setChatRooms((prev) => [data, ...prev]));
+            if (!chatRoom.some(room => room.id === data.id))
+            dispatch(setChatRooms([data, ...chatRoom]));
         });
         return () => {
             socket.off('newRoom'); // Hủy đăng ký sự kiện khi component unmount
@@ -171,8 +171,10 @@ const RightSidebar = () => {
                     return fetchFriendList();
                 case 'block':
                     return fetchBlockList();
-                default:
+                case 'chat':
                     return fetchChatRoom();
+                default:
+                    return null;
             }
         })();
         setFindData([]);

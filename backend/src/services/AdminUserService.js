@@ -1,6 +1,6 @@
 import pool from '../connectDB.js';
 import { getIO } from '../socket/socketConfig.js';
-
+import redisClient from '../connectRedis.js';
 const getUsers = async (page) => {
     try {
         const usersPerPage = 5;
@@ -13,10 +13,17 @@ const getUsers = async (page) => {
         const CountUser = await pool.query('SELECT COUNT(*) FROM nguoidung');
 
         const totalPages = CountUser[0][0]['COUNT(*)'];
-
+        const listStatus = await redisClient.get('online_users');
+        console.log(users[0],);
+        users[0].forEach(user => {
+            const foundStatus = JSON.parse(listStatus).find(status => status.userId === user.id && status.status === 'online');
+            user.checkin = foundStatus ? 0 : 1; // Nếu tìm thấy trạng thái "online", checkin = 0, ngược lại checkin = 1
+          });
+          
         return {
             user: users[0],
             totalPages: Math.ceil(totalPages / usersPerPage),
+            listStatus:listStatus
         };
     } catch (error) {
         console.log(error);
@@ -77,6 +84,7 @@ const editUserById = async (data) => {
         };
     }
 };
+// status mặc định = 1
 const banUserById = async (id) => {
     try {
         const [users] = await pool.query(`UPDATE xacthuc SET status=? WHERE id=?`, [0, id]);

@@ -1,7 +1,8 @@
 import {
     createChat,
     getChat,
-    deletaChat
+    deletaChat,
+    getNotify
 } from "../services/chatService.js";
 import { getIO } from "../socket/socketConfig.js";
 
@@ -88,10 +89,28 @@ const createRoomController = async (req, res) => {
       });
     }
   };
-
+const getNotifyController = async (req, res) => {
+    try {
+        const { userId } = req.body;
+        const data = await getNotify(userId);
+        return res.status(200).json({
+            EM: data.EM,
+            EC: data.EC,
+            DT: data.DT,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            EM: "SERVICE | CHAT CONTROLLER | ERROR | ",
+            EC: error,
+            DT: "",
+        });
+    }
+};
 export {
     chatController,
     getChatController,
     deletaChatController,
-    createRoomController
+    createRoomController,
+    getNotifyController
 };

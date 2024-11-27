@@ -3,6 +3,8 @@ let io;
 
 import { createChat } from '../services/chatService.js';
 import { deletaChat } from '../services/chatService.js';
+import { mute } from '../services/getChatRom.js';
+
 // import { handleCheckAccount } from '../services/AuthenService.js';
 import redisClient from '../connectRedis.js';
 import path from 'path';
@@ -87,7 +89,10 @@ const setupWebSocket = (server) => {
                 io.to(element).emit('newRoom', roominfo);
             });
         });
-
+        socket.on('mute', async (data) => {
+            const res = await mute(data.id,data.state,data.idRoom);
+            io.emit("muted",res)
+        })
         // Xử lý sự kiện gửi tin nhắn
         socket.on('send_mess', async (data) => {
             try {

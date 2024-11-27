@@ -15,11 +15,11 @@ import { currUserSelector, offsetSelector } from '../../../redux/selectors';
 import { setOffset } from '../../layout/ChatLayout/LeftSidebar/sidebarSlide';
 import { useDispatch, useSelector } from 'react-redux';
 import { setNewMessage } from '../../../components/layout/ChatLayout/LeftSidebar/sidebarSlide';
-import { setChatRooms } from '../../../redux/globalSlice/chatRoomSlice';
 Modal.setAppElement('#root');
 
 const ChatPage = () => {
     const { ChatData, RoomInfo, setRoomInfo } = useContext(ChatDataContext);
+    const notify = useSelector((state) => state.notify.notify.data);
     const [curChatData, setCurChatData] = useState([]);
     const [isSending, setIsSending] = useState(false);
     const [isReply, setIsReply] = useState('');
@@ -30,10 +30,18 @@ const ChatPage = () => {
     // const [offset, setOffset] = useState(0);
     const [audio] = useState(new Audio(song));
     const [modalIsOpen, setIsOpen] = useState(false);
-
+    const [scrollid, setScrollid] = useState("");
     const dispatch = useDispatch();
     const state = useSelector(offsetSelector);
     const currUser = useSelector(currUserSelector);
+    const [showGoDown, setShowGoDown] = useState(false);
+
+
+
+
+
+
+
 
     const fetchNewMessages = async () => {
         try {
@@ -80,7 +88,13 @@ const ChatPage = () => {
                         }
                     }
                 });
+
                 setCurChatData((previous) => {
+                    if (previous.length > 0) {
+                        const firstMessageId = previous[0].id;
+                        setScrollid(firstMessageId)
+                    }
+
                     const newData = [...previous];
                     data.forEach((item) => {
                         if (!previous.some((msg) => msg.id === item.id)) {
@@ -96,7 +110,12 @@ const ChatPage = () => {
             console.error('Error fetching new messages:', error);
         }
     };
-
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            scrollToMessage(scrollid);
+        }, 0);
+        return () => clearTimeout(timer);
+    }, [curChatData]);
     const handleDataReply = (data) => {
         setIsReply(data);
     };
@@ -133,7 +152,6 @@ const ChatPage = () => {
         };
 
         setCurChatData((prevMessages) => [...prevMessages, messageData]);
-
         try {
             socket.emit('send_mess', messageData);
             setIsSending(false);
@@ -150,20 +168,24 @@ const ChatPage = () => {
     }, [RoomInfo]);
 
     useEffect(() => {
+
         const handleNewChat = (data) => {
-            audio.play();
+            const notification = notify.find((item) => item.idRoom === data.roomid);
+            if (notification && notification.notify === 1) {
+                audio.play();
+            }
             setCurChatData((prevMessages) => {
                 dispatch(setNewMessage(data));
                 if (data.traloi) {
                     const replyMessage = prevMessages.find((msg) => msg.id === data.traloi);
                     if (replyMessage) {
-                        data.traloi = replyMessage;
+                        data = { ...data, traloi: replyMessage };
                     }
                 }
 
                 const index = prevMessages.findIndex((msg) => {
                     scrollToMessage(`message${data.id}`);
-                    return msg.id === tempId;
+                    return msg.id === tempId
                 });
 
                 if (index !== -1) {
@@ -206,6 +228,29 @@ const ChatPage = () => {
         };
     }, [state]);
 
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (chatWindowRef.current) {
+                const { scrollTop, scrollHeight, clientHeight } = chatWindowRef.current;
+                // Nếu cuộn tới cuối hoặc gần cuối (sai số 1px), ẩn nút
+                setShowGoDown(scrollHeight - scrollTop - clientHeight > 100);
+            }
+        };
+    
+        const chatWindow = chatWindowRef.current;
+        if (chatWindow) {
+            chatWindow.addEventListener('scroll', handleScroll);
+        }
+    
+        return () => {
+            if (chatWindow) {
+                chatWindow.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, []);
+    
+
     useEffect(() => {
         if (chatWindowRef.current && state <= 50) {
             chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
@@ -247,6 +292,10 @@ const ChatPage = () => {
             socket.off('delete_res'); // Hủy đăng ký sự kiện khi component unmount
         };
     }, []);
+    // socket.on('muted', (data) => {
+    //    console.log(data);
+    // })
+
     useEffect(() => {
         socket.on('return_res', (data) => {
             setCurChatData((prevMessages) => {
@@ -295,6 +344,7 @@ const ChatPage = () => {
                                     }}
                                     onReply={handleDataReply}
                                     reportting={handleReport}
+                                    target={scrollToMessage}
                                 />
                             ))
                         ) : (
@@ -335,22 +385,20 @@ const ChatPage = () => {
                             <span onClick={handleSendReport}>Xác nhận</span>
                         </div>
                     </Modal>
+                    {showGoDown && (
+                        <button
+                            className="go-down"
+                            onClick={() => {
+                                if (chatWindowRef.current) {
+                                    chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+                                    setShowGoDown(false); // Ẩn nút sau khi nhấn
+                                }
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faChevronDown} />
+                        </button>
+                    )}
 
-                    {chatWindowRef.current &&
-                        chatWindowRef.current.scrollHeight - chatWindowRef.current.scrollTop !==
-                            chatWindowRef.current.clientHeight && (
-                            <button
-                                className="go-down"
-                                onClick={() => {
-                                    if (chatWindowRef.current) {
-                                        chatWindowRef.current.scrollTop =
-                                            chatWindowRef.current.scrollHeight;
-                                    }
-                                }}
-                            >
-                                <FontAwesomeIcon icon={faChevronDown} />
-                            </button>
-                        )}
                 </div>
             ) : (
                 <h1>CHỌN MỘT CUỘC TRÒ TRUYỆN ĐỂ BẮT ĐẦU</h1>

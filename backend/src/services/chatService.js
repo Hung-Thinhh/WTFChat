@@ -135,7 +135,8 @@ const getChat = async (userId, roomId, offset) => {
       t.time,
       t.image,
       t.traloi,
-      CONCAT(u.firstname, ' ', u.lastname) AS senderName,u.id AS senderid,
+      CONCAT(u.firstname, ' ', u.lastname) AS senderName,
+      u.id AS senderid,
       u.avatar AS avt
       FROM tinnhan t
       JOIN thanhvien tv ON t.idThanhvien = tv.id
@@ -145,10 +146,17 @@ const getChat = async (userId, roomId, offset) => {
       LIMIT 50 OFFSET ?`,
       [roomId, offset]
     );
+
+    const [notify] = await pool.query(
+      `SELECT notify FROM thanhvien WHERE idRoom = ? AND userid = ?`,
+      [roomId, userId]
+    );
+    console.log('SERVICE | GET CHAT SERVICE | SUCCESS | ', notify);
     return {
       EM: 'Success',
       EC: 0,
       DT: rows.reverse(),
+      notify: notify[0]?.notify || 0,
     };
 
   } catch (error) {
@@ -157,6 +165,26 @@ const getChat = async (userId, roomId, offset) => {
       EM: 'Database query error',
       EC: -1,
       DT: []
+    };
+  }
+};
+const getNotify = async (userId) => {
+  try {
+    const [notify] = await pool.query(
+      `SELECT notify,idroom FROM thanhvien WHERE userid = ?`,
+      [userId]
+    );
+    return {
+      EM: 'Success',
+      EC: 0,
+      DT: notify,
+    };
+  } catch (error) {
+    console.log('SERVICE | GET NOTIFY SERVICE | ERROR | ', error);
+    return {
+      EM: 'Database query error',
+      EC: -1,
+      DT: 0,
     };
   }
 };
@@ -197,7 +225,7 @@ const createRoom = async (userOneId, userTwoId) => {
 
 const deletaChat = async (id) => {
   try {
-    const [result] = await pool.query(`UPDATE tinnhan SET status = 1 WHERE id = ?`, [ id]);
+    const [result] = await pool.query(`UPDATE tinnhan SET status = 1 WHERE id = ?`, [id]);
     return {
       EM: 'Success',
       EC: 0,
@@ -255,5 +283,6 @@ module.exports = {
   getChat,
   deletaChat,
   createRoom,
-  getInfo
+  getInfo,
+  getNotify
 };
