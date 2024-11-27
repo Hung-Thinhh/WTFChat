@@ -3,18 +3,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import styles from './Login.module.scss';
 import Button from 'components/Button';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { login } from 'controller/authen';
-import ChatDataContext from 'lib/Context/ChatContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { setCurrUser } from '../../../redux/globalSlice/userSlice';
 import config from 'config';
 import { socket } from 'socket';
 const cx = classNames.bind(styles);
 
 function Login() {
+    const dispatch = useDispatch();
     const nav = useNavigate(); // for nav page
-    const { setCurrUser } = useContext(ChatDataContext);
     const [input, setInput] = useState({
         email: '',
         password: '',
@@ -47,7 +48,7 @@ function Login() {
             const res = await login(input);
             if (res.EC === '200') {
                 // dang nhap thanh cong
-                setCurrUser(res.DT);
+                dispatch(setCurrUser(res.DT));;
                 localStorage.setItem('jwt', res.DT);
                 socket.emit('authenticate', res.DT.id);
                 nav(config.routes.home);

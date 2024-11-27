@@ -178,7 +178,9 @@ const ChatPage = () => {
     useEffect(() => {
 
         const handleNewChat = (data) => {
-            const notification = notify.find((item) => item.idRoom === data.roomid);
+            const notification = notify.find((item) => item.idroom === data.idRoom); 
+            console.log('hahahahaha',notification,data);
+            
             if (notification && notification.notify === 1) {
                 audio.play();
             }

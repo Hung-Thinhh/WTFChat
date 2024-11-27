@@ -127,7 +127,7 @@ const initApiRouter = (app) => {
     router.get('/getUserById/:id', getUserById);
     router.get('/banUserById/:id', banUserById);
     router.get('/unbanUserById/:id', unbanUserById);
-    router.get('/getUser/:page', getListUserAPI);
+    router.get('/getUser/:page',checkUserPermission, getListUserAPI);
     router.post('/edit-user', editUser);
 
     router.get('/getGroupById/:id', getListGroupAPI);

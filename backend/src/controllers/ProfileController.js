@@ -3,7 +3,6 @@ import { profileService } from '../services/ProfileService';
 export const getUserInfo = async (req, res) => {
     try {
         const account = await profileService.getUserInfo(req.user.email);
-
         // middleware
         if (!req.user.email || !account) {
             return res.status(200).json({
