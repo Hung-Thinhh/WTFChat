@@ -8,11 +8,10 @@ import { publicRoutes, privateRoutes } from 'routes';
 import { PrivateRoutes } from 'router/privateRoutes';
 
 import { Fragment, useContext, useEffect, useState } from 'react';
-import { logout } from 'controller/authen';
 import ChatDataContext from 'lib/Context/ChatContext';
 import { socket } from 'socket';
 import { userSelector } from './redux/selectors';
-import { fetchCurrUser } from './redux/globalSlice/userSlice';
+import { fetchCurrUser, fetchLogout } from './redux/globalSlice/userSlice';
 
 function App(props) {
     const dispatch = useDispatch();
@@ -66,7 +65,7 @@ function App(props) {
         console.log(data.id, user.currUser.id);
         if (parseInt(data.id) === user.currUser.id) {
             alert('Tài khoản đang bị khoá');
-            await logout();
+            dispatch(fetchLogout());
         }
     };
     useEffect(() => {

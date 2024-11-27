@@ -23,7 +23,9 @@ import {
     currUserSelector,
     showMenu1Selector,
 } from '../../../../redux/selectors';
-import { setNotify, fetchgNotify } from "../../../../redux/notifySlide";
+import { setNotify, fetchgNotify } from '../../../../redux/notifySlide';
+import Avatar from 'components/Avatar';
+import { Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
@@ -38,24 +40,26 @@ const RightSidebar = () => {
     const chatRoom = useSelector(chatRoomListSelector);
     const currUser = useSelector(currUserSelector);
     const newMess = useSelector(showMenu1Selector);
-    
+
     const handleNewChat = () => {
         setStateNewChatPopUp(true);
     };
 
     const handleAdd = (data) => {
         socket.emit('newRoom', data);
-    }
+    };
     useEffect(() => {
         if (newMess && newMess.newMessage.idRoom) {
-            const updatedRooms = chatRoom.map(room =>
-            room.id === newMess.newMessage.idRoom ? { 
-                ...room, 
-                last_message: JSON.stringify({
-                ...JSON.parse(room.last_message),
-                content: newMess.newMessage.content
-                }) 
-            } : room
+            const updatedRooms = chatRoom.map((room) =>
+                room.id === newMess.newMessage.idRoom
+                    ? {
+                          ...room,
+                          last_message: JSON.stringify({
+                              ...JSON.parse(room.last_message),
+                              content: newMess.newMessage.content,
+                          }),
+                      }
+                    : room,
             );
 
             const updatedRoomIndex = updatedRooms.findIndex(
@@ -86,10 +90,10 @@ const RightSidebar = () => {
         }
     }, [newMess]);
     useEffect(() => {
-        dispatch(fetchgNotify({ userId: currUser.id }))
+        dispatch(fetchgNotify({ userId: currUser.id }));
         socket.on('newRoom', (data) => {
-            if (!chatRoom.some(room => room.id === data.id))
-            dispatch(setChatRooms([data, ...chatRoom]));
+            if (!chatRoom.some((room) => room.id === data.id))
+                dispatch(setChatRooms([data, ...chatRoom]));
         });
         return () => {
             socket.off('newRoom'); // Hủy đăng ký sự kiện khi component unmount
@@ -191,10 +195,11 @@ const RightSidebar = () => {
                 setActive={setStateNewChatPopUp}
             />
             <div className={cx('me-auto', 'list_nav')}>
-                <div className={cx('sidebar_header')}>
-                    <FontAwesomeIcon icon={faUser} />
+                <Link className={cx('sidebar_header')} to="/">
+                    {/* <FontAwesomeIcon icon={faUser} /> */}
+                    <Avatar size="small" />
                     {pageState}
-                </div>
+                </Link>
                 {(() => {
                     switch (pageState) {
                         case 'chat':

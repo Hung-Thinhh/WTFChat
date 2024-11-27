@@ -7,8 +7,8 @@ import { faUser } from '@fortawesome/free-regular-svg-icons';
 import config from 'config';
 import Item from './Item';
 import { useRef, useState } from 'react';
-import { deleteCookie } from 'lib/function/function';
-import { logout } from 'controller/authen';
+import { fetchLogout } from '../../redux/globalSlice/userSlice';
+import { useDispatch } from 'react-redux';
 
 const cx = classNames.bind(styles);
 
@@ -26,13 +26,14 @@ const menuItems = [
 ];
 
 function AvatarMenu({ children }) {
+    const dispatch = useDispatch();
     const timeId = useRef(null);
     const [show, setShow] = useState(false);
 
     const handleEvent = async (event) => {
         switch (event) {
             case 'logout':
-                const res = await logout();
+                const res = dispatch(fetchLogout());
 
                 if (res.EC === '200') {
                     window.location.reload();

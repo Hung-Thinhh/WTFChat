@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th10 24, 2024 lúc 06:41 AM
+-- Thời gian đã tạo: Th10 27, 2024 lúc 09:54 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -35,15 +35,14 @@ CREATE TABLE `banbe` (
   `notify` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-
 --
 -- Đang đổ dữ liệu cho bảng `banbe`
 --
 
-INSERT INTO `banbe` (`id`, `useroneid`, `usertwoid`) VALUES
-(1, 861, 868),
-(2, 638, 868),
-(3, 868, 873);
+INSERT INTO `banbe` (`id`, `useroneid`, `usertwoid`, `block`, `notify`) VALUES
+(1, 861, 868, 0, 1),
+(2, 638, 868, 0, 1),
+(3, 868, 873, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -72,7 +71,12 @@ INSERT INTO `baocao` (`id`, `id_user`, `id_mess`, `type`, `content`, `status`, `
 (17, 874, 73, 2, '{\"content\":\"Ngoài DevTools (F12), còn một số công cụ khác có thể được sử dụng để thay đổi nội dung trang web, bao gồm: Công cụ mở rộng trình duyệt: Nhiều tiện ích mở rộng trình duyệt được thiết kế để sửa đổi nội dung trang web, chẳng hạn như Tampermonkey, Stylus, uBlock Origin, v.v. Công cụ sửa đổi mạng: Các công cụ như Charles Proxy, Fiddler, và Wireshark cho phép bạn chặn, sửa đổi và phân tích lưu lượng mạng, bao gồm cả nội dung trang web. Công cụ kiểm tra bảo mật: Các công cụ kiểm tra bảo mật như Burp Su\",\"img\":\"\"}', 0, '2024-11-20'),
 (18, 874, 89, 4, '{\"content\":\"siuuuu\",\"img\":\"https://meliawedding.com.vn/wp-content/uploads/2022/03/avatar-gai-xinh-1.jpg\"}', 0, '2024-11-20'),
 (19, 874, 66, 2, '{\"content\":\"寂し犬\",\"img\":\"\"}', 0, '2024-11-20'),
-(20, 874, 144, 2, '{\"content\":\"ss\",\"img\":\"\"}', 0, '2024-11-24');
+(20, 874, 144, 2, '{\"content\":\"ss\",\"img\":\"\"}', 0, '2024-11-24'),
+(21, 874, 81, 2, '{\"content\":\"hello\",\"img\":\"\"}', 0, '2024-11-25'),
+(22, 874, 15, 3, '{\"content\":\"thoi mà\",\"img\":\"\"}', 0, '2024-11-25'),
+(23, 874, 69, 4, '{\"content\":\"mà sao lỗi kìa\",\"img\":\"\"}', 0, '2024-11-25'),
+(24, 874, 149, 2, '{\"content\":\"l\",\"img\":\"\"}', 0, '2024-11-25'),
+(25, 874, 148, 2, '{\"content\":\"hả\",\"img\":\"\"}', 0, '2024-11-25');
 
 -- --------------------------------------------------------
 
@@ -118,20 +122,22 @@ CREATE TABLE `phongchat` (
   `id` int(11) NOT NULL,
   `groupName` varchar(255) NOT NULL,
   `avt` varchar(255) DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT 0,
   `type` int(11) NOT NULL,
   `update_time` datetime NOT NULL,
-  `createdAt` date DEFAULT NULL
+  `createdAt` date DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `phongchat`
 --
 
-INSERT INTO `phongchat` (`id`, `groupName`, `avt`, `type`, `update_time`, `createdAt`) VALUES
-(1, '', NULL, 0, '2024-11-21 15:37:38', NULL),
-(2, '', NULL, 0, '2024-11-17 08:11:44', NULL),
-(3, '', NULL, 0, '2024-11-17 08:12:49', NULL),
-(4, '', NULL, 0, '2024-11-20 16:19:42', NULL);
+INSERT INTO `phongchat` (`id`, `groupName`, `avt`, `status`, `type`, `update_time`, `createdAt`) VALUES
+(1, '', NULL, 0, 0, '2024-11-21 15:37:38', NULL),
+(2, '', NULL, 0, 0, '2024-11-17 08:11:44', NULL),
+(3, '', NULL, 0, 0, '2024-11-17 08:12:49', NULL),
+(4, '', NULL, 0, 0, '2024-11-27 05:38:32', NULL),
+(5, 'phong test', NULL, 1, 1, '2024-11-24 09:40:15', NULL);
 
 -- --------------------------------------------------------
 
@@ -159,7 +165,7 @@ INSERT INTO `report_type` (`id`, `content`, `infor`, `status`) VALUES
 (20, 'ổ quỷ', 'ban gấp', 0),
 (22, 'ổ cú', '1', 0),
 (23, 'ổ gà', '2', 0),
-(24, 'ổ bánh mì', '5', 1);
+(24, 'ổ bánh mì', '5', 0);
 
 -- --------------------------------------------------------
 
@@ -171,7 +177,7 @@ CREATE TABLE `thanhvien` (
   `id` int(11) NOT NULL,
   `userid` int(11) DEFAULT NULL,
   `idRoom` int(11) DEFAULT NULL,
-  `role` int(11) DEFAULT NULL,
+  `role` int(11) DEFAULT 0,
   `notify` tinyint(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -187,7 +193,9 @@ INSERT INTO `thanhvien` (`id`, `userid`, `idRoom`, `role`, `notify`) VALUES
 (5, 874, 3, 1, 1),
 (6, 862, 3, 1, 1),
 (7, 874, 4, 1, 1),
-(8, 875, 4, 1, 1);
+(8, 875, 4, 1, 1),
+(9, 875, 5, 1, 1),
+(10, 874, 5, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -357,7 +365,10 @@ INSERT INTO `tinnhan` (`id`, `idRoom`, `idThanhvien`, `content`, `time`, `status
 (144, 1, 1, 'ss', '2024-11-21 15:37:37', 0, '', 0),
 (145, 1, 1, 's', '2024-11-21 15:37:37', 0, '', 0),
 (146, 1, 1, 'ss', '2024-11-21 15:37:37', 0, '', 0),
-(147, 1, 1, 's', '2024-11-21 15:37:38', 0, '', 0);
+(147, 1, 1, 's', '2024-11-21 15:37:38', 0, '', 0),
+(148, 5, 10, 'hả', '2024-11-24 08:02:23', 0, '', 0),
+(149, 5, 10, 'l', '2024-11-24 09:40:15', 0, '', 0),
+(150, 4, 7, 'lỗi', '2024-11-27 05:38:32', 0, '', 36);
 
 -- --------------------------------------------------------
 
@@ -389,7 +400,7 @@ INSERT INTO `xacthuc` (`id`, `email`, `password`, `status`, `role`, `time`) VALU
 (872, 'nbminh2101381@student.ctuet.edu.vn', '$2a$10$5CceZQmetIxLVBZ1ALapHu2RX8u3k8hZOzU/4F1SXhqh0ScB1dJf6', 1, 1, '2024-10-22 22:47:02'),
 (873, 'nguyencongthang1541@gmail.com', '$2a$10$xxtXq.cuWFwz2i9rIG89T.KDpxekf5jypxA1wKdfuMCSSWn5r/Jd.', 1, 1, '2024-10-26 10:34:03'),
 (874, 'hungthinhh2003@gmail.com', '$2a$10$UfEOuIKZgQZ/F43cJCvH/.hMlWLIaPULHKFowkvd.DIjCfp642rGy', 1, 1, '2024-11-06 16:41:25'),
-(875, 'nhthinh2101518@student.ctuet.edu.vn', '$2a$10$gaOUlslOzfQaqV2k/HzHsuYRDEzowBLF7SdyJ/Bb0LD10E48pfrHq', 1, 1, '2024-11-08 00:17:14');
+(875, 'nhthinh2101518@student.ctuet.edu.vn', '$2a$10$gaOUlslOzfQaqV2k/HzHsuYRDEzowBLF7SdyJ/Bb0LD10E48pfrHq', 0, 1, '2024-11-08 00:17:14');
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -459,13 +470,13 @@ ALTER TABLE `xacthuc`
 -- AUTO_INCREMENT cho bảng `banbe`
 --
 ALTER TABLE `banbe`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT cho bảng `baocao`
 --
 ALTER TABLE `baocao`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT cho bảng `nguoidung`
@@ -477,7 +488,7 @@ ALTER TABLE `nguoidung`
 -- AUTO_INCREMENT cho bảng `phongchat`
 --
 ALTER TABLE `phongchat`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT cho bảng `report_type`
@@ -489,13 +500,13 @@ ALTER TABLE `report_type`
 -- AUTO_INCREMENT cho bảng `thanhvien`
 --
 ALTER TABLE `thanhvien`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT cho bảng `tinnhan`
 --
 ALTER TABLE `tinnhan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=148;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=151;
 
 --
 -- Các ràng buộc cho các bảng đã đổ

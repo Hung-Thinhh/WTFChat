@@ -1,16 +1,16 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { checkaccount, logout } from 'controller/authen';
 import { socket } from 'socket';
-const fetchLogout = async () => {
+export const fetchLogout = createAsyncThunk('user/logout', async () => {
     // logout
     const logoutRes = await logout();
 
     if (logoutRes.EC === '200') {
-        window.location.reload();
+        return true;
     } else if (logoutRes.EC === '500') {
         alert('Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com');
     }
-};
+});
 
 export const fetchCurrUser = createAsyncThunk('user/getCurrUser', async () => {
     const res = await checkaccount();
@@ -19,10 +19,10 @@ export const fetchCurrUser = createAsyncThunk('user/getCurrUser', async () => {
         return res.DT;
     } else if (res.EC === '400') {
         alert('Tài khoản đang bị khoá');
-        await fetchLogout();
+        fetchLogout();
     } else if (res.EC === '403') {
         alert('Xác thực thất bại');
-        await fetchLogout();
+        fetchLogout();
     } else if (res.EC === '500') {
         alert('Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com');
     }
@@ -48,9 +48,17 @@ export const userSlice = createSlice({
             .addCase(fetchCurrUser.fulfilled, (state, action) => {
                 state.currUser = action.payload || null;
                 state.checkAccount = true;
-                state.loading = false;
             })
             .addCase(fetchCurrUser.rejected, (state, action) => {
+                alert(
+                    'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
+                );
+            })
+            .addCase(fetchLogout.fulfilled, (state, action) => {
+                state.currUser = action.payload && null;
+                // state.checkAccount = false;
+            })
+            .addCase(fetchLogout.rejected, (state, action) => {
                 alert(
                     'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
                 );
