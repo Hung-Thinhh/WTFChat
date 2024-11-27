@@ -1,11 +1,12 @@
 import './App.css';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router,Navigate } from 'react-router-dom';
 import { Routes, Route } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchReportType, setReportType } from './redux/globalSlice/reportType_Slide';
 // routes
 import { publicRoutes, privateRoutes } from 'routes';
 import { PrivateRoutes } from 'router/privateRoutes';
+import { PublicRoutes } from 'router/publicRoutes';
 
 import { Fragment, useContext, useEffect, useState } from 'react';
 import ChatDataContext from 'lib/Context/ChatContext';
@@ -101,7 +102,8 @@ function App(props) {
                             if (route.layout) {
                                 Layout = route.layout;
                             }
-
+                            
+                           
                             // Set layout and Page props base on route.name
 
                             return (
@@ -109,9 +111,12 @@ function App(props) {
                                     key={index}
                                     path={route.path}
                                     element={
-                                        <Layout>
-                                            <Page {...pageProps} />
-                                        </Layout>
+                                        <PublicRoutes
+                                            component={
+                                                <Layout>
+                                                    <Page {...pageProps} />
+                                                </Layout>}
+                                         />
                                     }
                                 />
                             );

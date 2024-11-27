@@ -110,6 +110,9 @@ export const handleLogout = async (req, res) => {
 
 export const checkAccount = async (req, res) => {
     try {
+    console.log(req.session);
+    console.log('hdshjksd',req.user);
+        
         const account = await services.handleCheckAccount(req.user.email);
 
         if (!req.user.email || !account) {
