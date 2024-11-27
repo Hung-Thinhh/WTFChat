@@ -32,11 +32,13 @@ const extractToken = (req) => {
     return null;
 };
 
-const SecurePaths = ['/checkaccount', '/getUserInfo', '/updateUserInfo'];
+const SecurePaths = ['/checkaccount','/register','/login','/sendOTP','/searchMail',];
 
 export const checkUserJWT = async (req, res, next) => {
-    if (!SecurePaths.includes(req.path)) return next();
+    if (SecurePaths.includes(req.path)) return next();
+    console.log(session);
     let session = req.session;
+    
     let tokenFromHeader = extractToken(req);
     const token = session && session.userId ? session.userId : tokenFromHeader;
 
