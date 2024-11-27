@@ -30,10 +30,11 @@ const ChatPage = () => {
     // const [offset, setOffset] = useState(0);
     const [audio] = useState(new Audio(song));
     const [modalIsOpen, setIsOpen] = useState(false);
-
+    const [scrollid, setScrollid] = useState("");
     const dispatch = useDispatch();
     const state = useSelector(offsetSelector);
     const currUser = useSelector(currUserSelector);
+    const [showGoDown, setShowGoDown] = useState(false);
 
 
 
@@ -87,7 +88,13 @@ const ChatPage = () => {
                         }
                     }
                 });
+
                 setCurChatData((previous) => {
+                    if (previous.length > 0) {
+                        const firstMessageId = previous[0].id;
+                        setScrollid(firstMessageId)
+                    }
+
                     const newData = [...previous];
                     data.forEach((item) => {
                         if (!previous.some((msg) => msg.id === item.id)) {
@@ -103,7 +110,12 @@ const ChatPage = () => {
             console.error('Error fetching new messages:', error);
         }
     };
-
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            scrollToMessage(scrollid);
+        }, 0);
+        return () => clearTimeout(timer);
+    }, [curChatData]);
     const handleDataReply = (data) => {
         setIsReply(data);
     };
@@ -140,7 +152,6 @@ const ChatPage = () => {
         };
 
         setCurChatData((prevMessages) => [...prevMessages, messageData]);
-        console.log(messageData)
         try {
             socket.emit('send_mess', messageData);
             setIsSending(false);
@@ -174,7 +185,7 @@ const ChatPage = () => {
 
                 const index = prevMessages.findIndex((msg) => {
                     scrollToMessage(`message${data.id}`);
-                    return msg.id === tempId 
+                    return msg.id === tempId
                 });
 
                 if (index !== -1) {
@@ -217,6 +228,29 @@ const ChatPage = () => {
         };
     }, [state]);
 
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (chatWindowRef.current) {
+                const { scrollTop, scrollHeight, clientHeight } = chatWindowRef.current;
+                // Nếu cuộn tới cuối hoặc gần cuối (sai số 1px), ẩn nút
+                setShowGoDown(scrollHeight - scrollTop - clientHeight > 100);
+            }
+        };
+    
+        const chatWindow = chatWindowRef.current;
+        if (chatWindow) {
+            chatWindow.addEventListener('scroll', handleScroll);
+        }
+    
+        return () => {
+            if (chatWindow) {
+                chatWindow.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, []);
+    
+
     useEffect(() => {
         if (chatWindowRef.current && state <= 50) {
             chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
@@ -224,7 +258,6 @@ const ChatPage = () => {
     }, [curChatData]);
 
     const scrollToMessage = (id) => {
-        console.log("goij",id)
         const messageElement = document.getElementById(`message${id}`);
         if (messageElement && chatWindowRef.current) {
             const chatWindowHeight = chatWindowRef.current.clientHeight;
@@ -352,22 +385,20 @@ const ChatPage = () => {
                             <span onClick={handleSendReport}>Xác nhận</span>
                         </div>
                     </Modal>
+                    {showGoDown && (
+                        <button
+                            className="go-down"
+                            onClick={() => {
+                                if (chatWindowRef.current) {
+                                    chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+                                    setShowGoDown(false); // Ẩn nút sau khi nhấn
+                                }
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faChevronDown} />
+                        </button>
+                    )}
 
-                    {chatWindowRef.current &&
-                        chatWindowRef.current.scrollHeight - chatWindowRef.current.scrollTop !==
-                            chatWindowRef.current.clientHeight && (
-                            <button
-                                className="go-down"
-                                onClick={() => {
-                                    if (chatWindowRef.current) {
-                                        chatWindowRef.current.scrollTop =
-                                            chatWindowRef.current.scrollHeight;
-                                    }
-                                }}
-                            >
-                                <FontAwesomeIcon icon={faChevronDown} />
-                            </button>
-                        )}
                 </div>
             ) : (
                 <h1>CHỌN MỘT CUỘC TRÒ TRUYỆN ĐỂ BẮT ĐẦU</h1>
