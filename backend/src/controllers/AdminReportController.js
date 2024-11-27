@@ -155,7 +155,7 @@ const unbanReportById = async (req, res) => {
 };
 const editReportType = async (req, res) => {
     try {
-        console.log(req.body);
+
         
         const result = await reportService.editReportType(req.body);
         if (result) {
@@ -183,8 +183,7 @@ const editReportType = async (req, res) => {
 };
 const addReportType = async (req, res) => {
     try {
-        console.log(req.body);
-        
+
         const result = await reportService.addReportType(req.body);
         if (result) {
             return res.status(200).json({
@@ -250,7 +249,7 @@ const getReportByIdUser = async (req, res) => {
         const page = req.params.id;
         const result = await reportService.getReportByIdUser(page);
         if (result) {
-            console.log(result);
+
             
             return res.status(200).json(result);
         } else {
@@ -275,7 +274,7 @@ const getReportByIdGroup = async (req, res) => {
         const page = req.params.id;
         const result = await reportService.getReportByIdGroup(page);
         if (result) {
-            console.log(result);
+
             
             return res.status(200).json(result);
         } else {

@@ -42,8 +42,7 @@ function Profile() {
     };
 
     const handleChange = (event) => {
-        console.log(state);
-        console.log(state.input);
+
 
         dispatch(setInput({ ...state.input, [event.target.name]: event.target.value }));
         if (state.err) dispatch(setError(''));

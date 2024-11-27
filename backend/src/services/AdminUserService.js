@@ -14,7 +14,6 @@ const getUsers = async (page) => {
 
         const totalPages = CountUser[0][0]['COUNT(*)'];
         const listStatus = await redisClient.get('online_users');
-        console.log(users[0],);
         users[0].forEach(user => {
             const foundStatus = JSON.parse(listStatus).find(status => status.userId === user.id && status.status === 'online');
             user.checkin = foundStatus ? 0 : 1; // Nếu tìm thấy trạng thái "online", checkin = 0, ngược lại checkin = 1

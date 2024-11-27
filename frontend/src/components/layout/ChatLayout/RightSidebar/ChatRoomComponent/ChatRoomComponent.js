@@ -14,7 +14,7 @@ import createChatRoom from "services/createChatRoom";
 import { socket } from "socket";
 const cx = classNames.bind(styles);
 
-export default function ChatRoom({ onClick = () => { }, choosedMember, chattype, id, avt, name, time, mess, sender, friendId, isFriend, isBlock, type = 'chatroom' }) {
+export default function ChatRoom({ onClick = () => { }, choosedMember, chattype, id, avt, status,name, time, mess, sender, friendId, isFriend, isBlock, type = 'chatroom' }) {
     const { ChatData, setChatData } = useContext(ChatDataContext);
     const { setRoomInfo } = useContext(ChatDataContext);
     const dispatch = useDispatch();
@@ -43,7 +43,7 @@ export default function ChatRoom({ onClick = () => { }, choosedMember, chattype,
             setRoomInfo("");
             return;
         }
-        setRoomInfo({ id, avt, name, friendId, type: chattype });
+        setRoomInfo({ id, avt, name, status,friendId, type: chattype });
     };
 
 

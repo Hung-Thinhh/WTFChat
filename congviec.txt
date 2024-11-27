@@ -19,30 +19,26 @@ Nguyễn Ngọc Long
 fontend
 - Giao diện trang nhắn tin.
 	+ Khung chat.
-		Top bar (tên nhóm, tìm kiếm tin nhắn, tao tác nhanh)
+		Top bar (tên nhóm, tìm kiếm tin nhắn)
 		Thanh chat.
 		Tin nhăn.
 		Tin nhắn mới nhất (nút).
 		Phần tin nhắn ghim.
-		Menu quản lý chat (tổng hợp thông tin nhóm, ảnh, file, link)
+		Menu quản lý chat (tổng hợp thông tin nhóm, ảnh)
+		bật/tắt âm thanh thông báo
 	+ Danh sách bạn bè và nhóm.
-	+ Danh sách cài đặt. (bật tắt)
 	+ Mục quản lý liên hệ. (bật tắt)
 
 backend
 - Nhắn tin: 
 	+ Hiễn thị tin nhắn.
-	+ Gửi tin nhắn. (nâng cấp gửi file, ảnh, sticker, gif, link, ...)
+	+ Gửi tin nhắn.
 	+ Thu hồi tin nhắn.
-	+ Yêu thích/Không yêu thich tin nhắn. (nâng cấp thành thả biểu cảm)
 	+ Trả lời tin nhắn.
 	+ Báo cáo tin nhắn.
 	+ Xoá tin nhắn cả 2 phía.
-	+ Sao chép, chia sẽ tin nhắn.
-	+ Ghim tin nhắn.
-	+ Lưu tin nhắn (cloud).
-	+ Chia sẽ tin nhăn. (Nâng cấp)
-- Websocket cho giao tiếp trực tuyến. (Hỗ trợ TCP trong th dung 4g nâng cấp)
+	+ Sao chép.
+- Websocket cho giao tiếp trực tuyến.
 
 
 Nguyễn Trần Hoàng Long

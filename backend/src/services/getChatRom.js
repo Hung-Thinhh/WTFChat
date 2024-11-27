@@ -15,6 +15,7 @@ const getChatRoom = async (id) => {
             END AS avt,
             p.type,
             p.update_time,
+            p.status,
             (
                 SELECT GROUP_CONCAT(u.id)
                 FROM thanhvien tv
@@ -81,7 +82,7 @@ const mute = async (id, state, idRoom) => {
             };
         }
         
-        const [updatedRow] = await pool.query(`SELECT  notify,idRoom FROM thanhvien WHERE userid = ? AND idRoom = ?`, [id, idRoom]);
+        const [updatedRow] = await pool.query(`SELECT  notify, idRoom as idroom FROM thanhvien WHERE userid = ? AND idRoom = ?`, [id, idRoom]);
         return {
             EM: 'Success',
             EC: 0,

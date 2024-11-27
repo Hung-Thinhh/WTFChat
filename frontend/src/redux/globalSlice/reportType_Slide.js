@@ -15,7 +15,7 @@ export const sidebarSlice = createSlice({
     },
     reducers: {
         setReportType: (state, action) => {
-            console.log(action.payload);
+
 
             state.reportType = { data: action.payload, isLoading: false };
         },

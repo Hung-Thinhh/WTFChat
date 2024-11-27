@@ -14,7 +14,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import OpengraphReactComponent from 'opengraph-react';
-
+import ChatDataContext from 'lib/Context/ChatContext';
 import { ControlledMenu, MenuItem, SubMenu, MenuHeader,target } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 import '@szhsin/react-menu/dist/transitions/zoom.css';
@@ -23,6 +23,7 @@ import { useSelector } from "react-redux";
 
 
 const MessageBubble = (data) => {
+    const { ChatData } = useContext(ChatDataContext);
     const reportType = useSelector((state) => state.typeReport.reportType);
     const [status, setStatus] = useState('sending');
     const userClass = data.data.user;
@@ -35,7 +36,6 @@ const MessageBubble = (data) => {
     }
     const handlePropReport = useCallback((data_report) => {
         data.reportting(data_report);
-        console.log('ahahahha');
 
     }, []);
     const targets = (id) => {
@@ -115,7 +115,7 @@ const MessageBubble = (data) => {
 
     }
     const handleDelete = () => {
-        socket.emit('delete_mess', {id: data.data.id , roomid : 1});
+        socket.emit('delete_mess', {id: data.data.id , roomid : ChatData});
     }
 
     return (

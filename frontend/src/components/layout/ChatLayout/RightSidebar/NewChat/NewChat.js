@@ -42,9 +42,6 @@ const NewChat = ({ callBack, active, setActive }) => {
         }
     }, []);
 
-    useEffect(() => {
-        console.log(choosedMember);
-    }, [choosedMember]);
 
     return (
         <div className={cx('overlay', active ? 'active' : 'unActive')}>

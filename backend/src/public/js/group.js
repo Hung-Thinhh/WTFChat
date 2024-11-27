@@ -7,11 +7,11 @@ document.addEventListener('click', function (event) {
             event.target.parentElement.classList.contains('reportUserButton'))
     ) {
         // Lấy ID của user từ button
-        console.log('haaaaaaaaaaaaaaa');
+
         $('#reportModal .form-loading').removeClass('hidden');
         $('#reportModal .form-loaded').addClass('hidden');
         const userId = event.target.id || event.target.parentElement.id;
-        console.log(userId);
+
         $('.saveChangeBtn').attr('id', userId);
         const handleDate = (day) => {
             const birthdateString = day;
@@ -32,7 +32,7 @@ document.addEventListener('click', function (event) {
                     $('#reportModal .form-loading').removeClass('hidden');
                     $('#reportModal .form-loaded').addClass('hidden');
                     const report = data.DT;
-                    console.log(report);
+
 
                     // Lấy phần tử bảng HTML
                     const tableBody = document.querySelector('.table-report tbody');
@@ -61,7 +61,7 @@ document.addEventListener('click', function (event) {
                             <span>${JSON.parse(report.content).content}</span>
                         </td>`;
                             }
-                            console.log(img_text);
+                 
     
                             row.innerHTML =
                                 `
@@ -128,7 +128,7 @@ document.addEventListener('click', function (event) {
         (event.target.classList.contains('fa') &&
             event.target.parentElement.classList.contains('UnBanUserButton'))
     ) {
-        console.log('ahhaahh');
+     
         const button = event.target.closest('.UnBanUserButton');
         const userId = event.target.id || event.target.parentElement.id;
 
@@ -157,7 +157,7 @@ document.addEventListener('click', function (event) {
 let currentPage = 1;
 function createPagination() {
     $('#pagination').empty(); // Xóa pagination hiện tại
-    console.log(totalPages); // Giả sử totalPages đã được khai báo trước đó
+
     // Thêm nút "Previous"
     if (currentPage > 1) {
         $('.pagination').append(
@@ -191,7 +191,7 @@ function createPagination() {
             );
         }
     }
-    console.log(currentPage);
+
 
     // Thêm nút "Next"
     if (currentPage < totalPages) {
@@ -231,7 +231,7 @@ $('#pagination').on('click', '.page-link', function (e) {
         })
         .then((data) => {
             // Hiển thị dữ liệu trên trang web
-            console.log(data);
+       
             totalPages = data.totalPages;
             renderUsersTable(data);
             createPagination();

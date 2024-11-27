@@ -3,7 +3,6 @@ import { profileService } from '../services/ProfileService';
 export const getUserInfo = async (req, res) => {
     try {
         const account = await profileService.getUserInfo(req.user.email);
-
         // middleware
         if (!req.user.email || !account) {
             return res.status(200).json({
@@ -38,7 +37,7 @@ export const getUserInfo = async (req, res) => {
 
 export const updateUserInfo = async (req, res) => {
     try {
-        console.log('CONTROLLER | UPDATE_USER_INFO | req.body:', req.file);
+
         const driveUpload = req.file && (await profileService.uploadImage(req.file));
 
         const data = await req.body;

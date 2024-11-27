@@ -130,7 +130,7 @@ const setupWebSocket = (server) => {
             try {
                 const delete_mess = await deletaChat(data.id);
                 delete_mess.id = data.id;
-                io.to(data.roomid).emit('delete_res', { delete_mess }); // Phát sự kiện tới phòng cụ thể
+                io.to(data.roomid).emit('deleteres', { delete_mess }); // Phát sự kiện tới phòng cụ thể
             } catch (error) {
                 console.error('Error creating chat:', error);
             }
