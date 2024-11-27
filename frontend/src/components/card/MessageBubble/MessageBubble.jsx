@@ -130,7 +130,7 @@ const MessageBubble = (data) => {
                 setOpen(true);
             }}
             key={data.data.id}
-            onClick={()=>targets(data.data.traloi.id)}
+            onClick={() => targets(data.data.traloi ? data.data.traloi.id : null)}
         >
 
             <div className={`messageContent ${userClass}`}>
