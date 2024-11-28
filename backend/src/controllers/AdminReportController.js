@@ -26,7 +26,7 @@ const getReportTypeAPI = async (req, res) => {
         const page = req.params.page || null;
         const result = await reportService.TypeReportAPI(page);
         if (result) {
-            console.log(result);
+
             
             return result;
         } else {

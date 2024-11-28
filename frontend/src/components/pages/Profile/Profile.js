@@ -104,6 +104,7 @@ function Profile() {
             if (res.EC === '200') {
                 // set mặc định thành input
                 dispatch(setInitInput(state.input));
+                alert('Thay đổi thông tin thành công');
             } else if (res.EC === '400') {
                 dispatch(setError(res.EM));
                 dispatch(setInput(state.initInput));
