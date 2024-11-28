@@ -19,11 +19,6 @@ const menuItems = [
         to: config.routes.profile,
     },
     {
-        title: 'Admin',
-        icon: <FontAwesomeIcon icon={faArrowRightFromBracket} />,
-        event: 'admin',
-    },
-    {
         title: 'Đăng xuất',
         icon: <FontAwesomeIcon icon={faArrowRightFromBracket} />,
         event: 'logout',
