@@ -1,4 +1,3 @@
-
 import React from 'react';
 import classNames from 'classnames/bind';
 import styles from "./ChatRoomComponent.module.scss";
@@ -6,6 +5,13 @@ import styles from "./ChatRoomComponent.module.scss";
 const cx = classNames.bind(styles);
 
 export default function RoomInfo({ name, mess, sender, id, type, time }) {
+    const truncateMessage = (message, maxLength) => {
+        if (message.length > maxLength) {
+            return message.substring(0, maxLength) + '...';
+        }
+        return message;
+    };
+
     return (
         <div className={cx("CR_info")}>
             <div className={cx("CR_left")}>
@@ -15,7 +21,7 @@ export default function RoomInfo({ name, mess, sender, id, type, time }) {
                 {mess && (
                     <div className={cx("CR_mess")}>
                         <span className={cx("Sender")}>{sender}:</span>
-                        <span className={cx("content")}>{mess}</span>
+                        <span className={cx("content")}>{truncateMessage(mess, 30)}</span>
                     </div>
                 )}
                 {(type === 'new' || type === 'friend') && (

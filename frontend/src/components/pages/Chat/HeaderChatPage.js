@@ -65,7 +65,7 @@ const HeaderChatPage = ({ RoomInfo, target }) => {
                 />
                 {searchResults.length > 0 && (
                     <div className="search_results">
-                        {searchResults.map((result, index) => (
+                        {searchResults.slice(0, 10).map((result, index) => (
                             <div key={index} className="search_result_item" onClick={() => target(result.id)}>
                                 {result.content}
                             </div>
