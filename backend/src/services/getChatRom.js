@@ -15,6 +15,7 @@ const getChatRoom = async (id) => {
             END AS avt,
             p.type,
             p.update_time,
+            p.status,
             (
                 SELECT GROUP_CONCAT(u.id)
                 FROM thanhvien tv

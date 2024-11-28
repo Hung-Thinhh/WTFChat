@@ -11,6 +11,7 @@ const ChatList = ({ chatRoom, currUser }) => {
         <div className={cx('containerChatRoom')}>
             {chatRoom.map((room) => (
                 <ChatRoom
+                    status={room.status}
                     key={room.id}
                     id={room.id}
                     chattype={room.type}

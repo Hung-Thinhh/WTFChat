@@ -40,7 +40,7 @@ const banGroupById = async (id) => {
         if (users.affectedRows > 0) {
             console.log('Cập nhật thành công!');
             const io = getIO();
-            io.emit('ban_group', { id });
+            io.emit('ban_group', { id ,isBan: true });
             return {
                 EM: 'Success',
                 EC: 0,
@@ -71,6 +71,8 @@ const unbanGroupById = async (id) => {
         // Kiểm tra kết quả của câu lệnh UPDATE
         if (users.affectedRows > 0) {
             console.log('Cập nhật thành công!');
+            const io = getIO();
+            io.emit('ban_group', { id ,isBan: false });
             return {
                 EM: 'Success',
                 EC: 0,

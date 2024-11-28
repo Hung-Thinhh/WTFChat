@@ -6,7 +6,7 @@ export const createChatRoom = async (userid, name, choosedMember) => {
 
         // Thêm phòng chat
         const [chatRoomResult] = await pool.query(
-            "INSERT INTO `phongchat`(`groupName`, `avt`, `type`, `update_time`) VALUES (?,?,?,?)",
+            "INSERT INTO `phongchat`(`groupName`, `avt`, `type`, `update_time`,`status`) VALUES (?,?,?,?)",
             [name, null, 1, new Date()]
         );
 
