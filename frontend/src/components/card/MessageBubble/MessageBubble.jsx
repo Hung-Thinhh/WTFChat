@@ -30,16 +30,18 @@ const MessageBubble = (data) => {
     // truyền data lên component cha
     const handlePropReply = useCallback(() => {
         data.onReply(data.data);
-    }, []);
+    }, [data]);
     const handleReply = () => {
-        handlePropReply()
-    }
+        handlePropReply();
+    };
     const handlePropReport = useCallback((data_report) => {
         data.reportting(data_report);
 
     }, []);
     const targets = (id) => {
-        data.target(id);
+        if (id) {
+            data.target(id);
+        }
     };
     const handleReport = (data_report) => {
         const newReport = {

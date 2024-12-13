@@ -74,6 +74,7 @@ const ChatPage = () => {
 
     const lazyLoad = async () => {
         try {
+            const previousScrollHeight = chatWindowRef.current.scrollHeight;
             const response = await getChat({
                 userId: currUser.id,
                 roomId: ChatData,
@@ -106,17 +107,26 @@ const ChatPage = () => {
                     return newData;
                 });
                 dispatch(setOffset(state + 50));
+
+                // Maintain scroll position after loading older messages
+                setTimeout(() => {
+                    if (chatWindowRef.current) {
+                        chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight - previousScrollHeight;
+                    }
+                }, 0);
+
+                // Clear the scroll event listener after 1 second
+                setTimeout(() => {
+                    if (chatWindowRef.current) {
+                        chatWindowRef.current.removeEventListener('scroll', handleScroll);
+                    }
+                }, 1000);
             }
         } catch (error) {
             console.error('Error fetching new messages:', error);
         }
     };
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            scrollToMessage(scrollid);
-        }, 0);
-        return () => clearTimeout(timer);
-    }, [Chat]);
+
     const handleDataReply = (data) => {
         setIsReply(data);
     };
@@ -149,13 +159,17 @@ const ChatPage = () => {
             image: message.image,
             time: new Date().toISOString(),
             status: 'sending',
-            traloi: isReply ? isReply.id : null,
+            traloi: isReply && isReply.id ? isReply.id : null,
         };
 
         setCurChatData((prevMessages) => [...prevMessages, messageData]);
         try {
             socket.emit('send_mess', messageData);
             setIsSending(false);
+            setIsReply(''); // Clear the reply state after sending the message
+            if (chatWindowRef.current) {
+                chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight; // Scroll to bottom after sending a message
+            }
         } catch (error) {
             console.error('Error sending message:', error);
             setIsSending(false);
@@ -184,7 +198,6 @@ const ChatPage = () => {
                 }
 
                 const index = prevMessages.findIndex((msg) => {
-                    scrollToMessage(`message${data.id}`);
                     return msg.id === tempId;
                 });
 
@@ -227,43 +240,28 @@ const ChatPage = () => {
         };
     }, [ChatData, tempId]);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            if (chatWindowRef.current && chatWindowRef.current.scrollTop === 0) {
+    const handleScroll = () => {
+        if (chatWindowRef.current) {
+            const { scrollTop, scrollHeight, clientHeight } = chatWindowRef.current;
+            setShowGoDown(scrollHeight - scrollTop - clientHeight > 100);
+            if (scrollTop === 0) {
                 lazyLoad();
             }
-        };
+        }
+    };
+
+    useEffect(() => {
         const chatWindow = chatWindowRef.current;
         if (chatWindow) {
             chatWindow.addEventListener('scroll', handleScroll);
         }
+
         return () => {
             if (chatWindow) {
                 chatWindow.removeEventListener('scroll', handleScroll);
             }
         };
     }, [state]);
-
-    useEffect(() => {
-        const handleScroll = () => {
-            if (chatWindowRef.current) {
-                const { scrollTop, scrollHeight, clientHeight } = chatWindowRef.current;
-                // Nếu cuộn tới cuối hoặc gần cuối (sai số 1px), ẩn nút
-                setShowGoDown(scrollHeight - scrollTop - clientHeight > 100);
-            }
-        };
-
-        const chatWindow = chatWindowRef.current;
-        if (chatWindow) {
-            chatWindow.addEventListener('scroll', handleScroll);
-        }
-
-        return () => {
-            if (chatWindow) {
-                chatWindow.removeEventListener('scroll', handleScroll);
-            }
-        };
-    }, []);
 
     useEffect(() => {
         if (chatWindowRef.current && state <= 50) {

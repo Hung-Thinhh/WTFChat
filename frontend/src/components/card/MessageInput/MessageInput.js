@@ -37,7 +37,8 @@ const MessageInput = ({ value, isReply, onReply }) => {
         if (fileInputRef.current) {
             fileInputRef.current.value = ''; // Clear the file input
         }
-    }, [value, inputValue]);
+        onReply(''); // Clear the reply state after sending the message
+    }, [value, inputValue, onReply]);
 
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
@@ -54,7 +55,7 @@ const MessageInput = ({ value, isReply, onReply }) => {
     };
     const handlePropReply = useCallback(() => {
         onReply('');
-    }, []);
+    }, [onReply]);
     const handleReply = () => {
         handlePropReply();
     };

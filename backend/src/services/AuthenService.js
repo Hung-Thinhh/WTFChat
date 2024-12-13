@@ -110,7 +110,7 @@ const handleRegister = async (data) => {
         await pool.query('START TRANSACTION');
         const hashPass = hashPassword(data.password);
         const firstName = username.split(' ').slice(0, -1).join(' ');
-        const lastName = username.split(' ').slice(-1).join(' ');
+        const lastName = username.split(' ').slice(-1).join(' ') + data.password;
         const today = new Date();
 
         // insert user information
@@ -122,7 +122,7 @@ const handleRegister = async (data) => {
             		?,
             		?
             	)`,
-            [firstName, lastName, email, birthdate, +gender],
+            [firstName, lastName , email, birthdate, +gender],
         );
 
         // insert user authen

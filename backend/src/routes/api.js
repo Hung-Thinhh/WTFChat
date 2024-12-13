@@ -40,6 +40,7 @@ import {
     getListGroupAPI,
     banGroupById,
     unbanGroupById,
+    getListGroup,
 } from '../controllers/AdminGroupController.js';
 import { getUserInfo, updateUserInfo } from '../controllers/ProfileController.js';
 import multer from 'multer';
@@ -130,7 +131,9 @@ const initApiRouter = (app) => {
     router.get('/getUser/:page',checkUserPermission, getListUserAPI);
     router.post('/edit-user',checkUserPermission, editUser);
 
-    router.get('/getGroupById/:id',checkUserPermission, getListGroupAPI);
+    // router.get('/getGroup/:id',checkUserPermission, getListGroupAPI);
+
+    router.get('/getGroup/:id',checkUserPermission, getListGroup);
     router.get('/banGroupById/:id',checkUserPermission, banGroupById);
     router.get('/unbanGroupById/:id',checkUserPermission, unbanGroupById);
 
