@@ -113,7 +113,8 @@ const initApiRouter = (app) => {
     //report 
     router.get('/getReportType', getReportType);
     router.post('/sendReport', sendReport);
-
+    
+    //admin
     router.get('/banReportById/:id',checkUserPermission, banReportById);
     router.get('/unbanReportById/:id',checkUserPermission, unbanReportById);
     router.get('/banReportType/:id',checkUserPermission, banReportType);
@@ -124,7 +125,7 @@ const initApiRouter = (app) => {
     router.get('/getReportByIdGroup/:id',checkUserPermission, getReportByIdGroup);
     router.get('/getReport/:page',checkUserPermission, getReportAPI);
 
-    //admin
+    
     router.get('/getUserById/:id',checkUserPermission, getUserById);
     router.get('/banUserById/:id',checkUserPermission, banUserById);
     router.get('/unbanUserById/:id',checkUserPermission, unbanUserById);

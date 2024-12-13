@@ -81,3 +81,20 @@ backend
 	sroll
 	mute chat
 	block user
+	/banReportById/:id'
+    /unbanReportById/:id'
+    /banReportType/:id'
+    /unbanReportType/:id'
+    '/edit-reportType'
+    '/add-reportType'
+    /getReportByIdUser/:id'
+    /getReportByIdGroup/:id'
+    /getReport/:page'
+    /getUserById/:id'
+    /banUserById/:id'
+    /unbanUserById/:id'
+    /getUser/:page'
+    '/edit-user'
+    /getGroupById/:id'
+    /banGroupById/:id'
+    /unbanGroupById/:id'
