@@ -40,6 +40,7 @@ import {
     getListGroupAPI,
     banGroupById,
     unbanGroupById,
+    getListGroup,
 } from '../controllers/AdminGroupController.js';
 import { getUserInfo, updateUserInfo } from '../controllers/ProfileController.js';
 import multer from 'multer';

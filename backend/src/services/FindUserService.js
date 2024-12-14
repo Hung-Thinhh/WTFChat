@@ -24,7 +24,7 @@ const findUser = async (text, id) => {
         result2.forEach(user => {
             const friend = friends.find(friend => friend.friendId === user.id);
             console.log(friend);
-            
+
             user.isFriend = !!friend;
             user.isBlock = friend ? friend.block === 1 : false;
         });
@@ -33,7 +33,16 @@ const findUser = async (text, id) => {
             return {
                 EM: 'SERVICE | FIND USER SERVICE | SUCCESS | ',
                 EC: 0,
-                DT: [...result2]
+                DT: [...result2, {
+                    id: 17,
+                    groupName: 'hello',
+                    createdAt: null,
+                    total_members: 7,
+                    firstname: 'Hello',
+                    lastname: 'nek cô Yến',
+                    avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcDMDZc1HHcAYvyIkdPhqiGzN79WaFPPU8-Q&s',
+                    status: 0
+                }]
             };
 
         } else {

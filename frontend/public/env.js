@@ -56,6 +56,50 @@ window.env = {
   "OS": "Windows_NT",
   "Path": "D:\\project\\web\\WTFChat_BE\\frontend\\node_modules\\.bin;D:\\project\\web\\WTFChat_BE\\node_modules\\.bin;D:\\project\\web\\node_modules\\.bin;D:\\project\\node_modules\\.bin;D:\\node_modules\\.bin;C:\\Users\\N-H-T\\AppData\\Roaming\\nvm\\v20.18.0\\node_modules\\npm\\node_modules\\@npmcli\\run-script\\lib\\node-gyp-bin;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\dotnet\\;C:\\Users\\N-H-T\\AppData\\Roaming\\nvm;C:\\Program Files\\nodejs;C:\\Program Files\\Microsoft SQL Server\\150\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Users\\N-H-T\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\;C:\\Users\\N-H-T\\AppData\\Local\\Programs\\Python\\Python310\\;C:\\Users\\N-H-T\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\N-H-T\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\N-H-T\\AppData\\Roaming\\npm;C:\\Users\\N-H-T\\AppData\\Roaming\\nvm;C:\\Program Files\\nodejs;C:\\Users\\N-H-T\\.dotnet\\tools",
   "PATHEXT": ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.CPL",
+<<<<<<< HEAD
+=======
+=======
+  "GIT_LFS_PATH": "C:\\Program Files\\Git LFS",
+  "HOME": "C:\\Users\\nguye",
+  "HOMEDRIVE": "C:",
+  "HOMEPATH": "\\Users\\nguye",
+  "INIT_CWD": "D:\\github\\WTFChat\\frontend",
+  "LANG": "en_US.UTF-8",
+  "LOCALAPPDATA": "C:\\Users\\nguye\\AppData\\Local",
+  "LOGONSERVER": "\\\\LONG",
+  "NODE": "C:\\Program Files\\nodejs\\node.exe",
+  "NODE_EXE": "C:\\Program Files\\nodejs\\\\node.exe",
+  "NPM_CLI_JS": "C:\\Program Files\\nodejs\\\\node_modules\\npm\\bin\\npm-cli.js",
+  "npm_command": "start",
+  "npm_config_cache": "C:\\Users\\nguye\\AppData\\Local\\npm-cache",
+  "npm_config_globalconfig": "C:\\Users\\nguye\\AppData\\Roaming\\npm\\etc\\npmrc",
+  "npm_config_global_prefix": "C:\\Users\\nguye\\AppData\\Roaming\\npm",
+  "npm_config_init_module": "C:\\Users\\nguye\\.npm-init.js",
+  "npm_config_local_prefix": "D:\\github\\WTFChat\\frontend",
+  "npm_config_node_gyp": "C:\\Program Files\\nodejs\\node_modules\\npm\\node_modules\\node-gyp\\bin\\node-gyp.js",
+  "npm_config_noproxy": "",
+  "npm_config_npm_version": "10.5.2",
+  "npm_config_prefix": "C:\\Users\\nguye\\AppData\\Roaming\\npm",
+  "npm_config_userconfig": "C:\\Users\\nguye\\.npmrc",
+  "npm_config_user_agent": "npm/10.5.2 node/v20.13.1 win32 x64 workspaces/false",
+  "npm_execpath": "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+  "npm_lifecycle_event": "start",
+  "npm_lifecycle_script": "react-dotenv && react-scripts start",
+  "npm_node_execpath": "C:\\Program Files\\nodejs\\node.exe",
+  "npm_package_json": "D:\\github\\WTFChat\\frontend\\package.json",
+  "npm_package_name": "my-app",
+  "npm_package_version": "0.1.0",
+  "NPM_PREFIX_JS": "C:\\Program Files\\nodejs\\\\node_modules\\npm\\bin\\npm-prefix.js",
+  "NPM_PREFIX_NPM_CLI_JS": "C:\\Users\\nguye\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js",
+  "NUMBER_OF_PROCESSORS": "8",
+  "OneDrive": "C:\\Users\\nguye\\OneDrive",
+  "OneDriveConsumer": "C:\\Users\\nguye\\OneDrive",
+  "ORIGINAL_XDG_CURRENT_DESKTOP": "undefined",
+  "OS": "Windows_NT",
+  "Path": "D:\\github\\WTFChat\\frontend\\node_modules\\.bin;D:\\github\\WTFChat\\node_modules\\.bin;D:\\github\\node_modules\\.bin;D:\\node_modules\\.bin;C:\\Program Files\\nodejs\\node_modules\\npm\\node_modules\\@npmcli\\run-script\\lib\\node-gyp-bin;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Microsoft SQL Server\\150\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\dotnet\\;C:\\Program Files\\Git LFS;C:\\Program Files\\nodejs\\;C:\\Program Files\\Cloudflare\\Cloudflare WARP\\;C:\\Users\\nguye\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\nguye\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\nguye\\AppData\\Local\\GitHubDesktop\\bin;C:\\Users\\nguye\\.dotnet\\tools;C:\\Users\\nguye\\AppData\\Roaming\\npm",
+  "PATHEXT": ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC",
+>>>>>>> af25e4273b8bd7757699454a8bb09065f60460e1
+>>>>>>> 81ebabc4b1917155e02488bf0b333d0d0c98c00c
   "PROCESSOR_ARCHITECTURE": "AMD64",
   "PROCESSOR_IDENTIFIER": "AMD64 Family 23 Model 104 Stepping 1, AuthenticAMD",
   "PROCESSOR_LEVEL": "23",
@@ -89,4 +133,18 @@ window.env = {
   "VSCODE_NONCE": "fed402df-a17c-47df-b86c-b0aab7891df9",
   "VSCODE_STABLE": "1",
   "windir": "C:\\Windows"
+<<<<<<< HEAD
+=======
+=======
+  "TEMP": "C:\\Users\\binhm\\AppData\\Local\\Temp",
+  "TMP": "C:\\Users\\binhm\\AppData\\Local\\Temp",
+  "USERDOMAIN": "DAWN1810",
+  "USERDOMAIN_ROAMINGPROFILE": "DAWN1810",
+  "USERNAME": "binhm",
+  "USERPROFILE": "C:\\Users\\binhm",
+  "VBOX_MSI_INSTALL_PATH": "C:\\Program Files\\Oracle\\VirtualBox\\",
+  "windir": "C:\\Windows",
+  "ZES_ENABLE_SYSMAN": "1"
+>>>>>>> af25e4273b8bd7757699454a8bb09065f60460e1
+>>>>>>> 81ebabc4b1917155e02488bf0b333d0d0c98c00c
 };
