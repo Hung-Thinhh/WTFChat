@@ -48,7 +48,7 @@ const MoreOptions = ({ RoomInfo, dispatch, state }) => {
             if (Array.isArray(notify)) {
                 const newMuteState = data.DT[0].notify ? 0 : 1;
                 setMute(newMuteState);
-
+                
                 const updatedNotify = notify.map((item) => {
                     return item.idroom === data.DT[0].idroom ? data.DT[0] : item;
                 });

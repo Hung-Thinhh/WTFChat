@@ -268,25 +268,26 @@ function renderUsersTable(users) {
           ${user.firstname} ${user.lastname}
         </td>
         <td>
-          ${user.time ? new Date(user.time).toLocaleDateString() : '--'}
+        ${user.groupName}
         </td>
         <td>
-          ${user.role === 1 ? 'User' : 'Admin'}
+                    ${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '--'}
+
         </td>
         <td>
-          <span class="status ${user.checkin == 0 ? 'text-success' : 'text-err'} ">•</span>${user.checkin == 0 ? 'Online' : 'Offline'}
+        ${user.total_members}
         </td>
         <td class="action">
-          <button data-toggle="modal" data-target="#editModal" id="${
-              user.id
-          }" class="editUserButton">
-            <i class="fas fa-cog"></i>
-          </button>
-           <button data-toggle="modal" data-target="#reportModal" id="${
-              user.id
-          }" class="reportUserButton">
-            <i class="fas fa-flag"></i>
-          </button>
+          
+           <button
+                                                    
+                                                        data-toggle="modal"
+                                                        data-target="#reportModal"
+                                                        id="${user.id}"
+                                                        class="reportUserButton"
+                                                    >
+                                                        <i class="fas fa-flag"></i>
+                                                    </button>
           <button
             class="${user.status == 1 ? 'BanUserButton' : 'UnBanUserButton'}"
             id=${user.id}

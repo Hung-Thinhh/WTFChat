@@ -132,6 +132,7 @@ const initApiRouter = (app) => {
     router.post('/edit-user',checkUserPermission, editUser);
 
     router.get('/getGroupById/:id',checkUserPermission, getListGroupAPI);
+    router.get('/getGroup/:page',checkUserPermission, getListGroupAPI);
     router.get('/banGroupById/:id',checkUserPermission, banGroupById);
     router.get('/unbanGroupById/:id',checkUserPermission, unbanGroupById);
 
