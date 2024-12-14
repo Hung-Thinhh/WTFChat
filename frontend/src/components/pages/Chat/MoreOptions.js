@@ -45,13 +45,15 @@ const MoreOptions = ({ RoomInfo, dispatch, state }) => {
     };
     useEffect(() => {
         socket.on('muted', (data) => {
-            if (Array.isArray(notify)) {
+            if (Array.isArray(notify) && currUser.id === data.DT[0].userid) {
                 const newMuteState = data.DT[0].notify ? 0 : 1;
                 setMute(newMuteState);
-                
+
                 const updatedNotify = notify.map((item) => {
                     return item.idroom === data.DT[0].idroom ? data.DT[0] : item;
                 });
+                console.log('updatedNotify', updatedNotify);
+
                 dispatch(setNotify(updatedNotify));
             }
         });
@@ -61,7 +63,11 @@ const MoreOptions = ({ RoomInfo, dispatch, state }) => {
         };
     }, [notify, dispatch]);
 
+    const handleMute = () => {
+        console.log('muteeee');
 
+        socket.emit('mute', { id: currUser.id, state: mute, idRoom: RoomInfo.id });
+    };
     return (
         <div className="more">
             <Menu
@@ -77,12 +83,7 @@ const MoreOptions = ({ RoomInfo, dispatch, state }) => {
                     <FontAwesomeIcon icon={faInfo} />
                     Thông tin
                 </MenuItem>
-                <MenuItem
-                    className="menu_item"
-                    onClick={() =>
-                        socket.emit('mute', { id: currUser.id, state: mute, idRoom: RoomInfo.id })
-                    }
-                >
+                <MenuItem className="menu_item" onClick={() => handleMute()}>
                     {mute ? (
                         <>
                             <FontAwesomeIcon icon={faBell} />

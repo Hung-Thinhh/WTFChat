@@ -62,7 +62,6 @@ const createChat = async (senderid, roomid, content, time, media, traloi) => {
   try {
     let fileId = null;
     if (media) {
-      console.log('SERVICE | CREATE CHAT SERVICE | MEDIA | ', media);
       fileId = 'https://drive.google.com/thumbnail?id=' + await uploadImage(media);
       const [result] = await pool.query(`
         INSERT INTO tinnhan (content, idThanhvien, idRoom, time, image, traloi) 
@@ -72,10 +71,13 @@ const createChat = async (senderid, roomid, content, time, media, traloi) => {
         JOIN nguoidung u ON tv.userid = u.id
         WHERE u.id = ? AND tv.idRoom = ?;
         `,
-        [content, roomid, time, fileId, traloi ? traloi : null, senderid, roomid]); // thêm một tin nhắn mới
+        [content, roomid, time, fileId, traloi ? traloi : null, senderid, roomid]); 
+      console.log(result);
+      
       await pool.query(`UPDATE phongchat SET update_time = ? WHERE id = ?`, [time, roomid]);
       if (result.affectedRows > 0) {
-        const [newMessage] = await pool.query(`SELECT tinnhan.*, thanhvien.userid FROM tinnhan, thanhvien WHERE tinnhan.id = ? AND tinnhan.idThanhvien = thanhvien.id AND tinnhan.status = 0`, [result.insertId]);
+        const [newMessage] = await pool.query(`SELECT tinnhan.*, thanhvien.userid,nguoidung.avatar as avt FROM tinnhan, thanhvien,nguoidung WHERE tinnhan.id = ? AND tinnhan.idThanhvien = thanhvien.id AND nguoidung.id = thanhvien.userid AND tinnhan.status = 0`, [result.insertId]);
+
         return {
           EM: 'Success',
           EC: 0,
@@ -98,9 +100,10 @@ const createChat = async (senderid, roomid, content, time, media, traloi) => {
         WHERE u.id = ? AND tv.idRoom = ?;
         `,
         [content, roomid, time, traloi ? traloi : null, senderid, roomid]); // thêm một tin nhắn mới
+        console.log([content, roomid, time, traloi ? traloi : null, senderid, roomid]);
       await pool.query(`UPDATE phongchat SET update_time = ? WHERE id = ?`, [time, roomid]);
       if (result.affectedRows > 0) {
-        const [newMessage] = await pool.query(`SELECT tinnhan.*, thanhvien.userid FROM tinnhan, thanhvien WHERE tinnhan.id = ? AND tinnhan.idThanhvien = thanhvien.id AND tinnhan.status = 0`, [result.insertId]);
+        const [newMessage] = await pool.query(`SELECT tinnhan.*, thanhvien.userid,nguoidung.avatar as avt FROM tinnhan, thanhvien,nguoidung WHERE tinnhan.id = ? AND tinnhan.idThanhvien = thanhvien.id AND nguoidung.id = thanhvien.userid AND tinnhan.status = 0`, [result.insertId]);
         return {
           EM: 'Success',
           EC: 0,
@@ -135,6 +138,7 @@ const getChat = async (userId, roomId, offset) => {
       t.time,
       t.image,
       t.traloi,
+      u.avatar,
       CONCAT(u.firstname, ' ', u.lastname) AS senderName,
       u.id AS senderid,
       u.avatar AS avt

@@ -38,6 +38,31 @@ function Register() {
         event.preventDefault();
         dispatch(setLoading(true));
         // for avaiable input
+
+        const res = await register({
+            ...state.input,
+            password: state.input.repass,
+            otp: state.otp.join(''),
+        });
+
+        if (res.EC === '200') {
+            // dang ki thanh cong
+            nav(config.routes.login);
+            alert('Đăng kí tài khoản thành công!');
+            dispatch(setError(''));
+        } else if (res.EC === '400') {
+            dispatch(setError(res.EM));
+        } else if (res.EC === '500') {
+            alert('Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com');
+        }
+
+        dispatch(setLoading(false));
+    };
+
+    const handleOtpVerify = async (event) => {
+        event.preventDefault();
+        dispatch(setLoading(true));
+
         if (!state.input.email) dispatch(setError('Email không thể để trống'));
         else if (!state.input.username) dispatch(setError('Họ và tên không thể để trống'));
         else if (state.input.username.length > 100) dispatch(setError('Tên của bạn quá dài'));
@@ -50,45 +75,22 @@ function Register() {
         else if (state.input.gender < 0 || state.input.gender > 3)
             dispatch(setError('Giới tính không tồn tại'));
         else {
-            const res = await register({
-                ...state.input,
-                password: state.input.repass,
-                otp: state.otp.join(''),
-            });
+            const res = await sendOTP({ email: state.input.email });
 
             if (res.EC === '200') {
-                // dang ki thanh cong
-                nav(config.routes.login);
-                alert('Đăng kí tài khoản thành công!');
+                alert('Kiểm tra hộp thư email của bạn');
                 dispatch(setError(''));
+                setPage(false);
+                setCountDown(30);
             } else if (res.EC === '400') {
-                dispatch(setError(res.EM));
+                dispatch(setError('Email không thể để trống'));
+            } else if (res.EC === '401') {
+                dispatch(setError('Đã hết lượt gửi trong ngày'));
             } else if (res.EC === '500') {
                 alert(
                     'Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com',
                 );
             }
-        }
-
-        dispatch(setLoading(false));
-    };
-
-    const handleOtpVerify = async (event) => {
-        event.preventDefault();
-        dispatch(setLoading(true));
-        const res = await sendOTP({ email: state.input.email });
-
-        if (res.EC === '200') {
-            alert('Kiểm tra hộp thư email của bạn');
-            dispatch(setError(''));
-            setPage(false);
-            setCountDown(30);
-        } else if (res.EC === '400') {
-            dispatch(setError('Email không thể để trống'));
-        } else if (res.EC === '401') {
-            dispatch(setError('Đã hết lượt gửi trong ngày'));
-        } else if (res.EC === '500') {
-            alert('Lỗi hệ thống vui lòng báo cáo với chúng tôi! qua email: deptraivkl@gmail.com');
         }
         dispatch(setLoading(false));
     };

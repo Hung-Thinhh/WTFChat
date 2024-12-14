@@ -56,7 +56,9 @@ const MessageBubble = (data) => {
     }
     // time
     const formatTime = (datestring) => {
+        
         const date = new Date(datestring);
+            date.setTime(date.getTime() + (7*60*60*1000));
         const now = new Date();
 
         const diffTime = Math.abs(now.getTime() - date.getTime());

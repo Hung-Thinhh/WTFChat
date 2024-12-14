@@ -33,16 +33,7 @@ const findUser = async (text, id) => {
             return {
                 EM: 'SERVICE | FIND USER SERVICE | SUCCESS | ',
                 EC: 0,
-                DT: [...result2, {
-                    id: 17,
-                    groupName: 'hello',
-                    createdAt: null,
-                    total_members: 7,
-                    firstname: 'Hello',
-                    lastname: 'nek cô Yến',
-                    avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcDMDZc1HHcAYvyIkdPhqiGzN79WaFPPU8-Q&s',
-                    status: 0
-                }]
+                DT: result2
             };
 
         } else {

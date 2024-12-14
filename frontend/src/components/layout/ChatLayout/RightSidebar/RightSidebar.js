@@ -17,7 +17,7 @@ import SearchResults from './SearchResults';
 import BlockList from './BlockList';
 import { socket } from '../../../../socket';
 import { useDispatch, useSelector } from 'react-redux';
-import { setChatRooms,editChatRooms } from '../../../../redux/globalSlice/chatRoomSlice';
+import { setChatRooms, editChatRooms } from '../../../../redux/globalSlice/chatRoomSlice';
 import {
     chatRoomListSelector,
     currUserSelector,
@@ -92,18 +92,19 @@ const RightSidebar = () => {
     useEffect(() => {
         dispatch(fetchgNotify({ userId: currUser.id }));
         socket.on('newRoom', (data) => {
-            if (!chatRoom.some((room) => room.id === data.id))
+            if (!chatRoom.some((room) => room.id === data.id)) {
                 dispatch(setChatRooms([data, ...chatRoom]));
+            }
         });
         return () => {
             socket.off('newRoom'); // Hủy đăng ký sự kiện khi component unmount
         };
-    }, []);
+    }, [chatRoom, currUser.id, dispatch]);
     useEffect(() => {
         socket.on('ban_group', (data) => {
             console.log(data);
-            
-           dispatch(editChatRooms(data))
+
+            dispatch(editChatRooms(data));
         });
         return () => {
             socket.off('ban_group'); // Hủy đăng ký sự kiện khi component unmount

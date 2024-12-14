@@ -55,7 +55,10 @@ const ChatPage = () => {
             if (response && response.EC === 0) {
                 socket.emit('join_room', ChatData);
                 setRoom(ChatData);
+                console.log(response);
+                
                 let data = response.DT;
+                dispatch(setChatData(data));
                 data.forEach((item) => {
                     if (item.traloi !== null) {
                         const replyMessage = data.find((msg) => msg.id === item.traloi);
@@ -184,7 +187,11 @@ const ChatPage = () => {
 
     useEffect(() => {
         const handleNewChat = (data) => {
-            const notification = notify.find((item) => item.idRoom === data.roomid);
+            console.log( data.idRoom);
+            
+            const notification = notify.find((item) => item.idroom === data.idRoom);
+            console.log(notification);
+            
             if (notification && notification.notify === 1) {
                 audio.play();
             }
@@ -288,7 +295,7 @@ const ChatPage = () => {
     }
 
     useEffect(() => {
-        socket.on('deleteres', (data) => {
+        socket.on('delete_res', (data) => {
             setCurChatData((prevMessages) => {
                 const index = prevMessages.findIndex((msg) => msg.id === data.delete_mess.id);
                 if (index !== -1) {
@@ -301,7 +308,7 @@ const ChatPage = () => {
         });
 
         return () => {
-            socket.off('deleteres');
+            socket.off('delete_res');
         };
     }, []);
     // socket.on('muted', (data) => {
@@ -311,6 +318,7 @@ const ChatPage = () => {
     useEffect(() => {
         socket.on('return_res', (data) => {
             setCurChatData((prevMessages) => {
+                dispatch(setNewMessage(data));
                 return prevMessages.reduce((acc, msg) => {
                     if (msg.id > data.delete_mess.id) {
                         // Kiểm tra xem `data.delete_mess` đã có trong `acc` chưa

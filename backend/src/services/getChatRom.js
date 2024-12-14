@@ -82,7 +82,7 @@ const mute = async (id, state, idRoom) => {
             };
         }
         
-        const [updatedRow] = await pool.query(`SELECT  notify, idRoom as idroom FROM thanhvien WHERE userid = ? AND idRoom = ?`, [id, idRoom]);
+        const [updatedRow] = await pool.query(`SELECT  notify, idRoom as idroom, userid FROM thanhvien WHERE userid = ? AND idRoom = ?`, [id, idRoom]);
         return {
             EM: 'Success',
             EC: 0,

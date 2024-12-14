@@ -39,7 +39,8 @@ const LeftSiedbar = () => {
         if (ChatData) {
             fetchInfo();
         }
-    }, [ChatData]);
+    }, [ChatData,state]);
+  
 
     return (
         <div className={`leftSidebar ${state ? 'hide' : 'show'}`}>
@@ -56,7 +57,7 @@ const LeftSiedbar = () => {
                         }
                         alt="avt"
                     />
-                    <div className="upload_ctn">
+                    {RoomInfo.type!=='private' && <div className="upload_ctn">
                         <input
                             type="file"
                             accept="image/*"
@@ -92,7 +93,7 @@ const LeftSiedbar = () => {
                                 }
                             }}
                         />
-                    </div>
+                    </div>}
                 </label>
                 <div className="mail">@{RoomInfo.id}</div>
                 <div className="nameEditor">
@@ -103,7 +104,7 @@ const LeftSiedbar = () => {
                         onChange={(e) => setInputName(e.target.value)}
                         readOnly={!setEdit}
                     />
-                    <Button
+                    {RoomInfo.type!=='private' &&<Button
                         onClick={async () => {
                             setSetEdit(!setEdit);
                             if (setEdit) {
@@ -131,7 +132,7 @@ const LeftSiedbar = () => {
                         onlyIcon={true}
                         leftIcon={<FontAwesomeIcon icon={setEdit ? faFloppyDisk : faPenToSquare} />}
                         className="btn"
-                    ></Button>
+                    ></Button>}
                 </div>
             </div>
             <div className="media">

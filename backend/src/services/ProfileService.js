@@ -95,6 +95,9 @@ const uploadImage = async (file) => {
 };
 
 const extractFileId = (link) => {
+    if (!link) {
+        return '';
+    }
     // Define the regular expression
     const regex = /id=(\w+)/;
 
